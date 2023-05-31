@@ -1,0 +1,152 @@
+%Read the slack post (link below) regarding syntax and formatting before you start writing lecture notes.
+% Post: https://musa-2021.slack.com/archives/C01DGR645SL/p1609187728029500
+
+
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+
+\section{Week 1: Propositional Logic}
+Before we jump into proof techniques, let us first introduce propositional logic. Propositional logic is the foundation of all mathematics. It allows us to construct correct mathematical arguments and with a strong understanding of logic, one's ability to break down and solve problems will improve immensely. 
+\begin{definition}[proposition]
+    A \dfn{proposition} is a declarative sentence, which declares a fact. Note that this fact can either be true or false, but not both. 
+\end{definition}
+Let us go over a couple examples. 
+\begin{example}
+    Which of the following are propositions and which are not? 
+    \begin{enumerate}[label=(\alph*)]
+        \item I like peanut butter and jelly sandwiches. 
+        \item Pigs can fly and talk.
+        \item Can you see the pineapple wearing sunglasses?
+        \item $9 + 10 = 21$.
+        \item $5 + 5 = 10$.
+    \end{enumerate}
+\end{example}
+\begin{proof}
+    Sentences (a), (b), (d), and (e) are propositions. Sentence (c) is not a proposition. Can you think of why sentence (c) is not a proposition? Note that although (b) and (d) are not true, they are still propositions.
+\end{proof}
+
+\subsection{Compound Propositions}
+Here are a few definitions.
+\begin{definition}[propositional variable]
+    A \dfn{propositional variable} (also called a \dfn{sentential variable}) is a variable that is assigned to a \dfn{truth value} (true or false). 
+\end{definition}
+\begin{definition}[primitive proposition]
+    A \dfn{primitive proposition} is a proposition that can't be further broken down. 
+\end{definition}
+\begin{example}
+    The following are examples of primitive proposition examples.
+    \begin{enumerate}[label=(\alph*)]
+        \item It is sunny outside.
+        \item It is raining.
+        \item I am tired.
+    \end{enumerate}
+\end{example}
+\begin{definition}[compound proposition]
+    A \dfn{compound proposition} is a proposition that can be further broken down into primitive propositions. Compound propositions consist of one or more primitive (or compound) propositions joined by \dfn{logical operators}.
+\end{definition}
+Negation (NOT), conjunction (AND), disjunction (NOR), exclusive-OR (XOR), implication (conditional statement: if \ldots{} then \ldots), and equivalence (\ldots{} if and only if \ldots) are logical operators. We will explore these operators in more detail over the next few lectures. Note that propositional variables can also be used to represent compound propositions.
+\begin{exercise}
+Which of the following are compound propositions? 
+    \begin{enumerate}[label=(\alph*)]
+        \item Bob likes PB\&J sandwiches. 
+        \item Bob likes peanut butter sandwiches and he likes jelly sandwiches.
+        \item Alice has at least $20$ pigs.
+        \item Alice likes ice-cream or cookies, but not both. 
+        \item Tom failed his math test. 
+        \item If it is sunny outside then we will go to the beach. 
+    \end{enumerate}
+\end{exercise}
+Here are our first logical operators.
+\begin{definition}[negation]
+    Let $p$ be a proposition. The \dfn{negation} of $p$ is the statement ``not $p$'' or ``it is not the case that $p$''. We denote the negation of p using $\neg p$, $ -p$, $p'$, ${\sim}p$, $!p$, \ldots but they all mean the same and you can use any symbol. 
+\end{definition}
+\begin{exercise}
+    What is the negation of each of the following propositions?
+    \begin{enumerate}[label=(\alph*)]
+        \item Alice likes ice-cream or cookies
+        \item Bob has at least $20$ pigs.
+        \item The pineapple is not wearing sunglasses.
+        \item $9 + 10 = 21$.
+    \end{enumerate}
+\end{exercise}
+\begin{definition}[logical conjunction]
+    Let $p$ and $q$ be propositional variables. The \dfn{conjunction} of $p$ and $q$ is the statement ``$p$ and $q$''. We denote the conjunction of $p$ and $q$ by $p \land q$. Note that the conjunction $ p \land q$ has a truth value of true when both are true; otherwise, the truth value is false. 
+\end{definition} 
+\begin{definition}[logical disjunction]
+    Let $p$ and $q$ be propositional variables. The \dfn{disjunction} of $p$ and $q$ is the statement ``$p$ or $q$''. We denote the disjunction of $p$ and $q$ by $p \lor q$. Note that the conjunction $ p \lor q$ has a truth value of false when both are false; otherwise, the truth value is true. 
+\end{definition}
+\begin{definition}[exclusive disjunction]
+    Let $p$ and $q$ be propositional variables. The \dfn{exclusive disjunction} of $p$ and $q$ is the statement ``$p$ or $q$, but not both''. We denote the exclusive disjunction of $p$ and $q$ by $p \oplus q$. 
+\end{definition}
+\begin{definition}[conditional statement]
+    Let p and q be propositions. A \dfn{conditional statement}, symbolized by $p \rightarrow q$, is the statement ``if $p$, then $q$''. Note that $ p \rightarrow q$ is false when p is true and q is false; otherwise, the truth value is true. 
+\end{definition}
+There are many different ways to say something like $p\to q$. Here is a quick table, for reference.
+\begin{center}
+    \begin{tabular}{ c|c } 
+    ``if $p$, then $q$'' & ``$p$ implies $q$'' \\
+    ``if $p$, then $q$'' & ``$p$ only if $q$'' \\
+    ``$p$ is sufficient for $q$'' & ``a sufficient condition for $q$ is $p$'' \\
+    ``$q$ if $p$'' & ``$q$ whenever $p$'' \\
+    ``$q$ when $p$'' &  ``$q$ is necessary for $p$'' \\
+    ``a necessary condition for $p$ is $q$'' & “$q$ follows from $p$'' \\
+    ``$q$ unless $\lnot p$'' & ``q provided that p''
+    \end{tabular}
+\end{center}
+
+\subsection{Truth Tables} 
+Truth tables are utilized to keep track of all possible truth values of a compound proposition. Let's see some examples.
+\begin{example}
+    Let $p$ be a proposition. Here is the truth table for $\lnot p$.
+    \[\begin{array}{ c|c }
+        p & \neg p\\\hline
+        \text{T} & \text{F} \\
+        \text{F} & \text{T} \\
+    \end{array}\]
+\end{example}
+\begin{exercise}
+    Construct a truth table for each of the following compound propositions.
+    \begin{enumerate}[label=(\alph*)]
+        \item $p \land q$
+        \item $p \lor q$
+        \item $p \oplus q$
+        \item $p \land \neg q$
+        \item $p \land q \land r$
+    \end{enumerate}
+\end{exercise}
+Let's do some more examples! 
+\begin{exercise}
+    Write these statements using $p$ and $q$. Remember to define the propositions $p$ and $q$.
+    \begin{enumerate}[label=(\alph*)]
+        \item If I study really hard for this course, then I will do well in other upper division math courses. 
+        \item The dog is cute unless it is a lion. 
+        \item A necessary condition to do well in math is to practice many problems.
+        \item If it rains today, I should bring an umbrella. 
+    \end{enumerate}
+\end{exercise}
+Solve the following puzzle by translating statements into logical expressions and then make conclusions from these expressions with the help of truth tables.
+\begin{exercise}[{\cite[Exercise~1.2.23--27]{rosen}}]
+    Suppose that knights always tell the truth and knaves always lie. Now suppose you encounter two people $A$ and $B$. If $A$ is either a knight or a knave, and $B$ is either a knight or a knave, what conclusions can you draw from each of the following (indepedent) scenarios? When possible, determine the identity (knave or knight) of $A$ and $B$.
+    % Note: Each scenario is independent from the other scenarios. For some of the scenarios it may not be possible to determine the identity of A and B, but you will be able to draw some conclusions.
+    \begin{enumerate}[label=(\alph*)]
+        \item $A$ says ``At least one of us is a knave'' and $B$ says nothing. 
+        \item $A$ says ``The two of us are both knights,'' and $B$ says ``$A$ is a knave.''
+        \item $A$ says ``I am a knave or $B$ is a knight'' and B says nothing. 
+        \item Both $A$ and $B$ say ``I'm a knight.''
+        \item $A$ says ``We are both knaves,'' and $B$ says nothing. 
+    \end{enumerate}
+\end{exercise}
+% \noindent \textit{For more information, please see Kenneth H. Rosen's Discrete Mathematics and Its Applications Eighth Edition. }
+
+\subsection{Problems}
+% \noindent \textit{The following problems can be found in Kenneth H. Rosen's Discrete Mathematics and Its Applications Eighth Edition. }
+Solve the following puzzle by translating statements into logical expressions and then make conclusions from these expressions with the help of truth tables. Show your work!
+\begin{homework}[{\cite[Exercise~1.2.36]{rosen}}]
+    The police have three suspects for the murder of Mr. Cooper: Mr. Smith, Mr. Jones, and Mr. Williams. Smith, Jones, and Williams each declare that they did not kill Cooper. Smith also states that Cooper was a friend of Jones and that Williams disliked him. Jones also states that he did not know Cooper and that he was out of town the day Cooper was killed. Williams also states that he saw both Smith and Jones with Cooper the day of the killing and that either Smith or Jones must have killed him.
+    \begin{enumerate}[label=(\alph*)]
+        \item Can you determine who the murderer was if we know that one of the three men is guilty, the two innocent men are telling the truth, but the statements of the guilty man may or may not be true? 
+        \item Can you determine who the murderer was if we know that innocent men do not lie? 
+    \end{enumerate}
+\end{homework}
+
+\end{document}

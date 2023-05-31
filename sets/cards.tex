@@ -1,0 +1,491 @@
+%Read the slack post (link below) regarding syntax and formatting before you start writing lecture notes.
+% Post: https://musa-2021.slack.com/archives/C01DGR645SL/p1609187728029500
+
+
+
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+
+\section{Week 6: Cardinality}
+Cardinality is one way mathematicians formalize the concept of the ``size'' of a set. If we are given two sets $X$ and $Y$, we might ask whether $X$ and $Y$ have the same size, or whether one is larger than the other. For finite sets, this is not complicated: we can compare the number of elements in $X$ and in $Y$. What do we do for infinite sets? Do $\NN$ and $\ZZ$ have the same size? How about $\QQ$ and $\RR$? In this section, we will be able to give formal answers to these questions using functions and cardinality.
+
+\subsection{Cardinalities}
+In an auditorium where each audience member is seated in exactly one seat, we can say confidently that the total number of seats is the number of audience members even if we do not know how many audience members or seats there are. In other words, by providing a bijection between audience members and seats, we know the number of each is the same.
+
+With this motivation, we are ready to define cardinality.
+\begin{definition}[cardinality]
+    Two sets $X$ and $Y$ have the same \dfn{cardinality} if and only if there is a function $f\colon X \to Y$ which is a bijection.
+\end{definition}
+\begin{example}
+    Let $X$ be the set of students in MUSA 74, and let $Y$ be the set of student IDs of the students in MUSA 74. Do $X$ and $Y$ have the same cardinality? Yes! There is a bijection $f\colon X \to Y$ which sends each student to their student ID. Each student in MUSA 74 has a unique student ID, so $f$ is a bijection, so by definition of \textit{cardinality}, $X$ and $Y$ have the same cardinality.
+    % Notice that we did not need to rely on the fact that $X$ and $Y$ are finite sets to prove that they have the same cardinality, and we did not need to count the number of students who are in MUSA 74 for the proof.
+\end{example}
+Cardinality has allowed to declare that two sets are the same size, but it is also interesting to compare sizes. For finite sets, we can again just count and compare the numbers, but for general sets we will want a more function-based approach as with cardinality.
+\begin{example}
+    Every Berkeley student has a unique student ID. Thus, there is an injective function from the set $S$ of all Berkeley students to the set $\ZZ$ of all integers, taking students to their IDs. This injective functions convinces us that there are at least as many integers as Berkeley students, even without knowing how many Berkeley students there are.
+\end{example}
+\begin{example} \label{ex:surj-compares-cards}
+    Let $\sim$ be an equivalence relation on a nonempty set $X$. Then the function $\pi\colon X\to X/{\sim}$ sending an element $x\in X$ to its equivalence class $[x]\in X/{\sim}$ is surjective. Thus, the surjection $\pi$ convinces us that the number of elements of $X$ is at least the number of equivalence classes.
+\end{example}
+The above two examples give us two ways to think about comparing cardinalities, and it will turn out that they are equivalent in favorable circumstances.
+\begin{definition}
+    Let $X$ and $Y$ be sets. Then we say that the cardinality of $X$ is less than or equal to the cardinality of $Y$ if and only if there is an injective function $\iota\colon X\to Y$.
+\end{definition}
+\begin{example}
+    There is an injective function $\iota\colon\ZZ\to\QQ$ given by $\iota(x)\coloneqq x$. Thus, the cardinality of $\ZZ$ is less than or equal to the cardinality of $\ZZ$.
+\end{example}
+We now explain \Cref{ex:surj-compares-cards}.
+\begin{prop} \label{prop:compare-cards}
+    Let $X$ and $Y$ be sets. Suppose $X$ is nonempty. Then the following are equivalent.
+    \begin{enumerate}[label=(\alph*)]
+        \item There is an injective function $i\colon X\to Y$.
+        \item There is a surjective function $p\colon Y\to X$.
+    \end{enumerate}
+    In other words, (a) implies (b), and (b) implies (a).
+\end{prop}
+\begin{proof}
+    We have two claims to show.
+    \begin{itemize}
+        \item We show that (a) implies (b). Because $X$ is nonempty, we may find some element $a\in X$. We now construct our surjective map $p\colon Y\to X$. Note that $y\in i(X)$ is equivalent to having some $x\in X$ such that $y=i(x)$; because $i$ is injective, this $x\in X$ is unique. Thus, we define
+        \[p(y)\coloneqq\begin{cases}
+            x & \text{if }i(x)=y, \\
+            a & \text{if no }x\in X\text{ has }i(x)=y.
+        \end{cases}\]
+        For each $x\in X$, we see $p(i(x))=x$, so $p$ is surjective.
+        \item We show that (b) implies (a). For each $x\in X$, we know that there is some $y\in Y$ such that $p(y)=x$. As such, for each $x\in X$, we define $i(x)$ to be some chosen $y\in Y$ such that $p(y)=x$. This defines a map $i\colon X\to Y$, and we see that
+        \[p(i(x))=x\]
+        for each $x\in X$ by construction. Thus, $i$ is injective: $i(x)=i(x')$ for $x,x'\in X$ implies $x=p(i(x))=p(i(x'))=x'$.
+        \qedhere
+    \end{itemize}
+\end{proof}
+\begin{remark}
+    One might expect that, if the cardinality of $X$ is less than or equal to the cardinality of $Y$, and the cardinality of $Y$ is less than or equal to the cardinality of $X$, then $X$ and $Y$ have the same cardinality. In other words, given injections $i\colon X\to Y$ and $j\colon Y\to X$, then there is a bijection $X\to Y$. This is in fact true, but it is quite nontrivial to prove. For the interested, this result is known as the Cantor--Schröder--Bernstein theorem.
+\end{remark}
+
+\subsection{Finite Sets}
+Cardinality was defined to work for arbitrary sets, but as an aside, we note that finite sets remain well-defined.
+\begin{definition}[finite]
+    A set $X$ is \dfn{finite} if and only if there is some $n\in\NN$ such that $X$ has the same cardinality as $\{1,2,\ldots,n\}$. In this case, we say that $X$ has $n$ elements and write $|X|=n$. If no such $n$ exists, we say that $X$ is \dfn{infinite}.
+\end{definition}
+This definition might feel a little weird because the intuitive way to think of a set as having, say, $2$ elements is not via some bijection. To explain this, saying that a set $X$ has $n$ elements intuitively means that we can enumerate the elements of $X$ as
+\[X=\{x_1,x_2,\ldots,x_n\}.\]
+However, given such an enumeration, we can then define a bijection $f\colon\{1,2,\ldots,n\}\to X$ by $f(k)\coloneqq x_k$. And conversely, given a bijection $f\colon\{1,2,\ldots,n\}\to X$, we can enumerate the elements of $X$ as
+\[X=\{f(1),f(2),\ldots,f(n)\},\]
+showing visually that $X$ has $n$ elements.
+
+% \begin{prop}
+%     Let $n \in \NN$, let $X$ be a set, and let $Z_n \coloneqq \{1, 2, \dots, n\}$. Then $X$ has exactly $n$ elements if and only if $Z_n$ and $X$ have the same cardinality.
+% \end{prop}
+% \begin{proof}
+%     In one direction, if $X$ has $n$ elements, then we can define a function $f\colon Z_n \to X$ as follows.
+%     \begin{enumerate}
+%         \item Choose an arbitrary element $x_1 \in X$ and let $f(1) = x_1$.
+%         \item Then choose an arbitrary element $x_2 \in X\setminus\{x_1\}$, and let $f(2) = x_2$.
+%         \item Then choose an arbitrary element $x_3 \in X\setminus\{x_1,x_2\}$ such that $x_3 \neq x_2$ and $x_3 \neq x_1$ and let $f(3) = x_3$.
+%         \item Repeat this for $x_1,\ldots,x_n$ process until we have defined $f(k)$ for every $k$.
+%     \end{enumerate}
+%     Because we chose a different element of $X$ for each $n$, we see $f$ is injective. Moreover, $f$ is surjective because there were only $n$ elements of $X$ to work with, and we used all of them. So $Z_n$ and $X$ have the same cardinality.
+    
+%     In the other direction, if $Z_n$ and $X$ have the same cardinality, there is a bijection $f\colon Z_n \to X$. Because $f$ is surjective, each elements of $X$ takes the form $f(k)$ for some $k\in Z_n$, so we may write
+%     \[X=\{f(1),f(2),\ldots,f(n)\}.\]
+%     Because $f$ is injective, each of these elements is distinct, so we indeed see that $X$ has exactly $n$ elements.
+% \end{proof}
+This idea gives a very useful proof technique known as \dfn{combinatorial proof}: to show that two natural numbers $n$ and $m$ are the same, just show that there is a bijection between a set with $n$ elements and an element with $m$ elements. Let's see an example of this.
+\begin{definition}
+    Let $X$ be a set and $k \in \NN$. By $X^{(k)}$, we mean the set of all subsets of $X$ of cardinality $k$. If $X$ has $n$ elements, we let $\binom nk$ denote the cardinality of $X^{(k)}$.
+\end{definition}
+\begin{remark}
+    It is not terribly difficult to show that if two sets $X$ and $Y$ have the same cardinality, then $X^{(k)}$ and $Y^{(k)}$ have the same cardinality for any $k\in\NN$. We outline the proof. Let $f\colon X\to Y$ be a bijection with inverse function $g\colon Y\to X$. Then the functions $f^{(k)}\colon X^{(k)}\to Y^{(k)}$ and $g^{(k)}\colon Y^{(k)}\to X^{(k)}$ given by
+    \[f^{(k)}\colon A\mapsto f(A)\qquad\text{and}\qquad g^{(k)}\colon B\mapsto g(B)\]
+    are inverse functions and thus give a bijection $X^{(k)}\to Y^{(k)}$. The reader is encouraged to check as many of these details as they would like.
+\end{remark}
+% \begin{prop}
+%     Let $X$ and $Y$ be sets and $k\in\NN$. If $X$ and $Y$ have the same cardinality, then $X^{(k)}$ and $Y^{(k)}$ have the same cardinality.
+% \end{prop}
+% \begin{proof}
+%     Because $X$ and $Y$ have the same cardinality, there is a bijection $f\colon X\to Y$. To define our bijection $X^{(k)}\to Y^{(k)}$, we simply follow $f$: define $f^{(k)}\colon X^{(k)}\to Y^{(k)}$ by $f\colon A\mapsto f(A)$. Because $A$ has $k$ elements, and $f$ is injective, we see $f(A)$ has $k$ elements.
+%     \begin{exe}
+%         Find a bijection $f$ between the sets $X\coloneqq\{1,2,3,4\}$ and $Y\coloneqq\{5,6,7,8\}$. Write down the map $f^{(k)}\colon X^{(2)}\to Y^{(2)}$ explicitly.
+%     \end{exe}
+%     We would like to show that $f^{(k)}$ is a bijection, for which we find an inverse function, which is enough by \Cref{prop:bij-is-iso}. Well, by \Cref{prop:bij-is-iso}, there is an inverse function $g\colon Y\to X$ for $f$, and we define $g^{(k)}\colon Y^{(k)}\to X^{(k)}$ by $g^{(k)}\colon B\mapsto g(B)$. Note $g(B)$ has $k$ elements when $B$ has $k$ elements because $g$ is injective.
+
+%     We now show that $f^{(k)}$ and $g^{(k)}$ is bijective.
+% \end{proof}
+\begin{example}
+    For any $n,k\in\NN$ with $n\ge k$, we have
+    \[\binom nk = \binom{n}{n-k}.\]
+\end{example}
+\begin{proof}
+    Let $X$ be a set of $n$ elements. We need to show that $X^{(k)}$ and $X^{(n-k)}$ have the same cardinality. If $A \subseteq X$ has $k$ elements then $X\setminus A$ has $n-k$ elements, so we define the map $f\colon X^{(k)}\to X^{(n-k)}$ by $f\colon A\mapsto(X\setminus A)$.
+    
+    We claim that $f$ is a bijection. By \Cref{prop:bij-is-iso}, it suffices to show that $f$ has an inverse function, so we define $g\colon X^{(n-k)}\to X^{(k)}$ by $g\colon B\mapsto(X\setminus B)$. Then for any $A\in X^{(k)}$ and $B\in X^{(n-k)}$, we can compute
+    \[g(f(A))=g(X\setminus A)=A\qquad\text{and}\qquad f(g(B))=f(X\setminus B)=B.\]
+    So $g$ is an inverse for $f$, so $f$ is a bijection, completing the proof.
+\end{proof}
+% \begin{definition}
+%     If $X$ has $n$ elements for some $n \in \NN$ then we say that $X$ is \dfn{finite}, and write $|X| = n$. Otherwise, we say that $X$ is \dfn{infinite}.
+% \end{definition}
+For finite sets, checking that a function can be simplified if we at least know our sets have the same size already.
+\begin{prop} \label{prop:finite-inj-surj-bij}
+    Suppose that $X$ and $Y$ are finite sets of the same cardinality, and let $f\colon X \to Y$ be a function. Then the following are equivalent.
+    \begin{enumerate}[label=(\alph*)]
+        \item $f$ is injective.
+        \item $f$ is surjective.
+        \item $f$ is bijective.
+    \end{enumerate}
+    In other words, if any one of (a), (b), or (c) is true, then all are true.
+\end{prop}
+\begin{proof}
+    To prove that multiple properties are equivalent, we show that (a) implies (b), that (b) implies (c), and that (c) implies (a). Then, for example, if (b) is true, we know (c) is implied, and then (a) is implied from (c). Anyway, this lets us break down our proof into three parts.
+    \begin{itemize}
+        \item We show (a) implies (b). Suppose that $f$ is injective. We need to show that $f$ is surjective, which means we want to show $f(X)=Y$. Note $f$ maps $X$ surjectively onto its image $f(X)$, so $X$ and $f(X)$ have the same cardinality.
+
+        However, $f(X)$ is a subset of $Y$, and because $f(X)$ and $Y$ are both finite sets with the same cardinality, we conclude that $f(X)=Y$. More explicitly, if $Y\setminus f(X)$ had any elements, then $Y$ would have strictly larger cardinality than $f(X)$, which we know to be false.\footnote{We are using the following fact: if $X$ is a finite set, and $A\subseteq X$ is a subset such that $A$ and $X$ have the same cardinality, then $A=X$. We do not quite have the tools to prove this yet (we need induction), so we postpone a formal proof until \Cref{prop:dedekind-finite}.}
+        
+        % Therefore if $X$ has $n$ elements, so does $f(X)$. But we know that $Y$ also has the same cardinality as the $X$, so $Y$ has $n$ elements. Therefore the complement $f(X)^c$ in $Y$, $f(X)^c = \{y \in Y: y \notin f(X)\}$, has $n - n$ elements, hence $f(X)^c = \emptyset$. Therefore $f(X) = Y$, so $f$ is surjective.
+        \item Suppose that $f$ is surjective. We need to show that $f$ is bijective. By \Cref{prop:bij-is-iso}, we just need to find an inverse of $f$. Strap in---this proof is going to be a little wild.
+        
+        We now define a candidate inverse function $g\colon Y \to X$. Using the recipe of (b) implies (a) in \Cref{prop:compare-cards}, we get the surjective function $f\colon X\to Y$ defines an injective function $g\colon X\to X$ such that
+        \begin{equation}
+            f(g(y))=y \label{eq:left-inverse-for-finite}
+        \end{equation}
+        for each $y\in Y$. Using the argument of the previous point, because $g$ is injective, we see that $g$ is actually bijective.
+
+        We now finish checking that $g$ is an inverse for $f$. Namely, given $x\in X$, we must check $g(f(x))=x$. Well, $g$ is surjective, so we know there is some $y\in Y$ such that $g(y)=x$. But then
+        \[f(x)=f(g(y))=y\]
+        by \autoref{eq:left-inverse-for-finite}, so we conclude $g(f(x))=x$ by definition of $y$. This completes the proof.
+        \item By definition, if $f$ is bijective, then $f$ is injective.
+    \end{itemize}
+    The above implications complete the proof.
+\end{proof}
+Here are a couple combinatorial proofs for you to try. Feel free to use \Cref{prop:finite-inj-surj-bij}.
+\begin{exercise} \label{exe:pset-is-2x}
+    Let $X$ be a set, and let $B(X)$ denote the set of functions $X \to \{0, 1\}$. Show that $\mc P(X)$ has the same cardinality as $B(X)$ by sending subsets $A\subseteq X$ to the function $1_A\colon X\to\{0,1\}$ defined by
+    \[1_A(x)\coloneqq\begin{cases}
+        1 & \text{if }x\in A, \\
+        0 & \text{if }x\notin A.
+    \end{cases}\]
+\end{exercise}
+\begin{exe}
+    Let $X$ be a finite set with $n$ elements. Use the previous exercise to show that $\mc P(X)$ has $2^n$ elements. Conclude that
+    \[\binom n0+\binom n1+\cdots+\binom n{n-1}+\binom nn=2^n.\]
+\end{exe}
+
+\subsection{Countable Sets}
+The ``next largest'' type of set after finite sets are countable sets.
+\begin{definition}[countable]
+    Let $X$ be a set. Then $X$ is \dfn{countable} if and only if there is an injective function $f\colon X\to\NN$. If $X$ is not countable, we say $X$ is \dfn{uncountable}.
+\end{definition}
+\begin{remark}
+    If $X$ is nonempty, being countable is equivalent to having some surjective function $p\colon\NN\to X$.
+\end{remark}
+It's not obvious that there are any uncountable sets at all, and we'll need a powerful proof technique known as diagonalization to show that they exist. We'll have to come back to that later. For now, let's show that there are at a large quantity of countable sets.
+\begin{example}
+    Define the function $i\colon\ZZ\to\NN$ by
+    \[i(n)\coloneqq\begin{cases}
+        -2n+1 & \text{if }n<0, \\
+        2n & \text{if }n\ge0.
+    \end{cases}\]
+    Then $i$ is injective: if $i(n)=i(m)$, then $i(n)$ and $i(m)$ are both even or both odd, so $n$ and $m$ are both negative or both nonnegative. If $n$ and $m$ are both negative, then $-2n+1=-2m+1$, so $n=m$. The case of $n$ and $m$ both being nonnegative is similar.
+\end{example}
+\begin{lemma} \label{lem:inj-to-countable}
+    Let $X,Y$ be sets. If $X$ is countable and there is an injection $i\colon Y \to X$, then $Y$ is countable.
+\end{lemma}
+\begin{proof}
+    Because $X$ is countable, there is an injection $f\colon X\to\NN$. Thus, by \Cref{prob:compose-injs-surjs}, the composition $(f\circ i)$ defines an injection $Y\to\NN$, which makes $Y$ countable.
+    % There is a surjective function $f: \NN \to X$ and a surjective function $g: X \to Y$. Now $g \circ f$ is a surjective function $\NN \to Y$ (by homework problem 4.1). Therefore $g(f(n)) = y$, so $g \circ f$ is surjective.
+\end{proof}
+\begin{prop} \label{prop:finite-is-countable}
+    Let $X$ be a set. If $X$ is finite, then $X$ is countable.
+\end{prop}
+\begin{proof}
+    Being finite means that there is some $n\in\NN$ with a bijection $f\colon X\to\{1,2,\ldots,n\}$. But $\{1,2,\ldots,n\}\subseteq\NN$, so $f$ actually extends to an injection $f\colon X\to\NN$, making $X$ countable.
+    % For the first claim, notice that if $X$ is any finite set, we can list out its elements as $X = \{x_1, \dots, x_n\}$. Then we can define a surjection $\NN \to X$ by $1 \mapsto x_1, \dots, n \mapsto x_n$. What will we do with the rest of $\NN$? If $k > n$, we set $k \mapsto x_1$ as well -- the function only has to be surjective, not bijective.
+\end{proof}
+\begin{corollary}
+    Let $X$ be a set. If $X$ is uncountable, then $X$ is infinite.
+\end{corollary}
+\begin{proof}
+     This is the contraposition of \Cref{prop:finite-is-countable}.
+\end{proof}
+It is a pretty powerful result that products of countable sets remain countable. Let's build towards this result.
+\begin{lemma} \label{lem:nn-countable}
+    The set $\NN\times\NN$ is countable.
+\end{lemma}
+\begin{proof}
+    The idea is to write out the following grid.
+    % https://q.uiver.app/?q=WzAsMjUsWzAsMCwiKDAsMCkiXSxbMSwwLCIoMCwxKSJdLFsyLDAsIigwLDIpIl0sWzMsMCwiKDAsMykiXSxbNCwwLCJcXGNkb3RzIl0sWzAsMSwiKDEsMCkiXSxbMSwxLCIoMSwxKSJdLFsyLDEsIigxLDIpIl0sWzMsMSwiKDEsMykiXSxbNCwxLCJcXGNkb3RzIl0sWzAsMiwiKDIsMCkiXSxbMSwyLCIoMiwxKSJdLFsyLDIsIigyLDIpIl0sWzMsMiwiKDIsMykiXSxbNCwyLCJcXGNkb3RzIl0sWzAsMywiKDMsMCkiXSxbMSwzLCIoMywxKSJdLFsyLDMsIigzLDIpIl0sWzMsMywiKDMsMykiXSxbNCwzLCJcXGNkb3RzIl0sWzAsNCwiXFx2ZG90cyJdLFsxLDQsIlxcdmRvdHMiXSxbMiw0LCJcXHZkb3RzIl0sWzMsNCwiXFx2ZG90cyJdLFs0LDQsIlxcZGRvdHMiXSxbMCwxXSxbMSw1XSxbNSwxMF0sWzEwLDZdLFs2LDJdLFsyLDNdLFszLDddLFs3LDExXSxbMTEsMTVdLFsxNSwyMF0sWzE2LDEyXSxbMTIsOF0sWzEzLDE3XSxbOCw0XSxbMjAsMTZdLFs5LDEzXSxbMTcsMjFdLFsyMiwxOF0sWzE4LDE0XV0=&macro_url=https%3A%2F%2Fraw.githubusercontent.com%2FdFoiler%2Fnotes%2Fmaster%2Fnir.tex
+    \[\begin{tikzcd}[sep=tiny]
+    	{(0,0)} & {(0,1)} & {(0,2)} & {(0,3)} & \cdots \\
+    	{(1,0)} & {(1,1)} & {(1,2)} & {(1,3)} & \cdots \\
+    	{(2,0)} & {(2,1)} & {(2,2)} & {(2,3)} & \cdots \\
+    	{(3,0)} & {(3,1)} & {(3,2)} & {(3,3)} & \cdots \\
+    	\vdots & \vdots & \vdots & \vdots & \ddots
+    	\arrow[from=1-1, to=1-2]
+    	\arrow[from=1-2, to=2-1]
+    	\arrow[from=2-1, to=3-1]
+    	\arrow[from=3-1, to=2-2]
+    	\arrow[from=2-2, to=1-3]
+    	\arrow[from=1-3, to=1-4]
+    	\arrow[from=1-4, to=2-3]
+    	\arrow[from=2-3, to=3-2]
+    	\arrow[from=3-2, to=4-1]
+    	\arrow[from=4-1, to=5-1]
+    	\arrow[from=4-2, to=3-3]
+    	\arrow[from=3-3, to=2-4]
+    	\arrow[from=3-4, to=4-3]
+    	\arrow[from=2-4, to=1-5]
+    	\arrow[from=5-1, to=4-2]
+    	\arrow[from=2-5, to=3-4]
+    	\arrow[from=4-3, to=5-2]
+    	\arrow[from=5-3, to=4-4]
+    	\arrow[from=4-4, to=3-5]
+    \end{tikzcd}\]
+    The layout of the grid suggests a surjective function $\NN\to\NN\times\NN$: send $0$ to $(0,0)$, then send $1$ to $(0,1)$, then send $2$ to $(1,0)$, then send $3$ to $(2,0)$, and continue the process. This surjective function $\NN\to\NN\times\NN$ shows that $\NN\times\NN$ is countable by \Cref{prop:compare-cards}.
+\end{proof}
+\begin{exe}
+    In fact, show that the function $f\colon\NN\times\NN\to\NN$ defined by
+    \[f(a,b)\coloneqq\frac{(a+b)(a+b+1)}2+b\]
+    is a bijection. This tells us directly that $\NN\times\NN$ and $\NN$ have the same cardinality.
+\end{exe}
+\begin{theorem} \label{thm:prod-countable}
+    Let $X,Y$ be sets. If $X$ and $Y$ are countable, then $X \times Y$ is countable.
+\end{theorem}
+\begin{proof}
+    Because $X$ and $Y$ are countable, there are injections $f\colon X\to\NN$ and $g\colon Y\to\NN$. It follows that the function $i\colon(X\times Y)\to(\NN\times\NN)$ defined by
+    \[i(x,y)\coloneqq(f(x),g(y))\]
+    is injective: if $i(x,y)=i(x',y')$, then $f(x)=f(x')$ and $g(y)=g(y')$, so $x=x'$ and $y=y'$. Because $\NN\times\NN$ is countable by \Cref{lem:nn-countable}, we conclude that $X\times Y$ is countable by \Cref{lem:inj-to-countable}.
+\end{proof}
+\begin{corollary}
+    The set $\QQ$ is countable.
+\end{corollary}
+\begin{proof}
+    The idea here is that any rational number can be written as $\frac ab$ for integers $a$ and $b$. Note that the set $\ZZ^+$ of positive integers is a subset of the countable set $\NN$ and thus countable. By \Cref{thm:prod-countable}, we see that $\ZZ\times\ZZ^+$ is countable. Thus, we note we have a function $f\colon\ZZ\times\ZZ^+\to\QQ$ defined by
+    \[f(a,b)\coloneqq\frac ab.\]
+    Note that there are no division-by-zero problems here because $b\in\ZZ^+$. Now, because all rational numbers can be written $a/b$ for a positive integer $b$, we see that $f$ is surjective. It follows from \Cref{prop:compare-cards} that there is an injection $\QQ\to\ZZ\times\ZZ^+$, so $\QQ$ is countable by \Cref{lem:inj-to-countable}.
+    % (In this proof, we will take $0 \notin \NN$ to avoid accidentally dividing by $0$.) There is a surjection $\{-1, 0, 1\} \times \NN$ to $\ZZ$ by $(m, n) \mapsto mn$. Clearly $\{-1, 0, 1\}$ is finite, hence countable. So $\ZZ$ is countable. In particular, $\ZZ \times \NN$ is countable. There is also a surjection $\ZZ \times \NN \to \QQ$ given by $(m, n) \mapsto m/n$ if $n \neq 0$, and $(m, 0) \mapsto 0$ otherwise. Therefore $\QQ$ is countable.
+\end{proof}
+\begin{exercise} \label{exe:countable-union-of-countable}
+    Let $\mathcal F$ be a countable family of countable sets. Use \Cref{thm:prod-countable} to show that the union of all the sets in $\mathcal F$ is countable.
+\end{exercise}
+Thus far we have built countable sets up from small countable sets. In fact, we can go in reverse and extract countable sets from larger ones.
+% \begin{theorem}
+%     Let $X$ be a set and $Y \subseteq X$. If $X$ is countable, then $Y$ is countable.
+% \end{theorem}
+% \begin{proof}
+%     Let $n \mapsto x_n$ be a surjection. We would like to transform this into a surjection $\NN \to Y$, but we need to get rid of all the elements of $X$ that aren't in $Y$.
+    
+%     If $Y$ is empty, then $Y$ is finite, hence countable. So we might as well assume there is a $y \in Y$, which will be our ``garbage dump." We define our surjection by $n \mapsto x_n$ if $x_n \in Y$, and $n \mapsto y$ if $x_n \notin Y$.
+% \end{proof}
+
+\begin{theorem}
+    Every infinite set $X$ has an infinite, countable subset.
+\end{theorem}
+\begin{proof}
+    The idea here is that any finite subset $X_n\subseteq X$ must have $X\setminus X_n$ still finite, so we can keep removing finitely many elements from $X$ as long as we please. As such, we construct our countable subset in steps.
+    \begin{enumerate}
+        \setcounter{enumi}{-1}
+        \item To begin, we note $X$ is infinite and thus nonempty, so we can find some $x_0\in X$.
+        \item Next, $\{x_0\}$ is finite, so $X\setminus\{x_0\}$ is infinite and thus nonempty, so we can find some $x_1\in X\setminus\{x_0\}$.
+        \item Next, $\{x_0,x_1\}$ is finite, so $X\setminus\{x_0,x_1\}$ is infinite and thus nonempty, so we can find some $x_2\in X\setminus\{x_0,x_1\}$.
+    \end{enumerate}
+    Continuing the above process, we product a subset
+    \[Y\coloneqq\{x_0,x_1,x_2,\ldots\}\]
+    of $X$. Note that $Y$ is not finite because it has more than $n$ elements for any $n\in\NN$. However, $Y$ is countable, because the function $f\colon Y\to\NN$ defined by $f\colon x_n\mapsto n$ is injective.
+    % Since $X$ is infinite, it is nonempty and has an element $x_1$; and $X \setminus \{x_1\}$ is also infinite, so it has an element $x_2$. Then $X \setminus \{x_1, x_2\}$ has an element $x_3$; repeat this forever. The set $Y = \{x_1, \dots, x_n, \dots\}$ consists of all elements that are all distinct forever, so $Y$ is infinite; the map $n \mapsto x_n$ is clearly surjective as a function $\NN \to Y$, so $Y$ is countable.
+\end{proof}
+
+\subsection{Diagonalization and Uncountable Sets}
+Let's now give an especially powerful contradiction trick, invented in 1891 by Georg Cantor. The trick, called the ``diagonal argument,'' shows that certain sets are uncountable. It is best seen by example.
+\begin{theorem}[Cantor's diagonal argument] \label{thm:r-uncountable}
+    The set of real numbers is uncountable.
+\end{theorem}
+\begin{proof}
+    It is sufficient to show that the interval $(0, 1)$ in $\RR$ is uncountable. By \Cref{prop:compare-cards}, it suffices to show that no function $p\colon\NN\to(0,1)$ is surjective. Well, pick up some function $p\colon\NN\to(0,1)$, which allows us to enumerate the image of $p$ as follows, for some specific $p$.
+    \begin{align*}
+        x_1 &= 0.{\color{red}1}23456\ldots \\
+        x_2 &= 0.1{\color{red}4}1592\ldots \\
+        x_3 &= 0.10{\color{red}1}010\ldots \\
+        x_4 &= 0.500{\color{red}0}00\ldots \\
+        x_5 &= 0.4142{\color{red}1}3\ldots \\
+        x_6 &= 0.23571{\color{red}1}\ldots \\
+        &\,\vdots
+    \end{align*}
+    (Explicitly, we have set $x_{i+1}\coloneqq p(i)$ for each $i$.) We must show that $p$ is not surjective, so we find a real number $x\in(0,1)$ not in the image of $p$. Well, for each $i$, let the $i$th decimal place of $x$ (after the decimal point) be a $1$ if the $i$th decimal place of $x_i$ is not a $1$ and a $2$ if the $i$th decimal place of $x_i$ is a $2$. For the above example, we have
+    \[\phantom{.{}_1}x=0.212122\ldots.\]
+    For all $i$, the $i$th decimal place of $x$ differs from the $i$th decimal place of $x_i$, so $x\ne x_i$. Thus, $x$ is not in the image of $p$, which is what we wanted to prove.
+\end{proof}
+\begin{exe} \label{exe:p-n-uncountable}
+    Modify the proof \Cref{thm:r-uncountable} to show that the set of functions $\NN\to\{0,1,2,\ldots,9\}$ is uncountable.
+\end{exe}
+Uncountability is essentially a size result, so we have essentially proven that $\RR$ is a ``pretty big set.'' This has surprising applications.
+\begin{definition}[computable]
+    Let $x\in\RR$. Then $x$ is \dfn{computable} if and only if there is a computer program which takes a $n \in \NN$ as input, and returns the $n$th digit of $x$ as output.
+\end{definition}
+\begin{corollary}
+    There is a real number which is not computable.
+\end{corollary}
+\begin{proof}
+    Let $C$ denote the subset of all computable real numbers. We claim that $C$ is countable. This will finish because $\RR$ is uncountable by \Cref{thm:r-uncountable}, so it will imply that $C\subsetneq\RR$.
+    
+    Note every computer program is stored as a finite sequence of zeroes and ones. For every $k \in \NN$, the set $X_k$ of all sequences of zeroes and ones of length $k$ is finite, hence countable. Therefore the set
+    \[X =X_1\cup X_2\cup X_3\cup\cdots\]
+    of all finite sequences of zeroes and ones is countable by \Cref{exe:countable-union-of-countable} because it is the union of countably many countable sets. Therefore the set $Z$ of all computer programs is countable by \Cref{lem:inj-to-countable}.
+    
+    Now, define a function $f\colon Z \to \RR$ as follows: if $P \in Z$ computes a real number $x$, then we set $f(P) \coloneqq x$. Otherwise the program $P$ does not compute a real number, so we don't care about $P$ and define $f(P)\coloneqq0$. By definition of a countable real number, the function $f$ surjects onto $C$, so $C$ is countable. This finishes the proof.
+\end{proof}
+Here is another application of the diagonal argument, extending \Cref{exe:p-n-uncountable}.
+\begin{theorem} \label{thm:p-x-is-big}
+    Let $X$ be any set. Each function $f\colon X \to \mathcal P(X)$ is not surjective.
+\end{theorem}
+For fun, let's begin with a mysterious proof of this result, and then we'll give another proof to explain what's going on.
+\begin{proof}[Proof 1]
+    We claim that the subset
+    \[Y\coloneqq\{x\in X:x\notin f(x)\}\]
+    is not in the image of $f$. Indeed, suppose for the sake of contradiction that $Y=f(x)$ for some $x\in X$. Then $x\in Y$ is equivalent to $x\notin f(x)$, which is equivalent to $x\notin Y$. This is a contradiction.
+    % Suppose that $f: X \to \mathcal P(X)$ is surjective. (So $f$ is a function that takes elements of $X$ to sets of elements of $X$.) Let $Y = \{x \in X: x \notin f(x)\}$. Then there is a $y \in X$ such that $f(y) \in Y$. But $y \in Y$ if and only if $y \notin f(y) = Y$, which is a contradiction.
+\end{proof}
+\begin{proof}[Proof 2]
+    Let's explain what's going on in the above proof. Recall from \Cref{exe:pset-is-2x} that $\mc P(X)$ is the same size as the set of functions $X\to\{0,1\}$; let $F$ denote this set of functions. It suffices to show that any function $f\colon X\to F$ fails to be surjective. For notational ease, we let $f_x\colon X\to\{0,1\}$ denote the function $X\to\{0,1\}$ which $f$ returns when evaluated at $x\in X$.
+    
+    Well, imitating \Cref{exe:p-n-uncountable}, we imagine that we could list all the elements of $X$ linearly to make a grid as follows.
+    \[\begin{array}{c|ccccc}
+                & x_1          & x_2          & x_3          & \cdots \\
+        \hline
+        f_{x_1} & \color{red}0 & 0            & 0            & \cdots \\
+        f_{x_2} & 1            & \color{red}1 & 1            & \cdots \\
+        f_{x_3} & 0            & 1            & \color{red}0 & \cdots \\
+        \vdots  & \vdots       & \vdots       & \vdots       & \ddots \\
+    \end{array}\]
+    (For conreteness, we have labeled the elements of $X$ by $x_k$ for $k\in\NN$, even though $X$ need not be countable.)
+    
+    Here, each row is describing a function $f_{x_i}$, and each column explains what happens when a function $f_{x_i}$ is evaluated at some input. We would like to find a function $g\colon X\to\{0,1\}$ which is not in the image of $f$, for which we employ the diagonal argument: define $g$ to disagree with each $f_{x_i}$ along the diagonal! Namely, we simply define
+    \[g(x_i)\coloneqq\begin{cases}
+        1 & \text{if }f_{x_i}(x_i)=0, \\
+        0 & \text{if }f_{x_i}(x_i)=1.
+    \end{cases}\]
+    Removing the indices, we are defining
+    \[g(x)\coloneqq\begin{cases}
+        1 & \text{if }f_x(x)=0, \\
+        0 & \text{if }f_x(x)=1.
+    \end{cases}\]
+    Now, $g(x)\ne f_x(x)$ for each $x\in X$, so $g\ne f_x$ for each $x\in X$. Thus, $g$ is not in the image of $f$, which is what we wanted.
+\end{proof}
+\begin{remark}
+    To finish explaining the first proof, we note that we can translate everything in the second proof back into subsets of $X$ so that $g$ corresponds to the subset $Y\subseteq X$.
+\end{remark}
+It is a consequence of \Cref{thm:p-x-is-big} that $\mc P(X)$ has strictly larger cardinality than $X$, which we will see more explicitly in \Cref{prob:pset-is-bigger}. In fact, if $X$ was a finite set, then this would be quite clear: if there are $n$ elements in $X$ then there would be $2^n$ elements in $\mathcal P(X)$, and $2^n > n$.
+% For fun, you should try to think of the proof of \Cref{thm:p-x-is-big} in terms of the same picture of a diagonal that appeared in the proof that $\RR$ was uncountable; try this when $X = \NN$.
+
+As an application of our more general diagonalization, we can build larger and larger sets.
+\begin{corollary}
+    There is no set of largest cardinality.
+\end{corollary}
+\begin{proof}
+    For any set $X$ was a set with the largest cardinality, we set $\mc P(X)$ has strictly larger cardinality by \Cref{prob:pset-is-bigger}, so $X$ does not have the largest cardinality.
+\end{proof}
+\begin{corollary} \label{cor:no-universe}
+    There is no set $U$ such that $X\in U$ for each set $X$.
+\end{corollary}
+\begin{proof}
+    If such a set $U$ existed, then note that each element of $\mc P(U)$ is also a set, so $\mc P(U)\subseteq U$. Thus, there is an injection $\mc P(U)\to U$, so by \Cref{prop:compare-cards}, there is a surjection $U\to\mc P(U)$, which contradicts \Cref{thm:p-x-is-big}.
+    % Let $U$ be a universe and let $X$ be any set. Then $\mathcal P(X) \in U$, but the elements of $\mathcal P(X)$ are sets, so $\mathcal P(X) \subseteq U$. Therefore $U$ has at least as high cardinality as $\mathcal P(X)$. Therefore $U$ has higher cardinality than $X$, but $X$ was any set, so $U$ has higher cardinality than any set. Therefore $U$ is a set of highest cardinality, a contradiction.
+\end{proof}
+\begin{remark}
+    It is possible to prove \Cref{cor:no-universe} directly with a diagonization similar to \Cref{thm:p-x-is-big}. To see this, suppose some $U$ exists, and define
+    \[Y\coloneqq\{x\in U:x\notin x\}.\]
+    Now, $Y\in U$ because $Y$ is a set, but $Y\in Y$ is equivalent to $Y\notin Y$, which is a contradiction. In some sense, this proof is a rephrasing of \Cref{exe:barber-diagonalization}, where $Y$ is ``the set of all sets which do not contain themselves.''
+\end{remark}
+% Notice that this means there are properties $P$ for which the set
+% $$\{x: P(x)\}$$
+% does not exist! (For example, the property $P(x)$ which is always true But it's okay: for every set $X$ and property $P$,
+% $$\{x \in X: P(x)\}$$
+% actually is a set, and this is all we need for most practical purposes.
+    
+\begin{exercise}
+    A polynomial with rational coefficients is a function $f: \RR \to \RR$ of the form
+    \[f(x) = a_n x^n + a_{n-1} x^{n-1} + \cdots + a_1 x + a_0\]
+    where $a_0, a_1, \ldots, a_{n} \in \QQ$. Such a polynomial is ``nonzero'' if there exists $x \in \RR$ such that $f(x) \neq 0$. A real number $r$ is ``algebraic'' if there is a nonzero polynomial $f$ with rational coefficients such that $f(r)=0$. Show that the set of algebraic real numbers is countable. Conclude there are real numbers which are not algebraic.
+\end{exercise}
+    
+\subsection{Problems}
+%You may use Corollary \ref{countable is one cardinality}, which we have not proven yet.
+
+\begin{homework} \label{isomorphism of sets}
+    Let $X$ be a set. Given subsets $A,B\subseteq X$, write $X \sim Y$ to mean that $A$ and $B$ have the same cardinality. Prove that $\sim$ is an equivalence relation on $\mc P(X)$. %Much later on, compare this to Exercise \ref{isomorphism of fields}.
+\end{homework}
+
+\begin{homework}[inclusion-exclusion principle]
+    Let $X$ and $Y$ be finite sets. Show that
+    \[|X \cup Y| = |X| + |Y| - |X \cap Y|.\]
+\end{homework}
+
+\begin{homework}[Hilbert's grand hotel] \index{Hilbert's grand hotel}
+    The result of \Cref{prop:finite-inj-surj-bij} is not true for infinite sets. To see why, answer the following riddle.
+
+    After mathematicians die, they go to a grand hotel in the heavens with infinitely many rooms. Suppose that every room in the hotel is taken, but that a new mathematician has just arrived at the front door. The usher at the front desk tells her, ``Just wait a minute, I need to move some people around." Five minutes later, the usher returns, and though no mathematician has vacated the hotel, there is a room for the new guest! What happened?
+\end{homework}
+
+\begin{homework}[Dedekind's definition of infinity]
+    Prove the following.
+    \begin{enumerate}[label=(\alph*)]
+        \item Suppose $X$ is a finite set. Then any injective function $f\colon X\to X$ is bijective.
+        \item Show that there is an injective function $f\colon\NN\to\NN$ which is not surjective.
+        \item Suppose $X$ is any infinite set. Then there exists an injective function $f\colon X\to X$ which is not surjective.
+    \end{enumerate}
+    We have described ``Dedekind's definition of infinity.'' It shows that a set is infinite if and only if it could be the set of rooms in Hilbert's grand hotel.
+\end{homework}
+
+\begin{homework}[Don't deal with the Devil!] %\index{deal with the Devil}
+    Suppose that you have infinitely many $\$1$-bills, labeled $1$, $3$, $5$, and so on. A rather hellish merchant makes you an offer: he will give you $\$2$ for each of your $\$1$ bills, as follows:
+    \begin{enumerate}[label=(\alph*)]
+        \item After $30$ minutes, he will take the bill labeled $1$ and give you \$2 in bills labeled $2$ and $4$.
+        \item After $15$ more minutes, he will again take \$1, namely the bill labeled $2$, and give you another \$2, in bills labeled $6$ and $8$.
+        \item After another $7.5$ minutes, he will take the bill labeled $3$ and give you bills labeled $10$ and $12$.
+        \item After another $3.75$ minutes, he will take the bill labeled $4$ and give you bills labeled $14$ and $16$.
+        \item And so on, until $60$ minutes have passed. (Note that $30 + 15 + 7.5 + 3.75 + 1.825 + \dots = 60$.)
+    \end{enumerate}
+    Would you take this offer? Why or why not?
+\end{homework}
+
+\begin{homework}[Cantor's paradox] \label{prob:pset-is-bigger}
+    Let $X$ be a set.
+    \begin{enumerate}[label=(\alph*)]
+        \item Show there exists an injective function $f\colon X\to\mathcal P(X)$.
+        \item Show there does not exist an injective function $f\colon\mathcal P(X)\to X$.
+    \end{enumerate}
+\end{homework}
+
+\begin{homework}[Poincare recurrence]
+    Let $X$ be a set, and let $T\colon X \to X$ be a bijection. Further, for each positive integer $n$, let $T^{\circ n}\colon X \to X$ denote the $n$-fold application of $T$ as $T\circ T \circ \cdots \circ T$ (where $T$ is repeated $n$ times).
+    \begin{enumerate}[label=(\alph*)]
+        \item Suppose $X$ is finite. Show that for every $x \in X$ there is an $n > 0$ such that $T^{\circ n}(x) = x$.
+        \item Suppose $X$ is finite. Show that there are infinitely many $n > 0$ such that $T^{\circ n}(x) = x$.
+        \item Show that there exists a bijection $T\colon\ZZ\to\ZZ$ such that $T^{\circ n}(0)\ne0$ for each positive integer $n$.
+    \end{enumerate}
+    This phenomenon is known as ``Poincare recurrence.'' If you are very brave (and know the prerequisite physics), interpret Poincare recurrence as the following, highly paradoxical statement: ``If an ideal gas is allowed to travel between two chambers and starts in one chambers, eventually all the gas molecules will collect in one of the chambers."
+\end{homework}
+For the last exercises, we require the following definition.
+\begin{definition}
+    \label{infinite tree}
+    Let $X_k = \{1, 2, \dots, k\}$ and let $X_k^n = X_k \times X_k \times \cdots \times X_k$ ($n$ copies of $X_k$). The \dfn{infinite tree} with $k$ branches, denoted $T_k$, is the set
+    \[T_k = X_k \cup X_k^2 \cup X_k^3 \cup \cdots.\]
+    Let $A \subseteq T_k$. An ``infinite path'' through $A$ is an infinite set of the form
+    \[\{(a_1), (a_1, a_2), (a_1, a_2, a_3), \dots\}\]
+    where the $a_j \in A$.
+\end{definition}
+So a typical element of $T_2$, for example, looks like
+\[(2, 1, 2, 2, 1, 2, 1, 1, 1, 1, 2, 1, 2),\]
+which for convenience we may just choose to write as $2122121111212$. An infinite path would look like
+\[\{2, 21, 212, 2122, 21221, \dots\},\]
+which for convenience we may just choose to write as $21221 \cdots$.
+\begin{homework}
+    Let $T_k$ denote the infinite tree. Show that $\Omega_k$, the set of infinite paths through $T_k$, is countable if and only if $k = 1$.
+\end{homework}
+\begin{homework}
+    Let $T_k$ denote the infinite tree. Say that a path
+    \[\{(a_1), (a_1, a_2), (a_1, a_2, a_3), \dots\}\]
+    through $T_k$ is ``uncomputable path'' if and only if there does not exist a computer program which takes a number $n \in \NN$ as input and returns $a_n \in \NN$ as output. Show that if $k \geq 2$, then there is an uncomputable path. %(Hint: There are two ways to do this. One of them uses cardinality; the other uses the halting problem. This exercise is pretty tough.)
+\end{homework}
+
+\end{document}

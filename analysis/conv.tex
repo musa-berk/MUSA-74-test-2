@@ -1,0 +1,161 @@
+%Read the slack post (link below) regarding syntax and formatting before you start writing lecture notes.
+% Post: https://musa-2021.slack.com/archives/C01DGR645SL/p1609187728029500
+
+
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+
+\section{Week 12: Convergence}
+In this section, we will be taking a look at the behavior of sequences in a special type of metric space. An example of one of these metric spaces is the metric space that we are most familiar with ($\RR^n$ with metric $d(\textbf{x},\textbf{y}) = \sqrt{|y_1 - x_1|^2 + \dots |y_n - x_n|^2}$ for all $\textbf{x} = (x_1,x_2, ...,x_n), \textbf{y} = (y_1,y_2, ...,y_n) \in \RR^n$). We already know that every convergent sequence is a Cauchy sequence. We can't, however, say that every Cauchy sequence converges in every metric space. There are some spaces where every Cauchy sequence is convergent and  $\RR^n$ with metric $d(\textbf{x},\textbf{y}) = \sqrt{|y_1 - x_1|^2 + \dots |y_n - x_n|^2}$ for all $\textbf{x} = (x_1,x_2, ...,x_n), \textbf{y} = (y_1,y_2, ...,y_n) \in \RR^n$ is one of them! Once we have a better understanding of sequences we can revisit some of those calculus concepts with a whole new perspective. We will be able to use our knowledge of sequence behavior to help us better understand how functions behave in metric spaces.
+
+\subsection{Completeness}
+\begin{definition}[completeness]
+    A metric space $(X,d)$ is \dfn{complete} if every Cauchy sequence in $X$ converges to a point in X.
+\end{definition}
+\begin{exercise}
+Give an example of a metric space that isn't complete. Give an example of a Cauchy sequence in this space that doesn't converge.
+\end{exercise}
+\begin{definition}[monotonically increasing/decreasing sequence]
+    Consider the metric space $(\mathbb{R}, d)$ where $d(x, y) = |x - y|$ for all $x, y \in \mathbb{R}$. A sequence $(x_n)$ in $(\mathbb{R}, d)$ is a \dfn{monotonically increasing sequence} if for every $n \in N$ we have that $x_n \leq x_{n+1}$. A sequence $(x_n)$ in $(\mathbb{R}, d)$ is a \dfn{monotonically decreasing sequence} if for every $n \in N$ we have that $x_{n+1} \leq x_{n}$.
+\end{definition}
+\begin{theorem}
+    All bounded, monotone sequences converge. \\
+    ***Proof is left up to the reader and is one of the upcoming homework exercises.
+\end{theorem}
+
+
+\begin{theorem}[Bolzano-Weierstrass Theorem] Every bounded sequence in the metric space $(\mathbb{R}, d)$ with metric $d(x,y) := |x - y|$ has a convergent subsequence. 
+\end{theorem}
+
+\noindent We will prove the Bolzano-Weierstrass Theorem in class. 
+
+\begin{definition}[Bolzano-Weierstrass Property]
+    Let $(X,d)$ be a metric space. We say that a metric space has the \dfn{Bolzano-Weierstrass Property} if every sequence in $X$ has a convergent subsequence.  
+\end{definition}
+\begin{definition}[Sequentially Compact]
+    A metric space is \dfn{sequentially compact} if the metric space has the Bolzano-Weierstrass Property.
+\end{definition}
+
+\begin{example}
+    Let $(X, d)$ be a metric space where $X$ is finite. We claim that $(X, d)$ is sequentially compact. Let $(x_n)_{n=1}^{\infty}$ be an infinite sequence in $X$. We will apply the Infinite Pigeonhole Principle: if there are infinitely many objects in a finite number of boxes, then at least one box must contain infinitely many objects (why is this true?). In this case, the objects are elements of the sequence, and the boxes are elements of $X$. More precisely, say $X$ has $s$ elements, and write $X = \{a_1, a_2, \dotsc, a_s\}$. By the Infinite Pigeonhole Principle, there must be some $a_j$ such that infinitely many of the $x_i$ are equal to $a_j$. The subsequence of $(x_n)_{n=1}^{\infty}$ that is $(a_j, a_j, a_j, \dotsc)$ is a convergent subsequence, so we have shown that $(X, d)$ is sequentially compact.
+\end{example}
+
+
+
+\noindent Now that we have a better understanding of sequences we can revisit some of those calculus concepts with a whole new perspective. We will be able to use our knowledge of sequence behavior to help us better understand how functions behave in metric spaces.
+\subsection{Limits of Functions}
+
+\begin{definition}[limit]
+Let $(X,d_X)$ and $(Y,d_Y)$ be metric spaces. Let $E \subseteq X$ and let $x_0$ be a limit point of $E$. The \dfn{limit of a function} $f:E \rightarrow Y$ at $x_0$ is $q \in Y$ if for every $\epsilon > 0$ there exists a corresponding $\delta_{\epsilon} > 0$ such that for all $x \in E$,
+\begin{center}
+if $0<d_X(x,x_0) < \delta_{\epsilon}$ then $d_Y(f(x), q) < \epsilon$. We then write $\lim_{x \to x_0}f(x)= q$
+\end{center}
+\end{definition}
+
+\begin{example}
+    Consider the metric space $(\RR, d)$ where $d$ is the usual metric on $\RR$. Let $E = (1, \infty)$. Define $f: E \to \RR$ by $f(x) = 2x + 3$. Then $x_0 = 1$ is a limit point of $E$ in $(\RR, d)$. We claim that $\lim_{x \to 1} f(x) = 5$. Let $\epsilon > 0$. We need to find $\delta_{\epsilon} > 0$ such that for all $x \in (1, \infty)$, if $0 < \abs{x - 1} < \delta_{\epsilon}$, then $\abs{f(x) - 5} < \epsilon$. Since $f(x) = 2x + 3$, we have $\abs{f(x) - 5} = \abs{2x - 2}$. For any $\delta_{\epsilon} > 0$, if $0 < \abs{x - 1} < \delta_{\epsilon}$, it follows that $\abs{2x - 2} = \abs{2(x - 1)} < 2 \delta_{\epsilon}$. In order for $2\delta_{\epsilon}$ to equal $\epsilon$, we can set $\delta_{\epsilon}$ to be $\frac{\epsilon}{2}$. Then we have found $\delta_{\epsilon}$ such that for all $x \in E$, if $0 < \abs{x - 1} < \delta_{\epsilon}$, then $\abs{f(x) - 5} < \epsilon$. This proves that $\lim_{x \to 1} f(x) = 5$.
+\end{example}
+
+\index{Sequential Limit Criteria}
+\begin{theorem}[Sequential Criteria for a Limit of a Function]
+Let $(X,d_X)$ and $(Y,d_Y)$ be metric spaces. Let $E \subseteq X$, $f:E \rightarrow Y$ be a function and let $x_0$ be a limit point of $E$.  $\lim_{x \to x_0}f(x) = q$ if and only if we have that $\lim_{x \to x_0} f(x_n) = q$ for every sequence $(x_n)^{\infty}_{n=1}$ in $ E \setminus \{x_0\}$ that converges to $x_0$ and that has $x_n \neq x_0$ for all $n \in \mathbb{N}$. 
+
+\end{theorem}
+
+\noindent We will prove the \emph{Sequential Criteria for a Limit of a Function} Theorem in class.
+
+\begin{theorem}
+    Let $(X,d_X)$ and $(Y,d_Y)$ be metric spaces. Let $E \subseteq X$. If the function $f:E \rightarrow Y$ has a limit at $x_0$, then the limit is unique.
+\end{theorem}
+
+\begin{exercise}
+    Let $(X,d_X)$ and $(Y,d_Y)$ be metric spaces. Let $E \subseteq X$. Prove that if the function $f:E \rightarrow Y$ has a limit at $x_0$, then the limit is unique.
+\end{exercise}
+
+\begin{theorem}
+    Let $(X,d_X)$ be a metric space. Now consider the metric space $(\mathbb{R},d_Y)$ with the metric $d_{Y}(x,y) := |x-y|$. Let $E \subseteq X$ and $x_0$ be a limit point of $E$. Let $f: E \rightarrow \mathbb{R}$ and $g: E \rightarrow \mathbb{R}$ be real-valued functions on $E$ where $\lim_{x \to x_0}f(x)= A$ and $\lim_{x \to x_0}g(x)= B$. We then have that: 
+    \begin{enumerate}[label=\alph*.]
+        \item $\lim_{x \to x_0}(f+g)(x)= A + B$
+        \item For any $c \in \mathbb{R}$, we have that $\lim_{x \to x_0}cf(x) = cA$
+        \item $\lim_{x \to x_0}(fg)(x)= AB$
+        \item $\lim_{x \to x_0}(\frac{f}{g})(x)= \frac{A}{B}$ if $B \neq 0$ \\
+    \end{enumerate}
+    
+\end{theorem}
+\begin{exercise}
+    Prove a, b, c, and d in the above theorem. 
+\end{exercise}
+
+
+
+
+
+\subsection{Problems}
+
+
+\begin{homework}
+    Let $(x_n)$ be a bounded, increasing sequence. Show that $(x_n)$ converges to the supremum of the set $\{x_n:n\in\mathbb N\}$.
+\end{homework}
+
+\begin{homework}
+     Consider the metric space $(\mathbb{R}, d)$ with the metric $ d := |x - y|$. Let $(x_n)^{\infty}_{n=1}$ be a sequence such that  $x_{n+1} = \sqrt{2 + \sqrt{x_n}}$ for all $n \in \mathbb{N}$ and $x_1 = \sqrt{2}$.
+     
+     \begin{enumerate}[label=\alph*.]
+        \item Use induction to show that $(x_n)^{\infty}_{n=1}$ is bounded. 
+        \item Use induction to show that $(x_n)^{\infty}_{n=1}$ is monotonically increasing.
+        \item Use \textbf{Theorem 5.40} to show that $(x_n)^{\infty}_{n=1}$ converges.
+     \end{enumerate}
+\end{homework}
+\begin{homework}
+    Let $(X,d)$ be a metric space. Prove that a point $x_0 \in X$ is a limit point of the set $X$ if and only if there exists a sequence $(x_n)^{\infty}_{n=1}$ in $X$ such that for all $n \in \NN $, $ x_n \neq x_0$ and $\lim_{n\to\infty}x_n = x_0$. 
+\end{homework}
+
+\begin{homework}
+     Consider the metric space $(\mathbb{R}, d)$ with the metric $ d := |x - y|$. Let $a > 1$ and let the sequence $(x_n)^{\infty}_{n=1}$ in  $x, y \in \mathbb{R}$ be defined as $x_{n+1} = x_n + \frac{a-x_n^2}{1+x_n}$ where $x_1 > \sqrt{a}$
+    \begin{enumerate}[label=\alph*.]
+        \item Prove that $x_1 > x_3 > x_5 > ...$
+        \item Prove that $x_2 < x_4 < x_6 < ...$
+        \item Prove that $\lim_{x \to \infty} x_n = \sqrt{a}$
+    \end{enumerate}
+\end{homework}
+
+\begin{homework}
+Consider the metric spaces $(\mathbb{R},d_X)$ and $(\mathbb{R},d_Y)$ with  metrics $d_X(x_1, x_2) := |x_1 - x_2|$ and $d_Y(y_1, y_2) := |y_1 - y_2|$ respectively. Let  the sequences $(a_n)_{n =1}^{\infty}$  and $(b_n)_{n =1}^{\infty}$ be sequences in $(\mathbb{R},d_X)$ such that $a_n := \frac{1}{n \pi}$ and  $b_n := \frac{1}{2n \pi + \frac{\pi}{2}}$. Let  $f: \mathbb{R} \setminus \{0\} \rightarrow \mathbb{R}$ such that $f(x) := \sin(\frac{1}{x})$.
+ 
+    \begin{enumerate}[label=\alph*.]
+        \item  Show that $\lim_{n \rightarrow \infty} a_n = 0$ using the definition of a limit of a sequence.
+        \item Show that $\lim_{n \rightarrow \infty} b_n = 0$ using the definition of a limit of a sequence.
+        \item  Show that $\lim_{x \rightarrow 0} f(x)$ doesn't exist using the Sequential Criteria for a Limit of a Function. 
+    \end{enumerate}
+
+\end{homework}
+
+% Nir's problems
+\begin{homework}
+    Consider the metric space $(\RR,d)$ with the metric $d\coloneqq|x-y|$. Define the sequence $(x_n)$ by $x_1=1$ and $x_{n+1}=\frac12\left(x_n+\frac1{x_n}\right)$. Show that the $\lim_{n\to\infty}x_n=\sqrt2$.
+\end{homework}
+
+% Nir's problem
+\begin{homework}
+    Define the sequence $(s_n)$ of real numbers by
+    \[s_n\coloneqq\frac1{1^2}+\frac1{2^2}+\cdots+\frac1{n^2}.\]
+    Use \autoref{hw:basel} to show that $(s_n)$ converges to a real number.
+\end{homework}
+
+
+\begin{homework}
+    Consider the metric space $(\RR,d)$, where $d(x,y)\coloneqq|x-y|$, and define $f\colon\RR\to\RR$ by $f(x)\coloneqq x^2$. If a sequence $(x_n)$ of real numbers converges to the real number $a$, then show (by using the definitions that) the sequence $(f(x_n))$ of real numbers converges to the real number $a^2$.
+\end{homework}
+
+% Nir's problem
+\begin{homework}
+    Consider the metric space $(\RR,d)$, where $d(x,y)\coloneqq|x-y|$, and define $f\colon\RR\to\RR$ by $f(x)\coloneqq\sqrt{|x|}$. Compute $\lim_{x\to0}f(x)$.
+\end{homework}
+
+
+
+
+
+
+
+\end{document}

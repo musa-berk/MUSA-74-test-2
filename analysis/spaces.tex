@@ -1,0 +1,394 @@
+%Read the slack post (link below) regarding syntax and formatting before you start writing lecture notes.
+% Post: https://musa-2021.slack.com/archives/C01DGR645SL/p1609187728029500
+
+
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+
+\section{Week 9: Metric Spaces}
+In calculus, you learned that a function is continuous if ``you can draw its graph without lifting your pencil from the paper." However, this seems hopelessly difficult to prove properties about in $\RR$ using the machinery we've developed so far: we have learned how to write down symbols, not draw pictures!\footnote{However, pictures are a useful tool for developing proofs!} In order for us to develop a solid intuition of the concepts we were introduced to in calculus, we must start from the ground and work our way up.
+
+Sequences and their characteristics are the foundation of limits, continuity, differentiation, and integration. We will first generalize these definitions and concepts by stepping away from the comfort of working in $\RR$ and by doing so, we will begin to realize why these concepts need such rigorous definitions and explanations.
+
+\subsection{Metric Spaces}
+Metric spaces are an extension of the notion of a set, which allows us to talk about the distance between points in the set. You have had plenty of metric space experience because you have been working with them in most of your mathematics courses.
+\begin{definition}[metric space] \label{def:metric-space}
+    Let $X$ be a set. A \dfn{metric} $d$ on $X$ is a function $d\colon X \times X \rightarrow \RR$ that satisfies the following properties for any $x,y,z\in X$.
+    \begin{itemize}
+        \item Positive: $d(x,y) \geq 0$.
+        \item Zero: $d(x,y) = 0$ if and only if $x=y$.
+        \item Symmetric: $d(x,y) = d(y,x)$. 
+        \item Triangle inequality: $d(x,z) \leq d(x,y) + d(y,z)$.
+    \end{itemize}
+    If $d$ is a metric on a set $X$, the ordered pair $(X,d)$ is called a \dfn{metric space}.
+\end{definition}
+\begin{remark}
+    When it is understood, we may say ``$X$ is a metric space with metric $d$,'' but we emphasize here that the metric $d$ is essential data to the metric space. This is the same idea behind defining a partially ordered set as a set $X$ equipped with a partial order $\preceq$; in fact, many texts define a partially ordered set as an ordered pair $(X,\preceq)$!
+\end{remark}
+\Cref{def:metric-space} is pretty abstract. Let's see some examples.
+\begin{example}
+    Set $X\coloneqq\RR$, and define $d\colon\RR\times\RR\to\RR$ by $d(x,y)\coloneqq|x-y|$. We show $d$ is a metric.
+\end{example}
+\begin{proof}
+    Fix any real numbers $x,y,z\in\RR$.
+    \begin{itemize}
+        \item Positive: note $|x-y|\ge0$.
+        \item Zero: if $x=y$, then $|x-y|=|0|=0$. Conversely, if $|x-y|=0$, then $x-y=0$, so $x=y$.
+        \item Symmetric: note $x-y=-(y-x)$, so $|x-y|=|y-x|$. Thus, $d(x,y)=d(y,x)$.
+        \item Triangle inequality: this is a bit tricky. The trick is to set $a\coloneqq x-y$ and $b\coloneqq y-z$ so that we want to show
+        \[|a+b|\le|a|+|b|.\]
+        Now, $|a|\ge a$ and $|b|\ge b$, so $|a|+|b|\ge a+b$. Additionally, $|a|\ge-a$ and $|b|\ge-b$, so $|a|+|b|\ge-a-b$. However, $|a+b|$ equals either $a+b$ or $-a-b$, so the inequality follows.
+        \qedhere
+    \end{itemize}
+\end{proof}
+More generally, we have the following.
+\begin{proposition} \label{prop:rn-is-metric}
+    Let $n$ be a positive integer, and set $X\coloneqq\RR^n$, which is the set of tuples $(x_1,\ldots,x_n)$ of real numbers. Define $d\colon\RR^n\times\RR^n\to\RR$ by
+    \[d((x_1,\ldots,x_n),(y_1,\ldots,y_n)) = \sqrt{(x_1 - y_1)^2 + \cdots +(x_n - y_n)^2}.\]
+    We show $d$ is a metric.
+\end{proposition}
+We will want the following lemma for this proof.
+\begin{lemma}[Cauchy--Schwarz] \label{lem:cs}
+    Let $n$ be a positive integer and let $a_1,\ldots,a_n,b_1,\ldots,b_n\in\RR$ be real numbers. Then
+    \[(a_1b_1+\cdots+a_nb_n)^2\le\left(a_1^2+\cdots+a_n^2\right)\left(b_1^2+\cdots+b_n^2\right).\]
+\end{lemma}
+\begin{proof}
+    This proof is technically by direct expansion, but it is somewhat annoying to prove directly. Summation notation helps with the book-keeping, but we will use induction on $n$. At $n=0$, there are no real numbers anywhere, so the inequality is $0\le0$, which is true.
+
+    We now proceed with the inductive step. Assume the inequality for $n$, and we show it for $n+1$. As such, let $a_1,\ldots,a_{n+1}$ and $b_1,\ldots,b_{n+1}$ be real numbers. On one hand, we can expand
+    \begin{align*}
+        (a_1b_1+\cdots+a_nb_n+a_{n+1}b_{n+1})^2 &= ((a_1b_1+\cdots+a_nb_n)+a_{n+1}b_{n+1})^2 \\
+        &= (a_1b_1+\cdots+a_nb_n)^2+a_{n+1}^2b_{n+1}^2+2(a_1b_1+\cdots+a_nb_n)a_{n+1}b_{n+1}.
+    \end{align*}
+    On the other hand, we expand
+    \begin{align*}
+        \left(a_1^2+\cdots+a_n^2+a_{n+1}^2\right)\left(b_1^2+\cdots+b_n^2+b_{n+1}^2\right) &= \left(a_1^2+\cdots+a_n^2\right)\left(b_1+\cdots+b_n^2\right) \\
+        &\qquad+a_{n+1}^2\left(b_1^2+\cdots+b_n^2\right)+\left(a_1^2+\cdots+a_n^2\right)b_{n+1}^2 \\
+        &\qquad+a_{n+1}^2b_{n+1}^2.
+    \end{align*}
+    Now, to show
+    \[(a_1b_1+\cdots+a_nb_n+a_{n+1}b_{n+1})^2\stackrel?\le\left(a_1^2+\cdots+a_n^2+a_{n+1}^2\right)\left(b_1^2+\cdots+b_n^2+b_{n+1}^2\right),\]
+    we note that we already have
+    \[(a_1b_1+\cdots+a_nb_n)^2\le\left(a_1^2+\cdots+a_n^2\right)\left(b_1^2+\cdots+b_n^2\right)\]
+    by the inductive hypothesis, so combining our above inequalities means that we want to show
+    \[2(a_1b_1+\cdots+a_nb_n)a_{n+1}b_{n+1}\stackrel?\le a_{n+1}^2\left(b_1^2+\cdots+b_n^2\right)+\left(a_1^2+\cdots+a_n^2\right)b_{n+1}^2.\]
+    This rearranges into
+    \[0\stackrel?\le\left(a_{n+1}^2b_1^2-2a_{n+1}b_1a_1b_{n+1}+a_1^2b_{n+1}^2\right)+\cdots+\left(a_{n+1}^2b_n^2-2a_{n+1}b_na_nb_{n+1}+a_n^2b_{n+1}^2\right).\]
+    However, for each $k$, we see $\left(a_{n+1}^2b_1^2-2a_{n+1}b_1a_1b_{n+1}+a_n^2b_{n+1}^2\right)=(a_{n+1}b_1-a_1b_{n+1})^2$, so each term is nonnegative, so the total sum is nonnegative.
+\end{proof}
+\begin{exe}
+    Rewrite the proof of \Cref{lem:cs} using summation notation but no induction.
+\end{exe}
+\begin{remark}
+    \Cref{lem:cs} is usually stated as follows: let $a$ and $b$ be vectors in $\RR^n$, and let $\langle\cdot,\cdot\rangle$ be the usual inner product. Then
+    \[\langle a,b\rangle^2\le\langle a,a\rangle\cdot\langle b,b\rangle.\]
+\end{remark}
+We are now ready to prove \Cref{prop:rn-is-metric}.
+\begin{proof}[Proof of \Cref{prop:rn-is-metric}]
+    Find $x,y,z\in\RR^n$, where $x=(x_1,\ldots,x_n)$ and $y=(y_1,\ldots,y_n)$ and $z=(z_1,\ldots,z_n)$.
+    \begin{itemize}
+        \item Positive: note $d(x,y)$ is the square root of nonnegative real number, so $d(x,y)\ge0$.
+        \item Zero: if $x=y$, then $x_k=y_k$ for each $k$, so
+        \[d(x,y)=\sqrt{(x_1-y_1)^2+\cdots+(x_n-y_n)^2}=\sqrt{0+\cdots+0}=0.\]
+        Conversely, if $d(x,y)=0$, then for each index $k$, we see
+        \[(x_k-y_k)^2\le(x_1-y_1)^2+\cdots+(x_n-y_n)^2=d(x,y)^2=0.\]
+        However, $(x_k-y_k)^2\ge0$ as well, so $(x_k-y_k)^2=0$, so $x_k=y_k$ for each $k$. Thus, $x=y$.
+        \item Symmetric: for any real numbers $a,b\in\RR$, we see $(a-b)=-(b-a)$, so $(a-b)^2=(b-a)^2$. Applying this to each term,
+        \[d(x,y)=\sqrt{(x_1-y_1)^2+\cdots+(x_n-y_n)^2}=\sqrt{(y_1-x_1)^2+\cdots+(y_n-x_n)^2}=d(y,x).\]
+        \item Triangle inequality: this is again tricky. For each $k$, we set $a_k\coloneqq x_k-y_k$ and $b_k\coloneqq y_k-z_k$ so that $a_k+b_k=x_k-z_k$. Thus, the triangle inequality is equivalent to the inequality
+        \[\sqrt{(a_1+b_1)^2+\cdots+(a_n+b_n)^2}\stackrel?\le\sqrt{a_1^2+\cdots+a_n^2}+\sqrt{b_1^2+\cdots+b_n^2}.\]
+        Squaring both sides, we want to show
+        \[(a_1+b_1)^2+\cdots+(a_n+b_n)^2\stackrel?\le\left(a_1^2+\cdots+a_n^2\right)+\left(b_1^2+\cdots+b_n^2\right)+2\sqrt{\left(a_1^2+\cdots+a_n^2\right)\left(b_1^2+\cdots+b_n^2\right)}.\]
+        Now, for each $k$, we see $(a_k+b_k)^2=a_k^2+b_k^2+2a_kb_k$. Thus, after expanding these and cancelling all the $a_k^2$ and $b_k^2$ terms, we want to show
+        \[2(a_1b_1+\cdots+a_nb_n)\stackrel?\le2\sqrt{\left(a_1^2+\cdots+a_n^2\right)\left(b_1^2+\cdots+b_n^2\right)}.\]
+        Dividing by two and squaring, we would like to show
+        \[(a_1b_1+\cdots+a_nb_n)^2\stackrel?\le\left(a_1^2+\cdots+a_n^2\right)\left(b_1^2+\cdots+b_n^2\right).\]
+        This is exactly \Cref{lem:cs}.
+        \qedhere
+    \end{itemize}
+\end{proof}
+Here are few more metrics.
+\begin{exercise}
+    Let $X\coloneqq(0,\infty)$ be the set of positive real numbers. Show that the function $d\colon X\times X\to\RR$ defined by $d(x, y) = |\log(y/x)|$ is a metric space.
+\end{exercise}
+\begin{example} \label{exe:general-taxi-metric}
+    Suppose that $d$ is a metric on a set $X$. Show that $d_1((x,y),(x',y'))\coloneqq d(x,x')+d(y,y')$ is a metric on the set $X\times X$.
+\end{example}
+\begin{proof}
+    We check the conditions one at a time. Fix $(x,y),(x',y'),(x'',y'')\in X\times X$.
+    \begin{itemize}
+        \item Positive: note $d_1((x,y),(x',y'))=d(x,x')+d(y,y')\ge0+0=0$.
+        \item Zero: if $d_1((x,y),(x',y'))=0$, then $d(x,x')+d(y,y')=0$. However, $d(x,x')\ge0$ and $d(y,y')\ge0$, so the only way to get $d(x,x')+d(y,y')=0$ is for both $d(x,x')=0$ and $d(y,y')=0$. Thus, $x=x'$ and $y=y'$ because $d$ is a metric, so $(x,y)=(x',y')$ follows.
+        \item Symmetric: note $d_1((x,y),(x',y'))=d(x,x')+d(y,y')=d(x',x)+d(y',y)=d_1((x',y'),(x,y))$. Note that we have used the fact that $d$ is symmetric.
+        \item Triangle inequality: using the triangle inequality for $d$, we see
+        \begin{align*}
+            d_1((x,y),(x',y'))+d_1((x',y'),(x'',y'')) &= \big(d(x,x')+d(y,y')\big)+\big(d(x',x'')+d(y',y'')\big) \\
+            &= \big(d(x,x')+d(x',x'')\big)+\big(d(y,y')+d(y',y'')\big) \\
+            &\ge d(x,x'')+d(y,y'') \\
+            &= d_1((x,y),(x'',y'')),
+        \end{align*}
+        which is what we wanted.
+        \qedhere
+    \end{itemize}
+\end{proof}
+\begin{exercise}
+    Suppose $d_1$ and $d_2$ are both metrics on the set $X$. Show that $d_1+d_2$ is also a metric on $X$.
+\end{exercise}
+\begin{exercise}
+    Suppose $d$ is a metric on the set $X$. If $a$ is a positive real number, show that the function $ad\colon X\times X\to\RR$ defined by $(ad)(x,x')\coloneqq a\cdot d(x,x')$ is also a metric on $X$.
+\end{exercise}
+
+\subsection{Open Sets}
+Roughly speaking, we will try to understand metric spaces by paying attention to certain special subsets. Here, we will define open subsets, which are built from open sets.
+% \begin{definition}[neighborhood]
+% Let $(X, d)$ be a metric space. A \dfn{neighborhood} of $y \in X$ is a set $N_{\varepsilon}(y)$ consisting of all $x \in X$ such that $d(x,y) < \varepsilon$.
+% \end{definition}
+\begin{definition}[open ball]
+    Let $(X,d)$ be a metric space. Fix $x_0 \in X$ and $\varepsilon > 0$. The \dfn{open ball} centered at $x_0$ with radius $\varepsilon$ is the set
+    \[B(x_0,\varepsilon)=\{x\in X:d(x,x_0)<\varepsilon\}.\]
+    % A \dfn{closed ball} centered at $x_0$ with radius $\epsilon$ is the set $\bar{B}(x_0,\epsilon)=\{x\in X:d(x,x_0)\leq \epsilon \}.$
+\end{definition}
+\begin{example}
+    Give $\RR^2$ the metric $d$ by $d((x_1,y_1),(x_2,y_2))\coloneqq\sqrt{(x_1-x_2)^2+(y_1-y_2)^2}$. Then the open ball $B((0,0),1)$ is as follows.
+    \begin{center}
+        \begin{asy}
+            unitsize(1.5cm);
+            fill(circle((0,0),1), lightgray);
+            draw((-1.2,0)--(1.2,0));
+            draw((0,-1.2)--(0,1.2));
+            draw(circle((0,0),1), dashed);
+            dot("$(0,0)$", (0,0), NW);
+            label("$1$", (0.5,0), N);
+        \end{asy}
+    \end{center}
+\end{example}
+\begin{example}
+    Give $\RR^2$ the metric $d$ by $d((x_1,y_1),(x_2,y_2))\coloneqq|x_1-x_2|+|y_1-y_2|$. Then the open ball $B((0,0),1)$ is as follows.
+    \begin{center}
+        \begin{asy}
+            unitsize(1.5cm);
+            path p = (1,0) -- (0,1) -- (-1,0) -- (0,-1) -- cycle;
+            fill(p, lightgray);
+            draw((-1.2,0)--(1.2,0));
+            draw((0,-1.2)--(0,1.2));
+            draw(p, dashed);
+            dot("$(0,0)$", (0,0), NW);
+            label("$1$", (0.5,0), N);
+        \end{asy}
+    \end{center}
+\end{example}
+\begin{definition}[interior point]
+     Let $(X,d)$ be a metric space, and fix a subset $A \subseteq X$. We say that $a \in A$ is an \dfn{interior point} of $A$ if there is exists a $\varepsilon > 0$ such that $B(a,\varepsilon) \subseteq A$.
+\end{definition}
+\begin{definition}[interior]
+    Let $(X,d)$ be a metric space, and fix a subset $A \subseteq X$. The \emph{interior} of $A$, denoted $A^\circ$, is the set of all interior points of $A$. %The interior of a set $A$ is denoted as $ int(A)$.
+\end{definition}
+\begin{example} \label{exe:basic-interiors}
+    Give $\RR$ the metric $d(x,y)\coloneqq|x-y|$. Set $A\coloneqq[0,\infty)$, and we compute $A^\circ$.
+\end{example}
+\begin{proof}
+    We fix some $a\in\RR$ and test if $a\in A^\circ$ in various cases.
+    \begin{itemize}
+        \item If $a\le0$ no $\varepsilon>0$ can possibly yield $B(a,\varepsilon)\subseteq A$ because $a-\varepsilon/2\in B(a,\varepsilon)$ while $-\varepsilon/2\notin A$ because $a-\varepsilon/2<0$. Thus, $a\notin A^\circ$.
+        \item If $a>0$, then we claim $a\in A^\circ$. Indeed, set $\varepsilon\coloneqq a$, and we see $\varepsilon>0$ because $0<a<1$. We must show $B(a,\varepsilon)\subseteq[0,\infty)$. Well, if $x\in B(a,\varepsilon)$, then
+        \[|x-a|=d(x,a)<\varepsilon=a,\]
+        so $-a<x-a<a$, so $x>0$, so $x\in[0,\infty)$.
+    \end{itemize}
+    Thus, the interior of $[0,\infty)$ is $(0,\infty)$. In fact, we note that the above argument also shows that the interior of $(0,\infty)$ is $(0,\infty)$.
+\end{proof}
+\begin{exe}
+    Give $\RR$ the metric $d(x,y)\coloneqq|x-y|$. Compute the interior of the sets $(-\infty,1]$ and $[0,1]$.
+\end{exe}
+The above examples have the feature $A^\circ\subseteq A$, and this is true in general: if $a\in A^\circ$, then $a$ is an interior point of $A$, so there is $\varepsilon>0$ such that $B(a,\varepsilon)\subseteq A$. But $a\in B(a,\varepsilon)$, so $a\in A$. Thus, $A^\circ\subseteq A$ is also true. The equality case will be of special interest to us.
+\begin{definition}[open set]
+    Let $(X,d)$ be a metric space. A subset $A\subseteq X$ is \dfn{open} if and only if $A^\circ=A$. Equivalently, $A$ is \textit{open} if and only if each point $a\in A$ has some $\varepsilon>0$ such that $B(a,\varepsilon)\subseteq A$.
+\end{definition}
+Take a moment to convince yourself that the conditions stated in the above definition are in fact equivalent.
+\begin{remark} \label{rem:interior-is-largest-open-subset}
+    In some sense, the interior $A^\circ$ of a set $A$ is the largest open subset $A$. We will make this precise later, but this explains how to think about the interior.
+\end{remark}
+\begin{example}
+    \Cref{exe:basic-interiors} shows that $[0,\infty)$ is not an open subset of $\RR$, but $(0,\infty)$ is.
+\end{example}
+\begin{example} \label{ex:emp-is-open}
+    Let $(X,d)$ is a metric space. Then $A\coloneqq\emp$ is an open set, though not for interesting reasons. Indeed, $A^\circ\subseteq A=\emp$, so $A^\circ=\emp=A$.
+\end{example}
+\begin{example} \label{ex:space-is-open}
+    Let $(X,d)$ is a metric space. Then $A\coloneqq X$ is also open, though again not for interesting reasons. Indeed, for any $a\in X$, we see that
+    \[B(a,1)=\{x\in X:d(a,x)<1\}\subseteq X.\]
+    Thus, $X$ is open.
+\end{example}
+It should be somewhat uncomfortable that we have defined ``open balls'' and ``open sets,'' but it is not yet obvious that open balls are open sets. Let's see this.
+\begin{proposition} \label{prop:open-ball-is-open}
+    Let $(X,d)$ be a metric space. Given any $x\in X$ and $r>0$, the open ball $B(x,r)$ is an open set.
+\end{proposition}
+\begin{proof}
+    This is somewhat technical. Given $a\in B(x,r)$, we must produce $\varepsilon>0$ such that $B(a,\varepsilon)\subseteq B(x,r)$. Our guide will be the following image, where we have shown such an open ball $B(a,\varepsilon)$ around $a\in B(x,r)$.
+    \begin{center}
+        \begin{asy}
+            unitsize(1cm);
+            pair x = (0,0);
+            pair a = 1.3*dir(0);
+            fill(circle(x,2), lightgray);
+            draw(circle(x,2), dashed);
+            draw(circle(a,0.7), dashed);
+            draw(a--(2,0), red);
+            dot("$x$", x, S);
+            dot("$a$", a, S);
+        \end{asy}
+    \end{center}
+    Solving for the length of the red segment, we see that it is $\varepsilon\coloneqq r-d(x,a)$. Note $a\in B(x,r)$ implies $d(x,a)<r$, so $r-d(x,a)>0$, so $\varepsilon>0$.
+    
+    It remains to show $B(a,\varepsilon)\subseteq B(x,r)$. Hopefully this is visually clear from the image, so we will try to prove it. Given $y\in B(a,\varepsilon)$, we want to show $y\in B(x,r)$. In other words, we are given $d(a,y)<\varepsilon$, and we want to show $d(x,y)<r$. The key is to use the triangle inequality, which implies
+    \[d(x,y)\le d(x,a)+d(a,y)<d(x,a)+\varepsilon=d(x,a)+r-d(x,a)=r\]
+    by plugging into the definition of $\varepsilon$. This completes the proof.
+\end{proof}
+We now explain the sentence ``open sets are built from open balls,'' as follows.
+\begin{proposition} \label{prop:open-ball-base}
+    Let $(X,d)$ be a metric space. Given an open subset $U\subseteq X$, let $\mc B$ denote the collection of open balls contained in $U$. Then
+    \[U=\bigcup_{B\in\mc B}B.\]
+\end{proposition}
+\begin{proof}
+    We have two inclusions to show.
+    \begin{itemize}
+        \item We show $\bigcup_{B\in\mc B}B\subseteq U$. Well, we pick up any $x\in\bigcup_{B\in\mc B}B$. Then there exists some $B\in\mc B$ such that $x\in B$. However, $B\in\mc B$ forces $B\subseteq U$ by definition of $\mc B$, so $x\in U$ follows. This finishes.
+        \item We show $U\subseteq\bigcup_{B\in\mc B}B$. Well, we pick up any $x\in U$. Because $U$ is open, there exists some $\varepsilon>0$ such that $B(x,\varepsilon)\subseteq U$. However, $B(x,\varepsilon)$ is an open ball contained in $U$, so it follows $B(x,\varepsilon)\in\mc B$. Thus,
+        \[x\in B(x,\varepsilon)\subseteq\bigcup_{B\in\mc B}B,\]
+        from which the desired inclusion follows.
+        \qedhere
+    \end{itemize}
+\end{proof}
+% \begin{exercise}
+%     Consider the metric space $(\RR,d)$ where $d: \RR \times \RR \rightarrow \RR$ is defined as $d(x, y) = |x - y|$. Let $ a,b \in \RR$ and let $a \leq b$. Find the interior of the set $[a,b] = \{x \in \RR: a \leq x \leq b \}$
+% \end{exercise}
+% \begin{definition}[open/closed subset]
+%      Let $(X,d)$ be a metric space and let $A \subseteq X$.We say that $A$ is \emph{open} if every point of $A$ is an interior point of $A$. We say that $A$ is \emph{closed} if for every limit point $y$ of $A$, we have $y \in A$.
+% \end{definition}
+
+% \begin{exercise}
+%     Show that every neighborhood is an open set.
+% \end{exercise}
+
+\subsection{Building Open Sets} \label{subsec:build-opens}
+\Cref{prop:open-ball-is-open} provides us a wealth of open sets, but we are going to want access to many more. We begin by explaining \Cref{rem:interior-is-largest-open-subset}, which gives an open subset from any subset.
+\begin{lemma} \label{lem:all-opens-in-interior}
+    Let $(X,d)$ be a metric space. Given any subset $A\subseteq X$, and an open subset $U\subseteq X$ such that $U\subseteq A$, we actually have $U\subseteq A^\circ$.
+\end{lemma}
+\begin{proof}
+    This is a matter of unwinding all the definitions. Given $x\in U$, we want to show $x\in A^\circ$. Well, $U$ is open, so $x\in U$ promises some $\varepsilon>0$ such that $B(x,\varepsilon)\subseteq U$. However, $U\subseteq A$, so we see $B(x,\varepsilon)\subseteq A$. It follows $a\in A^\circ$.
+\end{proof}
+\begin{proposition} \label{prop:int-is-open}
+    Let $(X,d)$ be a metric space. Given any subset $A\subseteq X$, the interior $A^\circ$ is open. In other words, $(A^\circ)^\circ=A^\circ$.
+\end{proposition}
+\begin{proof}
+    This follows by combining \Cref{prop:open-ball-is-open,lem:all-opens-in-interior}, but it requires care, so pay attention. Given $a\in A^\circ$, we must find $\varepsilon>0$ such that $B(a,\varepsilon)\subseteq A^\circ$. However, $a\in A^\circ$ promises some $\varepsilon>0$ such that
+    \[B(a,\varepsilon)\subseteq A.\]
+    To finish the proof, we note $B(a,\varepsilon)$ is open by \Cref{prop:open-ball-is-open} and so $B(a,\varepsilon)\subseteq A^\circ$ by \Cref{lem:all-opens-in-interior}.
+\end{proof}
+\begin{exe} \label{exe:int-by-opens}
+    Use \Cref{lem:all-opens-in-interior,prop:open-ball-is-open} to show the following: for a subset $A$ of a metric space $(X,d)$, we have
+    \[A^\circ=\bigcup_{U\subseteq A}U,\]
+    where the union is over all open sets $U$ contained in $A$.
+\end{exe}
+Another way to build sets is with set operations, so we now investigate how open sets behave with unions and intersections. Let's first discuss intersections.
+\begin{proposition} \label{prop:intersect-open-sets}
+    Let $(X,d)$ be a metric space. Given open subsets $A,B\subseteq X$, the set $A\cap B$ is also open.
+\end{proposition}
+\begin{proof}
+    Given $x\in A\cap B$, we must find $\varepsilon$ such that $B(x,\varepsilon)\subseteq A\cap B$. Well, $x\in A$, and $A$ is open, so there is some $\varepsilon_A>0$ such that $B(x,\varepsilon_A)\subseteq A$. Similarly, $x\in B$, and $B$ is open, so there is some $\varepsilon_B>0$ such that $B(x,\varepsilon_B)\subseteq B$. To finish the proof, we set
+    \[\varepsilon\coloneqq\min\{\varepsilon_A,\varepsilon_B\}.\]
+    Note $\varepsilon>0$, so we want to show $B(x,\varepsilon)\subseteq A\cap B$. Well, for $y\in B(x,\varepsilon)$, we see $d(x,y)<\varepsilon\le\varepsilon_A$, so $y\in B(x,\varepsilon_A)$, so $y\in A$ because $B(x,\varepsilon_A)\subseteq A$. A similar argument shows $y\in B$, so we conclude $y\in A\cap B$.
+\end{proof}
+\begin{exe} \label{exe:finite-intersect-open-sets}
+    Show the following: given finitely many open subsets $A_1,A_2,\ldots,A_n$ of a metric space $(X,d)$, the intersection
+    \[\bigcap_{i=1}^nA_i=A_1\cap A_2\cap\cdots\cap A_n\]
+    is a closed set. One can show this directly, arguing similarly as in \Cref{prop:intersect-open-sets}; alternatively, one can use induction with \Cref{prop:intersect-open-sets}.
+\end{exe}
+\begin{nex}
+    In spite of \Cref{exe:finite-intersect-open-sets}, a countable intersection of open sets need not be open. A similar argument to \Cref{exe:basic-interiors} shows that the sets $A_n\coloneqq(-1/n,\infty)$ are all open for any positive integer $n$, but their intersection is
+    \[\bigcap_{n=1}^\infty A_n=[0,\infty),\]
+    and $[0,\infty)$ is not open.
+\end{nex}
+We quickly note that we can translate \Cref{prop:intersect-open-sets} into a statement about the interior.
+\begin{corollary} \label{cor:int-intersection}
+    Let $(X,d)$ be a metric space. Given subsets $A,B\subseteq X$, we have $(A\cap B)^\circ=A^\circ\cap B^\circ$.
+\end{corollary}
+\begin{proof}
+    We show this in two inclusions. As usual, this argument is somewhat confusing.
+    \begin{itemize}
+        \item We show $(A\cap B)^\circ\subseteq A^\circ\cap B^\circ$. Note $(A\cap B)^\circ$ is open by \Cref{prop:int-is-open}, and $(A\cap B)^\circ\subseteq A\cap B\subseteq A$. Thus, $(A\cap B)^\circ\subseteq A^\circ$ follows from \Cref{lem:all-opens-in-interior}. A similar argument shows $(A\cap B)^\circ\subseteq B^\circ$, so we are done.
+        \item We show $A^\circ\cap B^\circ\subseteq(A\cap B)^\circ$. Note $A^\circ\subseteq A$ and $B^\circ\subseteq B$, so $A^\circ\cap B^\circ\subseteq A\cap B$. However, $A^\circ$ and $B^\circ$ are both open by \Cref{prop:int-is-open}, so $A^\circ\cap B^\circ$ is open by \Cref{prop:intersect-open-sets}, so $A^\circ\cap B^\circ\subseteq A\cap B$ follows from \Cref{lem:all-opens-in-interior}.
+        \qedhere
+    \end{itemize}
+\end{proof}
+And now we discuss unions.
+\begin{exe}
+    Let $(X,d)$ be a metric space. Given open sets $A,B\subseteq X$, show directly that $A\cup B$ is open.
+\end{exe}
+In fact, we don't have to settle for merely taking the union of two open sets.
+\begin{proposition} \label{prop:union-open-sets}
+    Let $(X,d)$ be a metric space. Let $\mc U$ be a collection of open subsets of $X$. Then the union
+    \[A\coloneqq\bigcup_{U\in\mc U}U\]
+    is also open.
+\end{proposition}
+\begin{proof}
+    Given $a\in A$, we must find $\varepsilon>0$ such that $B(a,\varepsilon)\subseteq A$. Well, $A$ is the union of the open sets in $\mc U$, so there is some $U\in\mc U$ such that $x\in U$. However, $U$ is open, so there is some $\varepsilon>0$ such that $B(x,\varepsilon)\subseteq U$. Because $U\subseteq A$, it follows $B(x,\varepsilon)\subseteq A$ as well, which completes the proof.
+\end{proof}
+\begin{exe} \label{ex:int-union}
+    It is not true that the interior of the union is the union of the interiors. For example, given $\RR$ the usual metric $d(x,y)\coloneqq|x-y|$. Then we set $A=[0,\infty)$ and $B=(-\infty,0]$. Arguing similarly as in \Cref{exe:basic-interiors}, we see
+    \[A^\circ\cup B^\circ=(0,\infty)\cup(-\infty,0)=\RR\setminus\{0\},\]
+    but
+    \[(A\cup B)^\circ=\RR^\circ=\RR.\]
+\end{exe}
+Lastly, we might be interested in taking the complement of open sets, but this operation does not produce open sets. Instead, the complement of an open set is a ``closed set,'' which will be discussed in the next section.
+
+\subsection{Problems}
+\begin{homework}
+    The \textit{Chebyshev metric} on $\RR^n$ is the function $d\colon\RR^n \times \RR^n \rightarrow \RR$ defined by
+    \[d((x_1,x_2,\ldots,x_n),(y_1,y_2,\ldots,y_n)) \coloneqq \max\{|x_k-y_k|:k\in\{1,2,\ldots,n\}\}.\]
+    Verify that $d$ is a metric on $\mathbb{R}^n$.
+\end{homework}
+\begin{homework}
+    The \textit{discrete metric} on $\RR$ is the function $d\colon\RR\times\RR \rightarrow \RR$ defined for all $x,y \in \RR^n $ by
+    \[d(x,y) \coloneqq \begin{cases}
+        0 & \text{if } x=y, \\
+        1 & \text{if } x\ne y.
+    \end{cases}\]
+    Verify that $d$ is a metric.
+\end{homework}
+\begin{homework}
+    Define the function $d\colon\RR\times\RR\to\RR$ by $d(x,y) = \frac{|x-y|}{1 + |x-y|}$. Determine if $d$ is a metric on $\mathbb{R}$.
+\end{homework}
+\begin{homework}
+    Let $d\colon\RR\times\RR\to\RR$ be the metric on $\RR$ defined by $d(x,y)\coloneqq|x-y|$. The \textit{standard bounded metric} on $\mathbb{R}$ is the function $\overline{d}\colon\RR \times \RR \rightarrow \RR$ defined by
+    \[\overline d(x,y)\coloneqq\max\{1,d(x,y)\}.\]
+    Verify that $d$ is a metric on $\mathbb{R}$.
+\end{homework}
+\begin{homework}
+    Let $X$ be a set. Define the function $d\colon X\times X\to\RR$ by
+    \[d(x,y)\coloneqq\begin{cases}
+        0 & x=y, \\
+        1 & x\ne y.
+    \end{cases}\]
+    Verify that $d$ is a metric on $X$.
+    % Show that for any set $X$, $(X, d)$ is a metric space with the metric $d(x, y) = 1$ if $y \neq x$ and $d(x, x) = 0$.
+\end{homework}
+\begin{homework} \label{prop:many-ints}
+    Consider the metric space $(\mathbb{R}, d)$, where $d(x,y)\coloneqq|x - y|$. Find the the interior (without proof) of the following subsets of $\mathbb{R}$. 
+    \begin{enumerate}[label=(\alph*)]
+        \item $A = (0, 1)$
+        \item $A = [0,1]$
+        \item $A = \mathbb{Z}$
+        \item $A = \mathbb{Q}$
+        \item $A = \mathbb{R}$
+    \end{enumerate}
+\end{homework}
+\begin{homework}
+    Consider the metric space $(\RR,d)$ where $d(x,y)\coloneqq|x-y|$. Given real numbers $a,b\in\RR$ such that $a<b$, show that $[a,b]^\circ=(a,b)$.
+\end{homework}
+\begin{homework}
+    Let $(X,d)$ be a metric space. Given a subset $A\subseteq X$, let $\mc B$ denote the collection of open balls contained in $A$. Show that
+    \[A^\circ=\bigcup_{B\in\mc B}B.\]
+\end{homework}
+
+\end{document}

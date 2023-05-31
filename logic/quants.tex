@@ -1,0 +1,334 @@
+%Read the slack post (link below) regarding syntax and formatting before you start writing lecture notes.
+% Post: https://musa-2021.slack.com/archives/C01DGR645SL/p1609187728029500
+
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+
+\section{Week 2: Equivalences, Predicates, and Quantifiers }
+In this section, we discuss a few more aspects of propositional logic.
+
+\subsection{Logical Equivalences}
+Some propositions are particularly simple because they are either always true or always false.
+\begin{definition}[tautology]
+    A \dfn{tautology} is a compound proposition that is always true, regardless of whether the truth values of the proposition variables are true or false. 
+\end{definition}
+\begin{definition}[contradiction]
+    A \dfn{contradiction} is a compound proposition that is always false regardless of whether the truth values of the proposition variables used to construct the compound proposition are true or false.
+\end{definition}
+\begin{example}
+    Let $p$ and $q$ be propositional variables. For each compound proposition below, determine whether the proposition is a tautology, a contradiction, or neither. 
+    \begin{enumerate}[label=(\alph*)]
+        \item $p \land \neg q$
+        \item $p \land \neg p$
+        \item The temperature is $32$ degrees Fahrenheit and $0$ degrees Celsius.
+        \item The temperature is $32$ degrees Fahrenheit or not $0$ degrees Celsius.
+    \end{enumerate}
+\end{example}
+\begin{proof}
+    Here, (d) is a tautology, (b) is a contradiction, and (a) and (c) are neither.
+% Tautologies: $\# 4$ \\
+% Contradictions: $\# 2$ \\
+% Neither: $\# 1$, $\# 3$ 
+\end{proof}
+Even if two propositions are not both always true, they might still ``mean the same thing.'' In propositional logic, this notion is called logical equivalence.
+\begin{definition}[logical equivalence]
+    Let $p$ and $q$ be compound propositions. We say that $p$ and $q$ are \dfn{logically equivalent}, denoted as $p \equiv q$, if and only if $p \rightarrow q$ and $q \rightarrow p$ are both always true. Equivalently, $p\equiv q$ if and only if $p$ is true exactly when $q$ is true.
+\end{definition}
+\begin{example} \label{exe:logical-conditional}
+    Let $p$ and $q$ be proposition variables. Show that $p \rightarrow q  \equiv \neg p \lor q$ using a truth table.
+\end{example}
+\begin{proof}
+    We build a truth table, as follows.
+    \begin{center}
+        \begin{tabular}{c|c|c|c}
+            $p$ & $q$ & $p\to q$ & $\lnot p\lor q$ \\\hline
+            T & T & T & T \\
+            T & F & F & F \\
+            F & T & T & T \\
+            F & F & T & T
+        \end{tabular}
+    \end{center}
+    Note the $p\to q$ column is true exactly when the $\lnot p\lor q$ column is true.
+\end{proof}
+\begin{example}
+    Let $p$, $q$, and $r$ be proposition variables. Show that $(p \lor q) \lor r \equiv p \lor (q \lor r)$ using a truth table.
+\end{example}
+\begin{proof}
+    We build a truth table, as follows.
+    \begin{center}
+        \begin{tabular}{c|c|c|c|c|c|c}
+             $p$ & $q$ & $r$ & $p \lor q$ & $q \lor r$ & $(p \lor q) \lor r$ & $p \lor (q \lor r)$  \\
+             \hline
+             T & T & T & T &  T & T & T \\
+             T & T & F & T &  T & T & T \\
+             T & F & T & T &  T & T & T \\
+             T & F & F & T &  F & T & T \\
+             F & T & T & T &  T & T & T \\
+             F & T & F & T &  T & T & T \\
+             F & F & T & F &  T & T & T \\
+             F & F & F & F &  F & F & F \\
+        \end{tabular}
+    \end{center}
+    Note the $(p\lor q)\lor r$ column is true exactly when the $p\lor(q\lor r)$ column is true.
+\end{proof}
+We take a moment to record the most important equivalences and their names. Let $p$, $q$, and $r$ be proposition variables.
+\begin{center}
+    \begin{tabular}{ c|c }
+    Logical Equivalence & Name \\
+    \hline
+    $p \land T \equiv p$ & Identity Laws \\
+    $p \lor F \equiv p$ & \\
+    \hline
+    $p \lor T \equiv T $ & Domination Laws \\
+    $p \land F \equiv F$ & \\
+    \hline
+    $p \lor p \equiv p $ & Idempotent Laws \\
+    $p \land p \equiv p$ & \\
+    \hline
+    $\neg (\neg p) \equiv p$ & Double Negation Law \\
+    \hline
+    $p \lor q \equiv q \lor p $ & Commutative Laws \\
+    $p \land q \equiv q \land p $ & \\
+    \hline
+    $(p \lor q) \lor r \equiv p \lor (q \lor r)$ & Associative Laws \\
+    $(p \land q) \land r \equiv p \land (q \land r)$ & \\
+    \hline
+    $ p \lor (q \land r) \equiv (p \lor q) \land (p \lor r)$ & Distributive Laws \\
+    $ p \land (q \lor r) \equiv (p \land q) \lor (p \land r)$ & \\
+    \hline
+    $ \neg (p \land q) \equiv \neg p \lor \neg q$ & De Morgan's Laws \\
+    $ \neg (p \lor q) \equiv \neg p \land \neg q$ & \\
+    \hline
+    $ p \lor (p \land q) \equiv p$ & Absorption Laws \\
+    $ p \land (p \lor q) \equiv p$ & \\
+    \hline
+    $ p \lor \neg p \equiv\text T$ & Negation Laws \\
+    $ p \land \neg p \equiv\text F$ &
+    \end{tabular}
+\end{center}
+Let's see these in action.
+\begin{example} \label{exe:better-arrow}
+    Let $p$ and $q$ be proposition variables. Show that $\neg(p \rightarrow q)  \equiv p \land \neg q$ using a series of logical equivalences. 
+\end{example}
+\begin{proof}
+    By De Morgan's Laws, we have that $\neg (\neg p \lor q) \equiv \neg (\neg p) \land \neg q$. By the Double Negation Law, we know that $\neg (\neg p) \land \neg q \equiv  p \land \neg q.$ Considering that $p \rightarrow q \equiv \neg p \lor q$ by \Cref{exe:logical-conditional}, we can say that  $\neg(p \rightarrow q) \equiv \neg(\neg p \lor q) \equiv p \land \neg q.$
+\end{proof}
+\begin{example}
+    Let $p$, $q$, and $r$ be proposition variables. Show that $(p \land q) \rightarrow (p \lor q )$ is a tautology using a series of logical equivalences.
+\end{example}
+\begin{proof}
+    Let $u \equiv p \land q$ and $w \equiv p \lor q$. We want to show that $u \rightarrow w$. By \Cref{exe:better-arrow}, we know that $u \rightarrow w \equiv \neg u \lor w.$ So we have that $(p \land q) \rightarrow (p \lor q ) \equiv \neg(p \land q) \lor (p \lor q )$. We now have the equivalences
+    \begin{align*}
+        (p \land q) \rightarrow (p \lor q ) &\equiv (\neg p \lor \neg q) \lor (p \lor q ) \tag{De Morgan's Laws} \\
+        &\equiv \neg p \lor (\neg q \lor (p \lor q )) \tag{Associative Laws} \\
+        &\equiv \neg p \lor ( (p \lor q )\lor \neg q) \tag{Commutative Laws} \\
+        &\equiv \neg p \lor ( p \lor (q \lor \neg q)) \tag{Associative Laws} \\
+        &\equiv \neg p \lor ( p \lor \text{T}) \tag{Negation Laws} \\
+        &\equiv \neg p \lor \text{T} \tag{Negation Laws} \\
+        &\equiv \text{T} \tag{Negation Laws},
+    \end{align*}
+    which complete the proof.
+\end{proof}
+\begin{example}[contraposition] \label{exe:contraposition}
+    Let $p$ and $q$ be proposition variables. Show that $(p\to q)\equiv(\lnot q\to\lnot p)$ using a series of logical equivalences. The proposition $\lnot q\to\lnot p$ is called the \dfn{contraposition} of the proposition $p\to q$.
+\end{example}
+\begin{proof}
+    The main point is to use \Cref{exe:logical-conditional} to see $(p\to q)\equiv(\lnot p\lor q)$ and $(\lnot q\to\lnot p)\equiv(\lnot\lnot q\lor\lnot p)$. Thus, we compute
+    \begin{align*}
+        \lnot q\to\lnot p &\equiv \lnot\lnot q\lor\lnot p \\
+        &\equiv q\lor\lnot p \tag{Double Negation Law} \\
+        &\equiv \lnot p\lor q \tag{Commutative Laws} \\
+        &\equiv p\to q,
+    \end{align*}
+    which completes the proof.
+\end{proof}
+
+
+\subsection{Propositional Functions}
+Thus far we have built an intuition that a proposition like $p\land q$ takes in truth values according to $p$ and $q$ and then gives back the truth value of $p\land q$. This notion can be generalized, as follows.
+\begin{definition}[propositional function]
+    An \textit{$n$-ary propositional function}\nirindex{n-ary propositional function@$n$-ary propositional function} $P$ is a function that maps the $n$-tuple $(x_1, x_2, \ldots, x_n)$ to either true or false (exclusive). Note $P$ is often called the \dfn{predicate} and the evaluation of $P$ at $(x_1, \ldots,x_n)$ is $P(x_1, \ldots,x_n)$.
+\end{definition}
+Here are some examples.
+\begin{example}
+    Let $\RR$ denote the set of real numbers. Define $P\colon \mathbb{R} \rightarrow \{\text T,\text F \}$ by
+    \[P(x)\coloneqq\begin{cases}
+        \text T & \text{if } x > 3, \\
+        \text F & \text{if } x \leq 3.
+    \end{cases}\]
+\end{example}
+\begin{example}
+    Let $\RR$ denote the set of ordered pairs of real numbers. Define $P\colon \mathbb{R} \times \mathbb{R} \rightarrow \{\text T,\text F \}$ by
+    \[P(x,y)\coloneqq\begin{cases}
+        \text T & \text{if } x > y,\\
+        \text F & \text{if } x \leq y.
+    \end{cases}\]
+\end{example}
+\begin{example} \label{ex:musa-74-function}
+    Define $P\colon \{\text{UC Berkeley Students}\} \rightarrow \{\text T,\text F \}$ by
+    \[P(x)\coloneqq\begin{cases}
+        \text T & \text{if $x$ is enrolled in MUSA 74},\\
+        \text F & \text{if $x$ is NOT enrolled in MUSA 74}.
+    \end{cases}\]
+\end{example}
+As we can see from the above examples, a propositional function maps to a proposition, but the propositional function itself is not a proposition. For example, consider \Cref{ex:musa-74-function}. Let Bob be a UC Berkeley student. The truth table below shows us that $P(\text{Bob})$ is equivalent to the proposition: Bob is enrolled in MUSA 74.
+\begin{center}
+    \begin{tabular}{c|c}
+         Bob is enrolled in MUSA 74 & $P(\text{Bob})$ \\
+         \hline
+         T & T \\
+         F & F \\
+    \end{tabular}
+\end{center}
+
+\subsection{Quantifiers}
+What if we want to create a proposition from our propositional function without an argument? {Quantifiers} allow us to do exactly that!
+\begin{definition}[universal quantification]
+    Let $P\colon S \rightarrow \{\text T,\text F\}$ be a propositional function. The \dfn{universal quantification} of $P$ is the proposition ``$P(x)$ for all $x $ in $S$''. The notation $\forall xP(x)$ denotes the universal quantification of P where $\forall$ represents ``for all''. Note $\forall xP(x)$ is true when $P(x)$ is true for all $x \in S$; otherwise, $\forall x P(x)$ is false.
+\end{definition}
+\begin{definition}[existential quantification]
+    Let $P\colon S \rightarrow \{\text T,\text F\}$ be a propositional function. The \dfn{existential quantification} of $P$ is the proposition ``there exists an element $x$ in $S$ such that $P(x)$''. The notation $\exists x P(x)$ denotes the existential quantification of $P$ where $\exists $ represents ``there exists''. Note $\exists x P(x)$ is true when $P(x)$ is true for some $x$ in $S$. If there doesn't exist an $x$ in $S$ such that $P(x)$ is true then $\exists x P(x)$ is false.
+\end{definition}
+\begin{remark}
+    Considering that a combination of quantifiers and propositional functions are utilized to represent a wide range of statements found in both mathematics and in the English language (as well as all other languages for that matter), most propositions constructed using quantifiers and propositional functions have somewhat "less formal" language to express quantifiers. For example, instead of saying ``for all the marbles x in the bag, x is blue'', we can say ``all of the marbles in the bag are blue''. 
+\end{remark}
+It is important to remember that $\forall x P(x)$ and $\exists x P(x)$ are propositions, so we can treat them as such.
+\begin{example}
+    Express the following statements using propositional functions and quantifiers.
+    \begin{enumerate}[label=(\alph*)]
+        \item Some cats have richly colored fur. 
+        \item All cats are domesticated. 
+        \item No felines that are larger than the average human are domesticated.
+        \item Felines that are not cats are not domesticated.
+        \item All felines that are larger than the average human are not cats.
+    \end{enumerate}
+\end{example}
+\begin{proof} 
+    Let $P, Q, R, S\colon \{\text{all felines}\} \rightarrow \{\text T, \text F \}$ be propositional functions. Let $P(x)$ be the statement ``$x$ is a cat'' and $Q(x)$ be the statement ``$x$ is larger than the average human''. Let $R(x)$ be the statement ``$x$ is domesticated'' and $S(x)$ be the statement ``$x$ has richly colored fur''.
+    \begin{enumerate}[label=(\alph*)]
+        \item $\exists x (P(x) \land S(x)) $.
+        \item $\forall x (P(x) \rightarrow R(x))$.
+        \item $\neg \exists x (Q(x) \land R(x))$.
+        \item $\forall x(\neg P(x) \rightarrow \neg R(x))$.
+        \item $\forall x(Q(x) \rightarrow \neg P(x))$.
+        \qedhere
+    \end{enumerate}
+\end{proof}
+Let $P$ and $Q$ be propositional functions. The following tables include commonly used propositions with quantifiers (and nested quantifiers) along with information on how to determine their truth values.
+\begin{center}
+    \begin{tabular}{c|c|c|c}
+        Proposition & Equivalent & True when: & False when: \\
+        \hline
+        $\forall x P(x)$ && $P(x)$ is true for all x & There exists an $x$ for which\\
+        &&& $P(x)$ is false \\
+        \hline
+        $\exists x P(x)$ && There exists an $x$ for which & $P(x)$ is false for all $x$ \\
+        && $P(x)$ is true & \\
+        \hline
+        $\neg \exists x P(x)$ & $\forall x \neg P(x)$ & For every $x$, $P(x)$ is false & There is some $x$ \\
+        & & & for which $P(x)$ is true  \\  
+        \hline
+        $\neg \forall x P(x)$ & $\exists x \neg P(x)$ & There is some $x$ & $P(x)$ is true for all $x$ \\
+         & & for which $P(x)$ is false &
+    \end{tabular}
+\end{center}
+%  \mbox{}
+% \begin{center}
+%     \begin{tabular}{|c|c|c|c|}
+%     \hline
+%     Proposition & Equivalent  & True when: & False when: \\
+%     \hline
+%     \hline
+%     $\neg \exists x P(x)$ & $\forall x \neg P(x)$ & For every $x$, $P(x)$ is false & There is some x \\
+%     & & & for which P(x) is true  \\  
+%     \hline
+%     $\neg \forall x P(x)$ & $\exists x \neg P(x)$ & There is some x & $P(x)$ is true for all x \\
+%      & & for which P(x) is false & \\  
+%     \hline
+%     \end{tabular}
+% \end{center}
+We note that we can even nest our quantifiers! Here is the corresponding table.
+\begin{center}
+    \begin{tabular}{c|c|c}
+    Proposition & True when: & False when: \\
+    \hline
+    $\forall x \forall y Q(x,y)$ & $Q(x, y)$ is true for every pair $x$, $y$ & There is a pair $x$, $y$  \\
+    $\forall y \forall x Q(x,y)$ & & for which $Q(x, y)$ is false \\
+    \hline
+     $\forall x \exists y Q(x,y)$ & For every $x$, there is some $y$ & There is some $x$ for which \\
+     & for which $Q(x, y)$ is true & $Q(x,y)$ is false for every $y$\\
+     \hline
+     $\exists x \forall y Q(x,y)$ & There is some $x$ for which & For every $x$ there is some \\
+     & $Q(x,y)$ is true for every $y$ & $y$ for which $Q(x,y)$ is false\\
+     \hline
+     $\exists x \exists y Q(x,y)$ & There is a pair $x$, $y$ & $Q(x, y)$ is false for every pair $x$, $y$  \\
+    $\exists y \exists x Q(x,y)$ &  for which $Q(x, y)$ is true & \\
+    \end{tabular}
+\end{center}
+% \noindent \textit{For more information, please see Kenneth H. Rosen's Discrete Mathematics and Its Applications Eighth Edition. }
+
+
+
+\subsection{Problems}
+The following problems can be found in \cite{rosen}.
+\begin{homework}
+    Let $p$ and $q$ be propositional variables. Show that $(p\to q)\equiv(\lnot q\to\lnot p)$ by
+    \begin{enumerate}[label=(\alph*)]
+        \item using a truth table, and
+        \item using rules of logical equivalence.
+    \end{enumerate}
+\end{homework}
+\begin{homework}
+    Let $p$, $q$, and $r$ be propositional variables. Prove that the following statements are tautologies by using (a) truth tables and (b) without using truth tables.
+    \begin{enumerate}[label=(\alph*)]
+        \item $\neg p \land (p \lor q) \rightarrow q$
+        \item $((p \rightarrow q) \land (q \rightarrow r)) \rightarrow (p \rightarrow r) $
+        \item $(p \land (p \rightarrow q)) \rightarrow q$
+        \item $((p \lor q) \land (p \rightarrow r) \land (q \rightarrow r)) \rightarrow r $
+    \end{enumerate}
+\end{homework}
+\begin{homework} 
+    Let $p$ and $q$ be propositional variables. Determine whether $\neg (p \oplus q)$ is logically equivalent to $p \leftrightarrow q$. If these compound propositions are logically equivalent then provide a proof. If they are not equivalent, provide an explanation.
+\end{homework}
+\begin{homework}
+    Let $L\colon \{\text{all humans in the world}\} \times \{\text{all humans in the world}\}\rightarrow \{\text T, \text F\}$ be a propositional function. Let $L(x, y)$ be the statement ``$x$ loves $y$''. Use quantifiers to express each of the following statements.
+    \begin{enumerate}[label=(\alph*)]
+        \item Everybody loves Jerry.
+        \item Everybody loves somebody.
+        \item There is somebody whom everybody loves. 
+        \item Nobody loves everybody. 
+        \item There is somebody whom Lydia does not love.
+        \item There is somebody whom no one loves.
+        \item There is exactly one person whom everyone loves. 
+        \item There are exactly two people whom Lynn loves.
+        \item Everyone loves himself or herself. 
+        \item There is someone who loves no one besides himself or herself. 
+    \end{enumerate} 
+\end{homework}
+\begin{homework}
+    Let $L\colon\{\text{all humans in the world}\} \times \{\text{all humans in the world}\}\rightarrow \{\text T, \text F\}$ be a propositional function. Let $L(x, y)$ be the statement ``$x$ loves $y$''. Translate the following statements from propositonal logic to English.
+    \begin{enumerate}[label=(\alph*)]
+        \item $\forall xL(x,b)$
+        \item $\forall x(L(b,x)\to (x=m))$; here, ``$=$'' means equality.
+    \end{enumerate}
+\end{homework}
+\begin{homework}
+    Find a counterexample, if possible, to the following universally quantified statements, where the domain for all variables consists of all the integers. If the statement is true, provide a proof.
+    \begin{enumerate}[label=(\alph*)]
+        \item $\forall x \exists y \big(x = \frac{1}{y}\big)$
+        \item $\forall x \exists y \left(y^2 - x < 100\right)$ 
+        \item $\forall x \forall y \left(x^2 \neq y^3\right)$
+    \end{enumerate}
+\end{homework}
+\begin{homework}
+    Express each of the following statements using quantifiers and then form the negation of the statement so that no negation is to the left of a quantifier. Finally, express the negation in simple English. (Do not simply use the phrase ``It is not the case that.'')
+    \begin{enumerate}[label=(\alph*)]
+        \item Some student has solved every exercise in this book.
+        \item No student has solved at least one exercise in every section of this book.
+        \item No one has lost more than one thousand dollars playing the lottery.
+        \item There is a student in this class who has chatted with exactly one other student.
+        \item No student in this class has sent e-mail to exactly two other students in this class.
+    \end{enumerate}
+\end{homework}
+
+\end{document}

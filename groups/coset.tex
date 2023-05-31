@@ -1,0 +1,363 @@
+%Read the slack post (link below) regarding syntax and formatting before you start writing lecture notes.
+% Post: https://musa-2021.slack.com/archives/C01DGR645SL/p1609187728029500
+
+
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+
+\section{Week 13: Cosets}
+In this section, we will more closely examine the way that subgroups relate to the larger group. Along the way, we will show Lagrange's theorem (\Cref{thm:lagrange}) and discuss quotient groups.
+% \begin{notation}
+%     Starting in this lecture, we will more commonly abbreviate the group law of a group $(G,\cdot)$ to merely ``$ab$'' instead of writing out ``$a\cdot b$.'' As such, we will also begin referring to $G$ itself as the group.
+% \end{notation}
+
+\subsection{Cosets}
+Given a positive integer $n$, the subgroup $n\ZZ$ sits inside the group $(\ZZ,+)$. This viewpoint allows us to understand the construction of $C_n$ better: note $n\mid a-b$ is equivalent to $a-b\in n\ZZ$. In other words, we have
+\[a\equiv b\pmod n\iff a-b\in n\ZZ.\]
+Thus, trying to generalize the construction of $C_n$, we have the following lemma.
+\begin{lemma} \label{lem:r-coset-equiv}
+    Let $(G,\cdot)$ be a group and $H\subseteq G$ a subgroup. Define the relation $\sim$ on $G$ by $g\sim h$ if and only if $g\cdot h^{-1}\in H$. Then $\sim$ is an equivalence relation.
+\end{lemma}
+\begin{proof}
+    We have the following checks. Fix $g,h,k\in G$.
+    \begin{itemize}
+        \item Reflexive: we would like to show $g\sim g$, or $g\cdot g^{-1}\in H$. However, $g\cdot g^{-1}=e$, and $e\in H$, so we are done.
+        \item Symmetric: if $g\sim h$, we would like to show $h\sim g$. Unwinding the definition of $\sim$, we are given that $g\cdot h^{-1}\in H$, and we want to show $h\cdot g^{-1}\in H$. However, we see
+        \[\left(g\cdot h^{-1}\right)^{-1}=\left(h^{-1}\right)^{-1}\cdot g^{-1}=h\cdot g^{-1}.\]
+        Here, we have used \Cref{exe:inverse-prod} in the first equality and \Cref{lem:inv-inv} in the second one. Thus, $h\cdot g^{-1}\in H$ because $H$ contains inverses.
+        \item Transitive: given $g\sim h$ and $h\sim k$, we want to show $g\sim k$. Unwinding $\sim$, we are given $g\cdot h^{-1}\in H$ and $h\cdot k^{-1}\in H$, and we want to show $g\cdot k^{-1}$. Well, we the product
+        \[\left(g\cdot h^{-1}\right)\cdot\left(h\cdot k^{-1}\right)=g\cdot \left(h^{-1}\cdot h\right)\cdot k^{-1}=g\cdot e\cdot k^{-1}=g\cdot k^{-1}\]
+        must be in $H$ because $H$ is a subgroup, so we are done.
+        \qedhere
+    \end{itemize}
+\end{proof}
+\begin{exe} \label{exe:l-coset-equiv}
+    Let $(G,\cdot)$ be a group and $H\subseteq G$ a subgroup. Define the relation $\sim$ on $G$ by $g\sim h$ if and only if $g^{-1}\cdot h\in H$. Show that $\sim$ is an equivalence relation. This does not follow immediately from \Cref{lem:r-coset-equiv}.
+\end{exe}
+As with $C_n$, the equivalence classes of the above relations are what interest us.
+\begin{lemma}
+    Let $(G,\cdot)$ be a group and $H\subseteq G$ a subgroup. Define the equivalence relation $\sim$ from \Cref{lem:r-coset-equiv}. Then the equivalence class represented by $g\in G$ is the set
+    \[H\cdot g\coloneqq\{h\cdot g:h\in H\}.\]
+\end{lemma}
+\begin{proof}
+    For now, let $[g]$ denote the equivalence class represented by $g$. Very quickly, we unwind the definition of $[g]$: note that $g'\in[g]$ if and only if $g'\sim g$, which is in turn equivalent to $g'\cdot g^{-1}\in H$. Now, we have two inclusions to show.
+    \begin{itemize}
+        \item We show $[g]\subseteq H\cdot g$. Note that $g'\in[g]$ if and only if $g'\cdot g^{-1}\in H$, as discussed above. Thus, we define $h\coloneqq g'\cdot g^{-1}$ and see that
+        \[h\cdot g=g'\cdot g^{-1}\cdot g=g'\cdot e=g',\]
+        so $g'\in H\cdot g$ follows.
+        \item We show $H\cdot g\subseteq[g]$. Indeed, suppose we have some $g'=h\cdot g$ in $H\cdot g$. To show $g'\cdot g^{-1}\in H$, we compute
+        \[g'\cdot g^{-1}=h\cdot g\cdot g^{-1}=h\cdot e=h,\]
+        finishing.
+        \qedhere
+    \end{itemize}
+\end{proof}
+\begin{exe} \label{exe:define-left-coset}
+    Let $(G,\cdot)$ be a group and $H\subseteq G$ a subgroup. Define the equivalence relation $\sim$ from \Cref{exe:l-coset-equiv}. Show that equivalence class represented by $g\in G$ is the set
+    \[g\cdot H\coloneqq\{g\cdot h:h\in H\}.\]
+\end{exe}
+We are now ready to define cosets: they are the given equivalence classes above.
+\begin{definition}[coset]
+    Let $(G,\cdot)$ be a group and $H\subseteq G$ a subgroup. Fix $g\in G$.
+    \begin{itemize}
+        \item The \textit{left \dfn{coset}} of $g$ is $g\cdot H\coloneqq\{g\cdot h:h\in H\}$. The set of all left cosets is denoted $G/H$.
+        \item The \textit{right coset} of $g$ is $H\cdot g\coloneqq\{h\cdot g:h\in H\}$. The set of all right cosets is denoted $H\backslash G$.
+    \end{itemize}
+    The ``left'' and ``right'' refers to where the $g$ is with respect to $H$.
+\end{definition}
+It can be difficult to read the difference between $H\backslash G$ (right cosets) and $H\setminus G$ (set difference), and it is essentially for this reason that we will try to reason with left cosets instead of right cosets when we can. However, confusion will not usually arise because there is no reason to subtract the full group $G$ from a subgroup $H$ because this is just $H\setminus G=\emp$.
+\begin{notation}
+    As explained at the start of this subsection, we may now write $C_n$ as $\ZZ/n\ZZ$. We might write the equivalence classes $[k]_n$ as $k+n\ZZ$.
+\end{notation}
+\begin{exe} \label{exe:nz-is-normal}
+    Let $n$ be a positive integer and $k$ an integer. Verify that $k+n\ZZ=n\ZZ+k$ as sets.
+\end{exe}
+Let's see some more examples.
+\begin{example} \label{ex:d4-cosets}
+    Let $(D_4,\cdot)$ be the symmetries of the square. The set $S\coloneqq\{e,s\}$ is a subgroup of $D_4$.
+    \begin{itemize}
+        \item The left cosets are
+        \[e\cdot S=\{e,s\},\quad r\cdot S=\{r,r\cdot s\},\quad r^2\cdot S=\left\{r^2,r^2\cdot s\right\},\quad r^3\cdot S=\left\{r^3,r^3\cdot s\right\}.\]
+        There are no more cosets because we have alrady represented each element of $D_4$ above.
+        \item The right cosets are
+        \[S\cdot e=\{e,s\},\quad S\cdot r=\left\{r,r^3\cdot s\right\},\quad S\cdot r^2=\left\{r^2,r^2\cdot s\right\},\quad S\cdot r^3=\left\{r^3,r\cdot s\right\}.\]
+        (Why there are no more cosets?)
+    \end{itemize}
+    Notably, $r\cdot S\ne S\cdot r$, so the distinction between left and right cosets is necessary.
+\end{example}
+\begin{exe}
+    Let $(D_4,\cdot)$ be the symmetries of the square. Compute the left and right cosets of the subgroup $R\coloneqq\left\{e,r,r,^2,r^3\right\}$.
+\end{exe}
+\begin{example} \label{ex:double-quotient}
+    The group $(\ZZ/6\ZZ,+)$ has a subgroup $3\ZZ/6\ZZ=\{[0]_6,[3]_6\}$.
+    \begin{itemize}
+        \item The left cosets are
+        \[[0]_6+3\ZZ/6\ZZ=\{[0]_6,[3]_6\},\quad[1]_6+3\ZZ/6\ZZ=\{[1]_6,[4]_6\},\quad[2]_6+3\ZZ/6\ZZ=\{[2]_6,[5]_6\}.\]
+        \item The right cosets are
+        \[3\ZZ/6\ZZ+[0]_6=\{[0]_6,[3]_6\},\quad3\ZZ/6\ZZ+[1]_6=\{[1]_6,[4]_6\},\quad3\ZZ/6\ZZ+[2]_6=\{[2]_6,[5]_6\}.\]
+    \end{itemize}
+    Note that the cosets are equal this time. Also note that $(\ZZ/6\ZZ)/(3\ZZ/6\ZZ)$ resembles $\ZZ/3\ZZ$.
+\end{example}
+\begin{example} \label{ex:r-mod-z}
+    Consider the subgroup $\ZZ$ of the group $(\RR,+)$. Then we can consider the left cosets $\RR/\ZZ$, which are the sets $a+\ZZ$, where $a+\ZZ=a'+\ZZ$ if and only if $a-a'\in\ZZ$. Convince yourself that each coset in $\RR/\ZZ$ has a unique representative of the form $a+\ZZ$ such that $a\in[0,1)$.
+\end{example}
+Here are a few more abstract examples.
+\begin{example} \label{ex:trivial-cosets}
+    Let $(G,\cdot)$ be a group. Then $H=\{e\}$ is a subgroup by \Cref{exe:easy-subgroups}. The left coset of some $g\in G$ is
+    \[g\cdot H=\{g\cdot h:h\in H\}=\{g\cdot e\}=\{g\}.\]
+    Similarly, $H\cdot g=\{g\}$.
+\end{example}
+\begin{example}
+    Let $(G,\cdot)$ be a group. Then $H=G$ is a subgroup by \Cref{exe:easy-subgroups}. We claim that the left coset of some $g\in G$ is $g\cdot G=G$. For one, note that
+    \[e\cdot G=\{e\cdot g:g\in G\}=\{g:g\in G\}=G.\]
+    However, this implies that $g\in e\cdot G$, so $[g]=[e]$, where we are using the equivalence relation of \Cref{exe:l-coset-equiv}. It follows $g\cdot H=e\cdot H$.
+\end{example}
+
+\subsection{How to Think About Cosets}
+The following proposition explains how to think about cosets. Being able to interface with all the equivalent conditions is important.
+\begin{proposition} \label{prop:how-to-coset}
+    Let $(G,\cdot)$ be a group and $H\subseteq G$ be a subgroup. For $g_1,g_2\in G$, the following are equivalent.
+    \begin{listalph}
+        \item $g_1^{-1}\cdot g_2\in H$.
+        \item $g_2^{-1}\cdot g_1\in H$.
+        \item $g_1\in g_2\cdot H$.
+        \item $g_2\in g_1\cdot H$.
+        \item $g_1\cdot H\subseteq g_2\cdot H$.
+        \item $g_2\cdot H\subseteq g_1\cdot H$.
+        \item $g_1H=g_2H$.
+    \end{listalph}
+\end{proposition}
+\begin{proof}
+    This proof contains no ``hard work.'' Instead, we will essentially reduce everything to the equivalence relation $\sim$ of \Cref{exe:l-coset-equiv} so that the sets $g\cdot H$ are the equivalence classes by \Cref{exe:define-left-coset}.
+
+    For example, because $g_1\sim g_2$ is equivalent to $g_2\sim g_1$, we see that (a) and (b) are equivalent. Furthermore, because cosets are the equivalence classes, we see that $g_1\in g_2\cdot H$ is equivalent to $g_1^{-1}\cdot g_2\in H$, establishing (a) and (c) are equivalent. Similarly, (b) and (d) are equivalent. Thus, all of (a)--(d) are equivalent.
+    
+    Next, we show that (a)--(d) are equivalent to (e). On one hand, given (e), we note $g_1\in g_1\cdot H$, so $g_1\cdot H\subseteq g_2\cdot H$. Conversely, suppose $g_1\in g_2\cdot H$, and we show $g_1\cdot H\subseteq g_2\cdot H$. Using the equivalence relation, we note $g\in g_1\cdot H$ is equivalent to $g\sim g_1$. However, we know $g_1\sim g_2$, so it follows $g\sim g_2$ as well. Thus, $g\in g_1\cdot H$ implies $g\in g_2\cdot H$, which is what we wanted.
+    
+    A similar argument shows that (a)--(d) are equivalent to (f). It remains to show that the conditions (a)--(f) are equivalent to (g). Well, (g) is equivalent to (e) and (f) combined. So in one direction, (g) certainly implies (e). In the other direction, we know (e) implies (f), and then (e) and (f) implies (g). This completes the proof.
+\end{proof}
+\begin{remark} \label{rem:unjustified-manip}
+    The way to remember \Cref{prop:how-to-coset} is to imagine trying to manipulate the expression $g_1\cdot H=g_2\cdot H$ symbolically. For example, from $g_1\cdot H=g_2\cdot H$, we expect to have $\left(g_2^{-1}\cdot g_1\right)\cdot H=e\cdot H$ by multiplying on the left by $g_2^{-1}$. This then should imply $g_2^{-1}\cdot g_1\in H$, as we expect. We will partially rigorize this kind of thinking in \Cref{lem:mu-g-moves-cosets}.
+\end{remark}
+\begin{exe}
+    Let $(G,\cdot)$ be a group and $H\subseteq G$ a subgroup. Show directly from the definition $g\cdot H\coloneqq\{g\cdot h:g\in G\}$ that $g_1\in g_2\cdot H$ implies $g_1\cdot H\subseteq g_2\cdot H$.
+\end{exe}
+\begin{exe} \label{exe:how-to-right-coset}
+    State and prove the following right-coset version of \Cref{prop:how-to-coset}: let $(G,\cdot)$ be a group and $H\subseteq G$ a subgroup. For $g_1,g_2\in G$, the following are equivalent.
+    \begin{listalph}
+        \item $g_1\cdot g_2^{-1}\in H$.
+        \item $g_1\in H\cdot g_2$.
+        \item $H\cdot g_1=H\cdot g_2$.
+    \end{listalph}
+    Feel free to add more equivalent conditions.
+\end{exe}
+Let's see an example of how to use these conditions.
+\begin{corollary} \label{cor:intersect-cosets}
+    Let $(G,\cdot)$ be a group and $H\subseteq G$ a subgroup. For $g_1,g_2\in G$, the following are equivalent.
+    \begin{itemize}
+        \item $(g_1\cdot H)\cap(g_2\cdot H)$ is nonempty.
+        \item $g_1\cdot H=g_2\cdot H$.
+    \end{itemize}
+\end{corollary}
+\begin{proof}
+    In the easier direction, if $g_1\cdot H=g_2\cdot H$, then $(g_1\cdot H)\cap(g_2\cdot H)$ is nonempty; for example, $g_1\in g_1\cdot H$, so $g_1\in g_1\cdot H\cap g_2\cdot H$.
+    
+    The converse requires some attention. Suppose $(g_1\cdot H)\cap (g_2\cdot H)$ is nonempty. Then there is some $g\in G$ such that $g\in g_1\cdot H$ and $g\in g_2\cdot H$. But by \Cref{prop:how-to-coset}, this implies $g\cdot H=g_1\cdot H$ and $g\cdot H=g_2\cdot H$, so $g_1\cdot H=g_2\cdot H$ follows.
+\end{proof}
+\begin{corollary} \label{cor:left-to-right-coset}
+    Let $(G,\cdot)$ be a group and $H\subseteq G$ a subgroup. For $g_1,g_2\in G$, if $g_1\cdot H=g_2\cdot H$, then $H\cdot g_1^{-1}=H\cdot g_2^{-1}$.
+\end{corollary}
+\begin{proof}
+    Note $g_1\cdot H=g_2\cdot H$ implies $g_1^{-1}\cdot g_2\in H$ by \Cref{prop:how-to-coset}. However, $g_2=\left(g_2^{-1}\right)^{-1}$, so $g_1^{-1}\cdot\left(g_2^{-1}\right)^{-1}\in H$. By \Cref{exe:how-to-right-coset}, this implies $H\cdot g_1^{-1}=H\cdot g_2^{-1}$, which is what we wanted.
+\end{proof}
+\begin{exe}
+    Show \Cref{cor:left-to-right-coset} without using any results of this subsection.
+\end{exe}
+\begin{exe}
+    Find an example of a group $(G,\cdot)$ and subgroup $H\subseteq G$ such that there are elements $g_1,g_2\in G$ with $g_1\cdot H=g_2\cdot H$ and $H\cdot g_1\ne H\cdot g_2$.
+\end{exe}
+
+\subsection{Lagrange's Theorem}
+\Cref{ex:d4-cosets,ex:double-quotient,ex:trivial-cosets} all have the common feature that the cosets seem to all have the same size. (Even \Cref{ex:r-mod-z} has this property if one considers cardinality.) This is not a coincidence, as we now explain.
+\begin{lemma} \label{lem:mu-g-moves-cosets}
+    Let $(G,\cdot)$ be a group and $H\subseteq G$ a subgroup. For each $g\in G$, define the function $\mu_g\colon G\to G$ by $\mu_g(g')\coloneqq g\cdot g'$. Then $\mu_g(g'\cdot H)=(g\cdot g')\cdot H$.
+\end{lemma}
+\begin{proof}
+    This is essentially the associative law: intuitively, we should read this result as $g\cdot(g'\cdot H)=(g\cdot g')\cdot H$, but we have not defined how to multiply $g\in G$ by the coset $g'\cdot H$. Anyway, we compute
+    \begin{align*}
+        \mu_g(g'\cdot H) &= \{\mu_g(x):x\in g'\cdot H\} \\
+        &= \{\mu_g(g'\cdot h):h\in H\} \\
+        &= \{g\cdot g'\cdot h:h\in H\} \\
+        &= (g\cdot g')\cdot H,
+    \end{align*}
+    which is what we wanted.
+\end{proof}
+\begin{theorem}[Lagrange] \label{thm:lagrange}
+    Let $(G,\cdot)$ be a group and $H\subseteq G$ a subgroup. Then all cosets in $G/H$ have the same cardinality.
+\end{theorem}
+\begin{proof}
+    For psychological reasons, we note that it suffices to show that each coset $g\cdot H$ has the same cardinality as $e\cdot H$. Indeed, this will imply that any two cosets $g\cdot H$ and $g'\cdot H$ have the same cardinality as $e\cdot H$ and thus have the same cardinality.
+    
+    Well, define the function $\mu_g\colon G\to G$ as in \Cref{prop:mult-is-bij} and note that $\mu_g$ actually restricts to a function $\mu_g\colon(e\cdot H)\to(g\cdot H)$ by \Cref{lem:mu-g-moves-cosets}. (Indeed, $g\cdot e=g$.) We claim that this restriction is bijective, which will complete the proof.
+    \begin{itemize}
+        \item We show $\mu_g\colon(e\cdot H)\to(g\cdot H)$ is surjective. Indeed, this is exactly \Cref{lem:mu-g-moves-cosets}.
+        \item We show $\mu_g\colon(e\cdot H)\to(g\cdot H)$ is injective. Well, the full function $\mu_g\colon G\to G$ is already injective, so $\mu_g(g_1)=\mu_g(g_2)$ implies $g_1=g_2$ for any $g_1,g_2\in G$. Thus, $\mu_g(h_1)=\mu_g(h_2)$ implies $h_1=h_2$ for any $h_1,h_2\in e\cdot H$, which is what we wanted.
+        \qedhere
+    \end{itemize}
+\end{proof}
+\Cref{thm:lagrange} has the following surprising corollary.
+\begin{corollary} \label{cor:ord-subgroup}
+    Let $(G,\cdot)$ be a finite group and $H\subseteq G$ a subgroup. Then
+    \[|G|=|G/H|\cdot|H|.\]
+    In particular, $|H|$ divides $|G|$.
+\end{corollary}
+\begin{proof}
+    The idea here is that the cosets form a partition of $G$, which has $|G|$ elements. But there are $|G/H|$ total cosets, each of size $|H|$, which will give the result.
+    
+    Let's be a bit more explicit. Enumerate the cosets in $G/H$ as $\{g_1\cdot H,g_2\cdot H,\ldots,g_n\cdot H\}$, where $n\coloneqq|G/H|$. Because cosets are equivalence classes (by \Cref{exe:define-left-coset}), we see that each element of $G$ lives in exactly one of these cosets. Taking cardinalities, it follows that
+    \[|G|=\sum_{i=1}^n|g_i\cdot H|.\]
+    However, by \Cref{thm:lagrange}, we see $|g_i\cdot H|=|H|$, so actually
+    \[|G|=\sum_{i=1}^n|H|=|G/H|\cdot |H|,\]
+    which is what we wanted.
+\end{proof}
+\Cref{cor:ord-subgroup} is amazing. It is essentially the first time in group theory that we really see the structure of a group impact what a group can possibly be. Of course, we have been seeing this all along in our examples of cosets at the start of this section.
+\begin{example}
+    Let $(G,\cdot)$ be a finite group. We saw in \Cref{prop:center} that
+    \[Z(G)\coloneqq\{g\in G:g\cdot h=g\cdot g\text{ for all }h\in G\}\]
+    is a subgroup of $G$. Thus, $|Z(G)|$ divides $|G|$. This is not at all obvious a priori!
+\end{example}
+
+\subsection{Quotient Groups}
+We continue trying to generalize our construction of $\ZZ/n\ZZ$. Given a group $(G,\cdot)$ with subgroup $H\subseteq G$, we might hope that we can make $G/H$ into a group with the operation
+\[(g_1\cdot H)\cdot(g_2\cdot H)\coloneqq(g_1\cdot g_2)\cdot H.\]
+However, this operation is not well-defined in general.
+\begin{example} \label{ex:bad-quotient}
+    We work in the context of \Cref{ex:d4-cosets}. We would like
+    \[(e\cdot S)\cdot(r\cdot S)=r\cdot S,\]
+    but $e\cdot S=s\cdot S$, so we would also like
+    \[(s\cdot S)\cdot(r\cdot S)=(s\cdot r\cdot r)\cdot S=\left(r^3\cdot s\right)\cdot S=r^3\cdot S,\]
+    and $r\cdot S\ne r^3\cdot S$.
+\end{example}
+Thus, one cannot in general make $G/H$ into a group they way that we would like.
+
+Let's investigate this further. Thinking symbolically about our cosets (for example, see \Cref{rem:unjustified-manip}), we might hope we can write
+\begin{equation}
+    (g_1\cdot H)\cdot(g_2\cdot H)=g_1\cdot(H\cdot g_2)\cdot H\stackrel*=g_1\cdot(g_2\cdot H)\cdot H=(g_1\cdot g_2)\cdot H, \label{eq:pipe-dream-normal-subgroup}
+\end{equation}
+where maybe $H\cdot H=H$. However, there is an issue at the marked equality $\stackrel*=$: we won't always have $g_2\cdot H=H\cdot g_2$! For example, in \Cref{ex:d4-cosets}, we saw $r\cdot S\ne r\cdot S$, which was more or less the problem in \Cref{ex:bad-quotient}.
+
+However, in our construction of $\ZZ/n\ZZ$, we saw in \Cref{exe:nz-is-normal} that we do have $k+n\ZZ=n\ZZ+k$ for any $k\in\ZZ$, so sometimes we will have the property that $g_2\cdot H=H\cdot g_2$. As such, we define a new adjective.
+\begin{definition}[normal]
+    Let $(G,\cdot)$ be a group. A subgroup $H\subseteq G$ is \dfn{normal} if and only if $g\cdot H=H\cdot g$ (as sets) for any $g\in G$.
+\end{definition}
+Here are the examples we have easy access to.
+\begin{example}
+    We showed in \Cref{exe:nz-is-normal} that the subgroup $n\ZZ$ of $\ZZ$ is normal.
+\end{example}
+\begin{example}
+    The subgroup $R\coloneqq\left\{e,r,r^2,r^3\right\}$ of $(D_4,\cdot)$ is normal. For $g\in D_4$, there are two cases.
+    \begin{itemize}
+        \item If $g\in R$, then $g\cdot R=e\cdot R=R=R\cdot e=R\cdot g$.
+        \item If $g\notin R$, then $g\cdot R$ cannot have intersection with $e\cdot R$ by \Cref{cor:intersect-cosets}. However, $D_4$ has eight elements, and $e\cdot R=R$ and $g\cdot R$ must both have four elements by \Cref{thm:lagrange}, so $g\cdot R$ must be $D_4\setminus R$. The same argument shows $R\cdot g=D_4\setminus R$, so $g\cdot R=R\cdot g$ follows.
+    \end{itemize}
+\end{example}
+\begin{example}
+    Let $(G,\cdot)$ be a group, and set $Z(G)\coloneqq\{g\in G:g\cdot h=h\cdot g\text{ for all }h\in G\}$. Then $Z(G)$ is a normal subgroup of $G$. Indeed, for any $g\in G$, we compute
+    \begin{align*}
+        g\cdot Z(G) &= \{g\cdot h:h\in Z(G)\} \\
+        &= \{h\cdot g:h\in Z(G)\} \\
+        &= Z(G)\cdot g.
+    \end{align*}
+\end{example}
+\begin{nex}
+    The subgroup $S\coloneqq\{e,s\}$ of $(D_4,\cdot)$ is not normal. Indeed, we saw in \Cref{ex:d4-cosets} that $r\cdot S\ne S\cdot r$.
+\end{nex}
+Continuing our story, as we might hope from \eqref{eq:pipe-dream-normal-subgroup}, our prayers about $G/H$ are answered for normal subgroups.
+\begin{proposition}
+    Let $(G,\cdot)$ be a group and $H\subseteq G$ a normal subgroup. Then $G/H$ is a group with the operation
+    \[(g_1\cdot H)\cdot(g_2\cdot H)\coloneqq(g_1\cdot g_2)\cdot H.\]
+\end{proposition}
+\begin{proof}
+    The main difficulty is showing that the operation is a well-defined function, which we do first. This proof is a lot of force. If $g_1\cdot H=g_1'\cdot H$ and $g_2\cdot H=g_2'\cdot H$, then we must show that
+    \[(g_1\cdot H)\cdot(g_2\cdot H)\stackrel?=(g_1'\cdot H)\cdot(g_2'\cdot H),\]
+    or
+    \[(g_1\cdot g_2)\cdot H\stackrel?=(g_1'\cdot g_2')\cdot H.\]
+    The conclusion is the most complicated piece of the puzzle right now, so we will manipulate it first. By \Cref{prop:how-to-coset}, it's enough to show that $(g_1'\cdot g_2')\cdot(g_1\cdot g_2)^{-1}\in H$. Equivalently, it's enough to show $g_1'\cdot g_2'\cdot g_2^{-1}\cdot g_1^{-1}\in H$.
+    
+    We're now in a position to use our hypotheses. Because $H$ is normal, we see $g_2\cdot H=g_2'\cdot H$ implies $H\cdot g_2=H\cdot g_2'$, so \Cref{exe:how-to-right-coset} implies that $g_2'\cdot g_2^{-1}\in H$. Thus, we set $h\coloneqq g_2'\cdot g_2^{-1}$, and we want to show $g_1'\cdot h\cdot g_1^{-1}\in H$. To finish, we note \Cref{exe:how-to-right-coset} tells us that it's enough to show $g_1'\cdot h\in H\cdot g_1$, but $g_1'\cdot h\in g_1'\cdot H$ by definition of $g_1'\cdot H$, and $g_1'\cdot H=g_1\cdot H=H\cdot g_1$ because $H$ is normal.
+    
+    So we have a well-defined binary operation. It remains to check our group properties. These all follow more or less directly from $G$. Fix any $g,g',g''\in G$.
+    \begin{itemize}
+        \item Associative: note
+        \[(g\cdot H)\cdot((g'\cdot H)\cdot(g''\cdot H))=(g\cdot H)\cdot((g'\cdot g'')\cdot H)=(g\cdot g'\cdot g'')\cdot H.\]
+        A similar argument shows that $((g\cdot H)\cdot(g'\cdot H))\cdot(g''\cdot H)=(g\cdot g'\cdot g'')\cdot H$, so we are done.
+        \item Identity: we claim that $e\cdot H$ is our identity element. Indeed, for any coset $g\cdot H$, we write
+        \[(e\cdot H)\cdot(g\cdot H)=(e\cdot g)\cdot H=g\cdot H.\]
+        Similarly, $(g\cdot H)\cdot(e\cdot H)=(g\cdot e)\cdot H=g\cdot H$.
+        \item Inverse: we claim that the inverse of the coset $g\cdot H$ is $g^{-1}\cdot H$. Indeed,
+        \[(g\cdot H)\cdot\left(g^{-1}\cdot H\right)=\left(g\cdot g^{-1}\right)\cdot H=e\cdot H.\]
+        Similarly, $\left(g^{-1}\cdot H\right)\cdot(g\cdot H)=\left(g^{-1}\cdot g\right)\cdot H=e\cdot H$.
+        \qedhere
+    \end{itemize}
+\end{proof}
+\begin{example} \label{ex:double-quotient-is-z3z}
+    We work in the context of \Cref{ex:double-quotient}. We can visually see that $3\ZZ/6\ZZ$ is a normal subgroup of $\ZZ/6\ZZ$. In the group $(\ZZ/6\ZZ)/(3\ZZ/6\ZZ)$, we can also see that the addition law is given by
+    \[([k]_6+3\ZZ/6\ZZ)+([\ell]_6+3\ZZ/6\ZZ)=([k]_6+[\ell]_6)+3\ZZ/6\ZZ=[k+\ell]_6+3\ZZ/6\ZZ.\]
+    Thus, this group really looks identical to $\ZZ/3\ZZ$. Next lecture we will be able to put into words what ``identical'' means.
+\end{example}
+
+\subsection{Problems}
+
+\begin{homework}
+    Let $(D_4,\cdot)$ denote the symmetries of the square, and let $R\coloneqq\left\{e,r,r^2,r^3\right\}$.
+    \begin{listalph}
+        \item For each $g\in R$, show that $\{e,g\cdot s\}$ is a subgroup of $D_4$.
+        \item For which $g\in R$ is $\{e,g\cdot s\}$ a normal subgroup of $D_4$?
+    \end{listalph}
+\end{homework}
+
+\begin{homework}
+    Let $(G,\cdot)$ be a group and $H\subseteq G$ a subgroup. Show that the function $f\colon G/H\to H\backslash G$ defined by $f(g\cdot H)\coloneqq H\cdot g^{-1}$ is well-defined and a bijection. What is the inverse function?
+\end{homework}
+
+\begin{homework}
+    Let $(G,\cdot)$ be a group such that $|G|=p$, where $p$ is a prime number.
+    \begin{listalph}
+        \item Let $g\in G$ be an element not equal to the identity. Show that
+        \[\langle g\rangle\coloneqq\left\{e,g,g^2,g^3,g^3,\ldots\right\}\]
+        is a subgroup of $G$.
+        \item Show that $|\langle g\rangle|>1$. Conclude that $|\langle g\rangle|=p$ and thus $G=\langle g\rangle$.
+    \end{listalph}
+\end{homework}
+
+\begin{homework}
+    Let $(G,\cdot)$ be an abelian group. Show that all subgroups $H\subseteq G$ are normal.
+\end{homework}
+
+\begin{homework}
+    Let $(G,\cdot)$ be a group and $H\subseteq G$ a subgroup. For each $g\in G$, define the set
+    \[g\cdot H\cdot g^{-1}\coloneqq\left\{g\cdot h\cdot g^{-1}:h\in H\right\}.\]
+    Show the following.
+    \begin{listalph}
+        \item If $g\cdot H\cdot g^{-1}=H$, then $g\cdot H=H\cdot g$.
+        \item If $H$ is a normal subgroup, then $g\cdot H\cdot g^{-1}=H$ for all $g\in G$.
+        \item If $g\cdot H\cdot g^{-1}=H$ for all $g\in G$, then $H$ is normal.
+    \end{listalph}
+\end{homework}
+
+\begin{homework}
+    Let $(G,\cdot)$ be a group, and let $H_1,H_2\subseteq G$ be normal subgroups. Show that $H_1\cap H_2$ is a normal subgroup.
+\end{homework}
+
+\begin{homework}
+    Let $(G,\cdot)$. Suppose that $H\subseteq G$ is a subgroup such that $G/H$ has two elements. Show that $H$ is a normal subgroup of $G$.
+\end{homework}
+
+\begin{homework}
+    Let $(G,\cdot)$ be a group and $H\subseteq G$ a subgroup. This exercise explains that the definition of ``normal subgroup'' is in some sense chosen exactly so that $G/H$ is a group.
+    \begin{listalph}
+        \item Suppose $h\cdot g\in g\cdot H$ for all $h\in H$. Show that $H\cdot g=g\cdot H$.
+        \item Suppose that $G/H$ is a group with group law given by $(g_1\cdot H)\cdot(g_2\cdot H)=(g_1\cdot g_2)\cdot H$. In particular, suppose that this operation is well-defined. Show that $H$ is a normal subgroup of $G$.
+    \end{listalph}
+\end{homework}
+
+\end{document}

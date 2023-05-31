@@ -1,0 +1,121 @@
+%Read the slack post (link below) regarding syntax and formatting before you start writing lecture notes.
+% Post: https://musa-2021.slack.com/archives/C01DGR645SL/p1609187728029500
+
+
+
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+
+\section{Week 7: The Pigeonhole Principle}
+In this section, we discuss the pigeonhole principle, which is a basic theorem in combinatorics. It says that if you have $n$ pigeons roosting in fewer than $n$ nests (``pigeonholes''), then one of the nests contains at least two pigeons.
+
+\subsection{Basic Pigeonholing}
+% One of the most important applications of proof by contradiction is the pigeonhole principle, which is a basic theorem in combinatorics, the study of counting.  Let's look at the following example below.
+Suppose that a flock of $20$ pigeons flies into a set of $19$ pigeonholes to roost. Because there are $20$ pigeons but only $19$ pigeonholes, a least one of these $19$ pigeonholes must have at least two pigeons in it. To see why this is true, note that if each pigeonhole had at most one pigeon in it, at most $19$ pigeons, one per hole, could be accommodated. %This illustrates a general principle called the ``pigeonhole principle,'' which states that if there are more pigeons than pigeonholes, then there must be at least one pigeonhole with at least two pigeons in it.
+
+This ``principle'' is extremely useful; it applies to much more than pigeons and pigeonholes.
+\begin{theorem}[Pigeonhole principle] \label{thm:pigeonhole}
+    Let $k$ be a positive integer. If $k + 1$ or more objects are placed into the $k$ boxes, then there is at least one box containing two or more of the objects.
+\end{theorem}
+\begin{proof}
+    We prove the contrapositive: suppose that no box has two or more objects, and we show there are no more than $k$ objects total. Well, each box has at most one object. But there are $k$ boxes, which means there are at most $k$ objects contained in boxes. This is what we wanted.
+\end{proof}
+\Cref{thm:pigeonhole} looks innocent enough, but it has powerful applications. Let's see some examples.
+\begin{example}
+    Among any group of $367$ people, there must be at least two with the same birthday by the Pigeonhole Principle \ref{thm:pigeonhole}, because there are only $366$ possible birthdays.
+\end{example}
+\begin{exe}[Ramsey-type theorem]
+    Suppose that $X$ is the set of people at a party.  Then, there are at least two people in $X$ which have the same number of friends among those in $X$.
+\end{exe}
+\begin{proof}
+    Assume that there are $n$ people at the party. Everyone has at most $n - 1$ friends in $X$, because they cannot be friends with themselves. There are two cases: either everyone has at least one friend, or is there is someone with no friends.
+    \begin{itemize}
+        \item Suppose everyone has at least $1$ friend. Thus there are $n - 1$ different possibilities of the number of friends for $n$ people, so by the Pigeonhole~Principle \ref{thm:pigeonhole}, two people have the same number of friends.
+        \item Suppose that there is an individual with no friends; let's call them Nir.\footnote{How sad.} If someone other than Nir also has no friends, then there are two individuals with the same number of friends (namely $0$), and we're done.
+        
+        Otherwise, everyone other than Nir has at least one friend. Additionally, everyone than Nir has at most $n - 2$ friends, for if they had $n - 1$ friends, then they'd be friends with Nir. Since there are $n - 1$ people with between $1$ and $n - 2$ friends, two of them must have the same number of friends by the pigeonhole principle.
+    \end{itemize}
+    Having dealt with both cases, we are done.
+\end{proof}
+Here's an exercise for you to try.
+\begin{exe}
+    How many students must be in a class to guarantee that at least two students receive the same score on the final exam, if the exam is graded on a scale from $0$ to $100$ points?
+\end{exe}
+
+% We know that there are 101 possible scores on the final. The pigeonhole principle shows that among any 102 students there must be at least 2 students with the same score.
+
+\subsection{Generalized Pigeonholing}
+We can strengthen \Cref{thm:pigeonhole} as follows.
+\begin{theorem}[Generalized Pigeonhole principle] \label{thm:gen-pigeonhole}
+    Let $k$ be a positive integer. If $N$ objects are placed into $k$ boxes, then there is at least one box containing at least $ \lceil N/k \rceil $ objects. Here, $\lceil x\rceil$ refers to the least positive integer greater than or equal to $x$.
+\end{theorem}
+\begin{proof}
+    Again, we proceed by contraposition. Suppose that none of the boxes contain at least $\lceil N/k \rceil{}$ objects, and we show that there are not $N$ total objects. Then the total number of objects is at most
+    \[k(\lceil N/k \rceil -1) < k((N/k + 1) - 1) = N,\]
+    where we have used the inequality $\lceil N/k \rceil < (N/k) + 1$ has been used. Thus, the total number of objects is less than $N$, which is what we wanted.
+\end{proof}
+And here's an example.
+\begin{exe}
+    Compute the minimum number of students required in a MUSA 74 DeCal course to be sure that at least six will receive the same grade, if there are five possible grades, A, B, C, D, and F.
+\end{exe}
+\begin{proof}
+    By \Cref{thm:gen-pigeonhole}, if there are $N$ students with $\ceil{N/5}\ge6$, then at least six students will receive the same grade. The smallest such $N$ is $N=5\cdot 5+1=26$.
+    
+    We now show that $N=26$ is minimal. If you have only $25$ students, it is possible for there to be five students who received each grade so that no six students have received the same grade. Thus, $26$ is the
+    minimum number of students needed to ensure that at least six students will receive the same
+    grade. 
+\end{proof}
+And here's an example for you to try.
+\begin{exe}
+    How many cards must be selected from a standard deck of 52 cards to guarantee that at least three cards of the same suit are selected?
+\end{exe}
+% How would you approach this example? 
+% (Hint: Think of the general pigeonhole principle and look at how we did the previous example!)
+One limitation of the theorems we've stated so far in this section is that they only apply to situations with finitely many objects and finitely many boxes. To finish this section we'll prove a theorem that generalizes these to the case when there are infinitely many objects.
+\begin{theorem}[Infinite Pigeonhole principle] \label{thm:inf-pigenhole}
+    If infinitely many objects are placed into a finite number of boxes, then there is at least one box containing infinitely many objects.
+\end{theorem}
+\begin{proof}
+    Unsurprisingly, we proceed by contraposition. Suppose that none of the boxes contain infinitely many objects, and we show that there are not an infinite number of boxes in total. Indeed, because there are finitely many boxes, the total number of objects in all the boxes is a finite sum of finite numbers and so is finite.
+\end{proof}
+\begin{example}
+    There are infinitely many primes, but there are only $10$ possible last digits for each of these primes. Thus, by \Cref{thm:inf-pigenhole}, there exists a digit $d$ such that infinitely many primes have the last digit $d$.
+\end{example}
+
+\subsection{Problems}
+\begin{homework}
+    Suppose that every student in the MUSA 74 DeCal course of 50 students is a freshman, sophomore, junior, or senior. 
+    \begin{enumerate}[label=(\alph*)]
+        \item Show that there are at least 13 freshmen, at least 13 sophomores, at least 13 juniors, or at least 13 seniors in the course.
+        \item Show that there are at least 20 freshmen, at least 15 sophomores, at least 8 juniors, or at least 9 seniors.  
+    \end{enumerate}
+\end{homework}
+
+\begin{homework}
+    Determine whether the following statements are true or false. If they are true, provide a proof; if they are false, provide a counterexample. 
+    \begin{enumerate}[label=(\alph*)]
+        \item The Pigeonhole principle tells us that if there are $n+1$ pigeons and $n$ holes, each hole will have at least one pigeon.
+        \item In a group of $100$ people, there are at least $\lceil 100/12 \rceil = 9$ who were born in the same month.  
+        \item The Pigeonhole principle tells us that with $n$ pigeons and $k$ holes, each hole can have at most $\lceil N/k \rceil$ pigeons.
+        \item Suppose we have a function $f\colon S\to T$ from a set $S$ with $k+1$ or more elements to a set $T$ with $k$ elements. Then there are $x,y\in S$ such that $f(x)=f(y)$.
+    \end{enumerate}
+\end{homework}
+
+\begin{homework}
+    Determine if the following statements are true or false. If they are true, provide a proof; if they are false, provide a counterexample.
+    \begin{enumerate}[label=(\alph*)]
+        \item Whenever $4$ girls and $4$ boys are seated around a circular table with $8$ seats, there is always a person with both neighbors as boys.
+        \item Whenever $5$ girls and $5$ boys are seated around a circular table with $10$ seats, there is always a person with both neighbors as boys.
+        \item Let $n$ be any positive integer. Whenever $2n+1$ girls and $2n+1$ boys are seated around a circular table with $2(2n+1)$ seats, there is always a person with both neighbors as boys.
+    \end{enumerate}
+\end{homework}
+
+\begin{homework}
+    Let $S$ be a subset of positive integers less than or equal to $100$.
+    \begin{enumerate}[label=(\alph*)]
+        \item Find a subset $S$ with $50$ positive integers such that there do not exist distinct positive integers $a$ and $b$ in $S$ such that $b/a$ is an integer power of $2$.
+        \item If $S$ has $51$ positive integers, show that there exist distinct positive integers $a$ and $b$ in $S$ such that $b/a$ is an integer power of $2$.
+    \end{enumerate}
+\end{homework}
+
+\end{document}

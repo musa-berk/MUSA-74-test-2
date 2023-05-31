@@ -1,0 +1,525 @@
+%Read the slack post (link below) regarding syntax and formatting before you start writing lecture notes.
+% Post: https://musa-2021.slack.com/archives/C01DGR645SL/p1609187728029500
+
+
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+
+\section{Week 10: Closed Sets}
+In this lecture, we discuss everything you ever wanted to know about closed sets. We will give two definitions of a closed subset of a metric space $(X,d)$ and explain why they are equivalent. Along the way, we will also give some properties of closed sets.
+
+\subsection{Convergence}
+Intuitively, a closed set is one which is closed under convergence of sequences. We will make this precise, but only very slowly. We must first define what it means for a sequence to convergence.
+\begin{definition}[sequence]
+    Fix a set $X$. Then an infinite \dfn{sequence} of elements in $X$ is a function $a\colon\NN\to X$. We will often write this as $\{a_n\}_{n\in\NN}$, where $a_n$ refers to $a(n)$.
+\end{definition}
+\begin{definition}[limit]
+    Fix a metric space $(X,d)$ and a sequence $\{a_n\}_{n\in\NN}$ of elements in $X$. The sequence $\{a_n\}_{n\in\NN}$ is \textit{converges} to the \dfn{limit} $a\in X$ if and only if, for each $\varepsilon>0$, there exists some $N$ such that
+    \[n>N\implies d(a_n,a)<\varepsilon.\]
+    We might write this situation as $\lim a_n=a$.
+\end{definition}
+Intuitively, we are saying that the elements $\{a_n\}_{n\in\NN}$ get closer and closer to $a$ as $n$ gets larger. Let's see some examples.
+\begin{example}
+    Let $(X,d)$ be a metric space and $a\in X$ an element, and define the sequence $\{a_n\}_{n\in\NN}$ by $a_n\coloneqq a$ for each $n\in\NN$. Then we claim $\lim a_n=a$. Indeed, for any $\varepsilon>0$, we set $N\coloneqq0$ so that $n>N$ implies
+    \[d(a_n,a)=d(a,a)=0<\varepsilon.\]
+\end{example}
+Here is a harder example.
+\begin{example} \label{exe:converge-to-zero}
+    Give $\RR$ the metric $d$ by $d(x,y)\coloneqq|x-y|$. Define $a_n\coloneqq1/(n+1)$ for each $n\in\NN$. Then $\lim a_n=0$.
+\end{example}
+\begin{proof}
+    We plug directly into the definition. Fix some $\varepsilon>0$, and we want to find some $N$ such that $n>N$ implies
+    \[\frac1{n+1}=d(a_n,a)\stackrel?<\varepsilon.\]
+    Rearranging this, we are asking for $n+1>1/\varepsilon$, or $n>\varepsilon-1$. As such, we just set $N\coloneqq-1+1/\varepsilon$. Then $n>N$ implies
+    \[\frac1{n+1}<\frac1{N+1}=\varepsilon,\]
+    as desired.
+\end{proof}
+Importantly, in the above proof, we had $N$ be a function of $\varepsilon$. This is a common feature of such proofs of convergence. Here is are a few examples for you to try.
+\begin{exe}
+    Give $\RR$ the metric $d$ by $d(x,y)\coloneqq|x-y|$. Define $a_n\coloneqq2/(n+1)$ for each $n\in\NN$. Then show $\lim a_n=0$.
+\end{exe}
+\begin{exe}
+    Give $\RR$ the metric $d$ by $d(x,y)\coloneqq|x-y|$. Define $a_n\coloneqq\frac{2n+\sin(n)}{3n+\cos(n)}$ for each $n\in\NN$. Then show $\lim a_n=\frac23$.
+\end{exe}
+Let's give an example where convergence fails.
+\begin{example}
+    Give $\RR$ the metric $d$ by $d(x,y)\coloneqq|x-y|$. Define $a_n\coloneqq(-1)^n$ for each $n\in\NN$. Then there does not exist $a\in\RR$ such that $\lim a_n=a$.
+\end{example}
+\begin{proof}
+    We proceed by contradiction. Suppose for the sake of contradiction that we have found $a\in\RR$ such that $\lim a_n=a$. Thus, for all $\varepsilon>0$, we are promised some $N$ such that $n>N$ implies
+    \[d(a_n,a)<\varepsilon.\]
+    Intuitively, we expect to arrive at a contradiction because the sequence $\{a_n\}_{n\in\NN}$ does not get infinitely close to any particularly real number---it oscillates between $+1$ and $-1$!
+    
+    Let's make this intuition rigorous: actually, we can see that the terms $\{a_n\}_{n\in\NN}$ never stay within $\varepsilon\coloneqq0.1$ of any given real number due to this oscillation. Thus, we will use $\varepsilon\coloneqq0.1$ for our contradiction: we are given some $N$ such that
+    \[n>N\implies d(a_n,a)<\varepsilon=0.1.\]
+    However, choosing some $n>N$ which is even, we see $d(1,a)<0.1$, and choosing some $n>N$ which is odd, we see $d(-1,a)<0.1$. To get our contradiction, we cleverly apply the triangle inequality, which asserts
+    \[2=d(-1,1)\le d(-1,a)+d(a,1)=d(-1,a)+d(1,a)=0.1+0.1=0.2.\]
+    The above inequality is obviously false, so we have arrived at our contradiction.
+\end{proof}
+\begin{exe}
+    Give $\RR$ the metric $d$ by $d(x,y)\coloneqq|x-y|$. Define $a_n\coloneqq n^2$ for each $n\in\NN$. Then show that there does not exist $a\in\RR$ such that $\lim a_n=a$.
+\end{exe}
+
+\subsection{Closures}
+We are now almost ready to give our first definition of a closed set. Similar to how we defined open sets by defining interiors, we will define closed sets by defining closures.
+\begin{definition}[closure] \label{defi:cl}
+    Let $(X,d)$ be a metric space and $A\subseteq X$ be a subset. Then the \dfn{closure} is the set $\overline A\subseteq X$ such that each $a\in\overline A$ satisfies the following property: for each $\varepsilon>0$, the set $A\cap B(a,\varepsilon)$ is nonempty.
+\end{definition}
+Roughly speaking, the closure $\overline A$ consists of all the points which are ``arbitrarily close'' to points in $A$.
+\begin{example} \label{exe:closure-example}
+    Give $\RR$ the metric $d$ by $d(x,y)\coloneqq|x-y|$. Let $A\coloneqq(0,\infty)$. We show $\overline A=[0,\infty)$.
+\end{example}
+\begin{proof}
+    For each $a\in\RR$, we must decide if $a\in\overline A$. We have the following cases.
+    \begin{itemize}
+        \item Suppose $a>0$. We show $a\in\overline A$. Well, for each $\varepsilon>0$, we note that $a\in A$ and $a\in B(a,\varepsilon)$, so $A\cap B(a,\varepsilon)$ and is thus nonempty.
+        \item Suppose $a=0$. We show $a\in\overline A$. Well, for each $\varepsilon>0$, we must show that $A\cap B(0,\varepsilon)$ is nonempty. For this, we note $\varepsilon/2>0$ has $\varepsilon/2\in A$ and $\varepsilon/2\in B(0,\varepsilon)$, so $A\cap B(0,\varepsilon)$ is nonempty. This is what we wanted.
+        \item Suppose $a<0$. We show $a\notin\overline A$. Intuitively, we expect to have a contradiction because $a$ has some positive distance from $A$, so elements of $A$ cannot get arbitrarily close to $a$.
+
+        To make this rigorous, we expect that elements of $A$ are a distance of at least $|a|$ away from $a$. So we set $\varepsilon\coloneqq|a|$ and claim that
+        \[A\cap B(a,\varepsilon)\stackrel?=\emp,\]
+        from which $a\notin\overline A$ will follow. Indeed, if $x\in A$, then $x>0$. But then we note $x>0>a$, so
+        \[d(x,a)=|x-a|=|x|+|a|>|a|=\varepsilon,\]
+        so it follows $x\notin B(a,\varepsilon)$. Thus, $A\cap B(a,\varepsilon)=\emp$.
+    \end{itemize}
+    Synthesizing the above cases, we see $\overline A=[0,\infty)$. In fact, we note that the above argument also shows $\overline{[0,\infty)}=[0,\infty)$.
+\end{proof}
+\begin{exe} \label{exe:cl-of-open-interval}
+    Give $\RR$ the metric $d$ by $d(x,y)\coloneqq|x-y|$. Show that $\overline{(0,1)}=[0,1]$.
+\end{exe}
+Before continuing, we explain why we introduced convergence at the beginning of this section.
+\begin{proposition} \label{prop:cl-by-sequences}
+    Let $(X,d)$ be a metric space. Given a subset $A\subseteq X$, we have $a\in\overline A$ if and only if there exists a sequence $\{a_n\}_{n\in\NN}$ of elements in $A$ such that $\lim a_n=a$.
+\end{proposition}
+\begin{proof}
+    We have two directions to show.
+    \begin{itemize}
+        \item Suppose $a\in\overline A$. Then we must construct a sequence of elements of $A$ which gets arbitrarily close to $A$. For this, we use the definition of the closure: for any $n\in\NN$, we note that $A\cap B(a,1/(n+1))$ is nonempty, so we can find a point
+        \[a_n\in A\cap B(a,1/(n+1)).\]
+        The idea here is that the term $a_n$ is a distance of at most $1/(n+1)$ away from $0$, but this distance goes to $0$ as $n$ gets large, so the sequence $\{a_n\}_{n\in\NN}$ should converge to $a$.
+        
+        As such, we claim that $\{a_n\}_{n\in\NN}$ is the desired sequence. Note $a_n\in A$ for each $n\in\NN$ by construction, so it remains to show $\lim a_n=a$. For this, we fix any $\varepsilon>0$ and see that we want $N$ such that
+        \[n>N\implies d(a,a_n)<\varepsilon.\]
+        However, by construction, we see $d(a,a_n)<1/(n+1)$, so it will be enough for $1/(n+1)<\varepsilon$. Rearranging, we see that we may set $N\coloneqq1/\varepsilon$: indeed, for any $n>N$, we see
+        \[d(a,a_n)<\frac1{n+1}<\frac1n<\frac1N=\varepsilon.\]
+
+        \item Suppose there is a sequence $\{a_n\}_{n\in\NN}$ of elements in $A$ such that $\lim a_n=a$. Then we claim $a\in\overline A$. Indeed, for any $\varepsilon>0$, we must show $A\cap B(a,\varepsilon)$ is nonempty. Intuitively, we are asking for an element of $A$ which is very close to $a$, so we will use the given sequence $\{a_n\}_{n\in\NN}$.
+
+        We are given some $N$ such that $n>N$ implies $d(a,a_n)<\varepsilon$. Thus, choosing any $n>N$ provides some $a_n\in A$ such that $d(a,a_n)<\varepsilon$ and so $a_n\in A\cap B(a,\varepsilon)$. It follows $A\cap B(a,\varepsilon)$ is nonempty.
+        \qedhere
+    \end{itemize}
+\end{proof}
+\begin{exe}
+    Give $\RR$ the metric $d$ by $d(x,y)\coloneqq|x-y|$. Find a sequence $\{a_n\}_{n\in\NN}$ of elements in $(0,\infty)$ such that $\lim a_n=0$.
+\end{exe}
+
+\subsection{Closed Sets}
+At this point, we should remark that the argument in \Cref{exe:closure-example} generalizes to show $A\subseteq\overline A$ in general. Indeed, for any $a\in A$, we claim $a\in\overline A$: for any $\varepsilon>0$, we see $a\in B(a,\varepsilon)$ and $a\in A$, so $A\cap B(a,\varepsilon)$ is nonempty.
+
+As with interiors and open sets, the equality case is what we are interested in.
+\begin{definition}[closed sets] \label{defi:closed}
+    Let $(X,d)$ be a metric space and $A\subseteq X$ be a subset. Then $A$ is \dfn{closed} if and only if $A$ satisfies one of the following equivalent conditions.
+    \begin{itemize}
+        \item $\overline A=A$.
+        \item $\overline A\subseteq A$. In other words, suppose $a\in X$ makes the set $A\cap B(a,\varepsilon)$ nonempty for all $\varepsilon>0$. Then $a\in A$.
+        \item If a sequence $\{a_n\}_{n\in\NN}$ of elements in $A$ which converges to an element $a\in X$, then actually $a\in A$.
+    \end{itemize}
+\end{definition}
+Again, take a moment to convince yourself that the two conditions we gave above are equivalent. The equivalence of the last two uses \Cref{prop:cl-by-sequences}.
+\begin{remark} \label{rem:cl-is-smallest-closed}
+    Similar to before, the closure $\overline A$ will turn out to be the smallest closed set containing $A$. We will make this precise later.
+\end{remark}
+Here are some examples.
+\begin{example}
+    Give $\RR$ the metric $d$ by $d(x,y)\coloneqq|x-y|$. The argument of \Cref{exe:closure-example} shows that $(0,\infty)$ is not closed, but $[0,\infty)$ is.
+\end{example}
+\begin{example}
+    Let $(X,d)$ be a metric space. Then we claim the subset $X$ of $X$ is closed. Indeed, suppose $a\in X$ makes the set $X\cap B(a,\varepsilon)$ nonempty for all $\varepsilon>0$. Then of course $a\in X$.
+\end{example}
+\begin{example}
+    Let $(X,d)$ be a metric space. Then we claim $\emp\subseteq X$ is closed. Indeed, there is no $a\in X$ such that the sets $\emp\cap B(a,\varepsilon)$ are nonempty for all $\varepsilon>0$. Thus, $\overline\emp=\emp$.
+\end{example}
+\begin{warn}
+    Sets are not doors! They can be both open and closed! (They can also be neither open nor closed!) Most notably, given a metric space $(X,d)$, the sets $X$ and $\emp$ are both open and closed.
+\end{warn}
+\begin{example}
+    Let $(X,d)$ be a metric space. Given an element $a\in X$, the set $\{a\}$ is closed. Indeed, we use the last equivalent condition in \Cref{defi:closed}: for any sequence $\{a_n\}_{n\in\NN}$ of elements in $\{a\}$, we see we must have $a_n=a$ for each $n\in\NN$. Thus, $\lim a_n=a$ follows, so the limit lives in $\{a\}$, which is what we wanted.
+\end{example}
+Here is a last, more interesting example which provides us with a wealth of closed sets.
+\begin{proposition}
+    Let $(X,d)$ be a metric space. Given $a\in X$ and $r>0$, the ``closed ball''
+    \[\overline B(a,r)\coloneqq\{x\in X:d(a,x)\le r\}\]
+    is closed.
+\end{proposition}
+\begin{proof}
+    This is somewhat technical. We would like to show the following: given $x\in X$, if the sets $\overline B(a,r)\cap B(x,\varepsilon)$ are nonempty for all $\varepsilon>0$, then $x\in\overline B(a,r)$. Instead, we will show the contrapositive, which is the following: given $x\in X$, if $x\notin\overline B(a,r)$, then there is some $\varepsilon>0$ such that $\overline B(a,r)\cap B(x,\varepsilon)$ is empty.
+
+    Unpacking our definitions, we are given some $x\in X$ such that $d(a,x)>r$, and we want $\varepsilon>0$ such that $\overline B(a,r)\cap B(x,\varepsilon)$ is empty. For this, we draw the following picture.
+    \begin{center}
+        \begin{asy}
+            unitsize(1cm);
+            
+            fill(circle((0,0),2), lightgray);
+            draw(circle((0,0),2));
+            dot("$a$", (0,0), S);
+            draw((0,0) -- (2,0));
+            label("$r$", (1,0), N);
+            
+            draw((2,0)--(3,0), red);
+            draw(circle((3,0), 1), dashed);
+            dot("$x$", (3,0), S);
+            label("$\varepsilon$", (2.5,0), N, red);
+        \end{asy}
+    \end{center}
+    Solving for $\varepsilon$, we hope that $\varepsilon\coloneqq d(a,x)-r$ will work. Note $\varepsilon>0$ by construction.
+    
+    It remains to show that $\overline B(a,r)\cap B(x,\varepsilon)$ is empty. Indeed, suppose $x'\in\overline B(a,r)$, and we will show $x'\notin B(x,\varepsilon)$, which will finish the proof because it implies that no element lives in both $\overline B(a,r)$ and $B(x,\varepsilon)$ at once. Well, we see $d(a,x')\le r$. To compute $d(x,x')$, we use the triangle inequality, writing
+    \[d(x,x')+r\ge d(x,x')+d(x',a)\ge d(x,a)=\varepsilon+r.\]
+    Rearranging, we see $d(x,x')\ge\varepsilon$, so $x'\notin B(x,\varepsilon)$ follows. This completes the proof.
+\end{proof}
+
+\subsection{Building Closed Sets}
+We now mirror the discussion of \cref{subsec:build-opens} to build lots of closed sets. To begin, we really should check that the closure of a set is closed, which produces a closed set from any subset.
+\begin{proposition} \label{prop:cl-is-closed}
+    Let $(X,d)$ be a metric space. Given a subset $A\subseteq X$, the closure $\overline A$ is closed. In other words, $\overline{\overline A}=\overline A$.
+\end{proposition}
+\begin{proof}
+    Suppose $a\in X$ makes the sets $\overline A\cap B(a,\varepsilon)$ nonempty for all $\varepsilon>0$. Then we must show $a\in\overline A$. However, to show $a\in\overline A$, we must show that the sets $A\cap B(a,\varepsilon)$ are all nonempty.
+
+    For this proof, we employ a ``$\varepsilon/2$'' trick. Let's first attempt the proof without this trick. Fix any $\varepsilon>0$, and we want to show $A\cap B(a,\varepsilon)$ is nonempty. We construct two elements.
+    \begin{itemize}
+        \item By definition of $a$, we know $\overline A\cap B(a,\varepsilon)$ is nonempty, so we find $a'\in\overline A\cap B(a,\varepsilon)$.
+        \item By definition of $\overline A$, we know $ A\cap B(a',\varepsilon)$ is nonempty, so we find $a''\in A\cap B(a',\varepsilon)$.
+    \end{itemize}
+    We might hope that $a''$ is the desired element in $A\cap B(a,\varepsilon)$ because it is in $A$ after all, but we cannot quite show this: doing our best, we use the triangle inequality to bound
+    \[d(a,a'')\le d(a,a')+d(a',a'')<\varepsilon+\varepsilon=2\varepsilon,\]
+    so actually $a''\in A\cap B(a,2\varepsilon)$. But we wanted to show $A\cap B(a,\varepsilon)$ is nonempty!
+
+    To fix this problem, we divide all the relevant $\varepsilon$ terms in the above paragraph by $2$, which is the aforementioned ``$\varepsilon/2$'' trick. We rewrite the above paragraph for clarity. Note $\varepsilon/2>0$.
+    \begin{itemize}
+        \item By definition of $a$, we know $\overline A\cap B(a,\varepsilon/2)$ is nonempty, so we find $a'\in\overline A\cap B(a,\varepsilon/2)$.
+        \item By definition of $\overline A$, we know $ A\cap B(a',\varepsilon/2)$ is nonempty, so we find $a''\in A\cap B(a',\varepsilon/2)$.
+    \end{itemize}
+    Now, we see $a''\in A$, and by the triangle inequality, we have
+    \[d(a,a'')\le d(a,a')+d(a',a'')<\frac\varepsilon2+\frac\varepsilon2=\varepsilon,\]
+    so $a''\in B(a,\varepsilon)$ as well. Thus, $A\cap B(a,\varepsilon)$ is indeed nonempty.
+\end{proof}
+We can now explain \Cref{rem:cl-is-smallest-closed}: we see $\overline A$ is a closed set, and it is the smallest closed set which contains $A$ in the following sense.
+\begin{proposition} \label{prop:cl-is-smallest-closed}
+    Let $(X,d)$ be a metric space. Given a set $A$ and a closed set $C$ such that $A\subseteq C$, then actually $\overline A\subseteq C$.
+\end{proposition}
+\begin{proof}
+    Suppose $a\in\overline A$, and we must show $a\in C$. Then for any $\varepsilon>0$, the set $A\cap B(a,\varepsilon)$ is nonempty. However, $A\subseteq C$, so the set $C\cap B(a,\varepsilon)$ is also nonempty for all $\varepsilon>0$. Thus, because $C$ is closed, it follows that $a\in C$.
+\end{proof}
+\begin{exe} \label{exe:cl-is-intersection-closed}
+    Use \Cref{prop:cl-is-smallest-closed} to prove the following alternate characterization of the closure: given a subset $A$ of a metric space $(X,d)$, we have
+    \[\overline A=\bigcap_{A\subseteq C}C,\]
+    where the intersection is over all closed subsets $C\subseteq X$ which contain $A$. This statement is in some sense the closed-set analogue to \Cref{prop:open-ball-base}.
+\end{exe}
+We now discuss some set operations. We begin with intersections. The following is analogous to \Cref{prop:union-open-sets}.
+\begin{proposition} \label{prop:intersect-closed-sets}
+    Let $(X,d)$ be a metric space. Given a collection $\mc C$ of closed subsets of $X$, the intersection
+    \[A\coloneqq\bigcap_{C\in\mc C}C\]
+    is closed.
+\end{proposition}
+\begin{proof}
+    Suppose $x\in X$ makes the sets $A\cap B(x,\varepsilon)$ nonempty for all $\varepsilon>0$. We show $x\in A$. By definition of $A$, it's enough to show $x\in C$ for any given $C\in\mc C$. However, we note $A\subseteq C$, so for any $\varepsilon>0$, the set $C\cup B(x,\varepsilon)$ is nonempty because $A\cap B(x,\varepsilon)$ is nonempty. Because $C$ is closed, it follows that $x\in C$, which is what we wanted.
+\end{proof}
+\begin{example}
+    Similar to \Cref{ex:int-union}, it is not true that the closure of an intersection is the intersection of the closures. For example, give $\RR$ the usual metric $d(x,y)\coloneqq|x-y|$. Then set $A\coloneqq(-1,0)$ and $B\coloneqq(0,1)$, and we see
+    \[\overline{A\cap B}=\overline\emp=\emp,\]
+    but
+    \[\overline A\cap\overline B=[-1,0]\cap[0,1]=\{0\}.\]
+    The computation of $\overline A$ and $\overline B$ follow from computations similar to \Cref{exe:cl-of-open-interval}.
+\end{example}
+And now we discuss unions. The following result is analogous to \Cref{prop:intersect-open-sets}.
+\begin{proposition} \label{prop:closed-union}
+    Let $(X,d)$ be a metric space. Given closed sets $A,B\subseteq X$, the union $A\cup B$ is also closed.
+\end{proposition}
+\begin{proof}
+    Suppose $x\in X$ has a sequence $\{x_n\}_{n\in\NN}$ of elements in $A\cup B$ which converges to $x$. We show that $x\in A\cup B$.
+
+    Note that there are infinitely many elements in the sequence $\{x_n\}_{n\in\NN}$, so infinitely many elements must live in $A$, or infinitely many elements must live in $B$. Indeed, if only finitely many elements of the sequence live in either $A$ or $B$, then only finitely many elements of the sequence live in $A\cup B$, which is does not make any sense.
+
+    Without loss of generality, we will say that infinitely many elements of our sequence $\{x_n\}_{n\in\NN}$ live in $A$. Then, for each $k\in\NN$, we may let $x_{n_k}$ denote the $k$th element of the sequence in $A$. We claim that $\lim x_{n_k}=x$, which will imply $x\in A$ because $A$ is closed, so this will complete the proof.
+
+    Well, we know $\lim x_n=x$, and $\{x_{n_k}\}_{k\in\NN}$ is just a subsequence, so it had better have the same limit. Indeed, for any $\varepsilon>0$, we are promised some $N$ such that $n>N$ implies $d(x,x_n)<\varepsilon$. Now, for each $k$, we must have $n_k\ge k$, so
+    \[k>N\implies n_k>N\implies d(x,x_{n_k})<\varepsilon,\]
+    which is what we wanted.
+\end{proof}
+\begin{exe} \label{exe:fin-intersection-closed}
+    Let $(X,d)$ be a metric space. Given finitely many closed sets $A_1,A_2,\ldots,A_n$, show that the union
+    \[\bigcup_{i=1}^nA_i=A_1\cup A_2\cup\cdots\cup A_n\]
+    is also closed.
+\end{exe}
+\begin{nex}
+    The finite union of closed sets is closed by \Cref{exe:fin-intersection-closed}, but the countable union of closed sets need not be closed. For example, give $\RR$ the metric $d$ by $d(x,y)\coloneqq|x-y|$. Arguing similar to \Cref{exe:closure-example}, the sets $[1/(n+1),\infty)$ are closed for all $n\in\NN$. However, their union
+    \[\bigcup_{n\in\NN}[1/(n+1),\infty)=(0,\infty)\]
+    is not closed by \Cref{exe:closure-example}.
+\end{nex}
+Unsurprisingly, analogous to \Cref{cor:int-intersection}, we can also translate \Cref{prop:closed-union} into closures.
+\begin{exe} \label{exe:union-cl}
+    Let $(X,d)$ be a metric space. Given subsets $A,B\subseteq X$, show that $\overline{A\cup B}=\overline A\cup\overline B$.
+\end{exe}
+% \begin{proof}
+%     We have two inclusions to show.
+%     \begin{itemize}
+%         \item We show $\overline A\cup\overline B\subseteq\overline{A\cup B}$. By symmetry, it's enough to show $\overline A\subseteq\overline{A\cup B}$. Well, $A\subseteq A\cup B\subseteq\overline{A\cup B}$, so the result follows from \Cref{prop:cl-is-smallest-closed}.
+%         \item We show $\overline{A\cup B}\subseteq\overline A\cup\overline B$. Note that $A\subseteq\overline A$ and $B\subseteq\overline B$, so $A\cup B\subseteq\overline A\cup\overline B$. However, $\overline A\cup\overline B$ is closed by combining \Cref{prop:cl-is-closed,prop:closed-union}. Thus, \Cref{prop:cl-is-smallest-closed} implies $\overline{A\cup B}\subseteq\overline A\cup\overline B$.
+%         \qedhere
+%     \end{itemize}
+% \end{proof}
+
+\subsection{Complements of Open Sets}
+The purpose of this subsection is to establish the following result.
+\begin{theorem} \label{thm:complement-closed-is-open}
+    Let $(X,d)$ be a metric space. Given a subset $A\subseteq X$, the following are equivalent.
+    \begin{listalph}
+        \item $A$ is closed.
+        \item $X\setminus A$ is open.
+    \end{listalph}
+\end{theorem}
+\begin{proof}
+    We work very slowly done equivalent characterizations of these statements. At each step, be convinced that the statement is equivalent to the one provided before.
+    \begin{enumerate}
+        \item By definition, ``$X\setminus A$ is open'' is equivalent to ``if $x\in X\setminus A$, there exists $\varepsilon>0$ such that $B(x,\varepsilon)\subseteq X\setminus A$.''
+        \item By contraposition, this is equivalent to ``if $x\in A$, then any $\varepsilon>0$ has $B(x,\varepsilon)\not\subseteq X\setminus A$.''
+        \item Unpacking the statement ``$B(x,\varepsilon)\not\subseteq X\setminus A$,'' we see that it promises some $y\in B(x,\varepsilon)$ such that $y\notin X\setminus A$. However, $y\notin X\setminus A$ is equivalent to $y\in A$, so ``$B(x,\varepsilon)\not\subseteq X\setminus A$,'' is equivalent to asserting ``$A\cap B(x,\varepsilon)$ is nonempty.''
+
+        Thus, ``$X\setminus A$ is open'' is now equivalent to ``if $x\in A$, then any $\varepsilon>0$ makes the sets $A\cap B(x,\varepsilon)$ nonempty.''
+        \item Finishing, the last condition stated is equivalent to ``$A$ is closed,'' completing the proof.
+        \qedhere
+    \end{enumerate}
+\end{proof}
+\begin{exe}
+    Use \Cref{thm:complement-closed-is-open} to show the following: given a subset $A$ of a metric space $(X,d)$, the following are equivalent.
+    \begin{listalph}
+        \item $A$ is open.
+        \item $X\setminus A$ is closed.
+    \end{listalph}
+\end{exe}
+Roughly speaking, \Cref{thm:complement-closed-is-open} provides another characterization of closed sets by relating them to how we understand open sets. Indeed, many of the results we proved in the previous subsection can be given new proofs by appealing to results of open sets. Here are a few for you to try.
+\begin{exe} \label{exe:complement-open-is-closed}
+    Use \Cref{thm:complement-closed-is-open} and results of \cref{subsec:build-opens} to give new proofs of \Cref{prop:intersect-closed-sets,prop:closed-union}.
+\end{exe}
+We can translate \Cref{thm:complement-closed-is-open} into a statement about closures and interiors, as follows.
+\begin{corollary} \label{cor:complement-int-is-cl}
+    Let $(X,d)$ be a metric space. For any subset $A\subseteq X$, we have $\overline{X\setminus A}=X\setminus A^\circ$.
+\end{corollary}
+\begin{proof}
+    We show this in two inclusions.
+    \begin{itemize}
+        \item We show $\overline{X\setminus A}\subseteq X\setminus A^\circ$. Note $A^\circ$ is open by \Cref{prop:int-is-open}, so $X\setminus A^\circ$ is closed by \Cref{exe:complement-open-is-closed}. However, $A^\circ\subseteq A$ implies $X\setminus A\subseteq X\setminus A^\circ$, so
+        \[\overline{X\setminus A}\subseteq X\setminus A^\circ\]
+        follows from \Cref{prop:cl-is-smallest-closed}.
+        \item We show $X\setminus A^\circ\subseteq\overline{X\setminus A}$. Taking complements, we may instead show $X\setminus\overline{X\setminus A}\subseteq A^\circ$. Now, $\overline{X\setminus A}$ is closed by \Cref{prop:cl-is-closed}, so $X\setminus\overline{X\setminus A}$ is open by \Cref{thm:complement-closed-is-open}. Further, $X\setminus A\subseteq\overline{X\setminus A}$ implies $X\setminus\overline{X\setminus A}\subseteq A$, so \Cref{lem:all-opens-in-interior} implies
+        \[X\setminus\overline{X\setminus A}\subseteq A^\circ,\]
+        which is what we wanted.
+        \qedhere
+    \end{itemize}
+\end{proof}
+\begin{exe}
+    Use \Cref{cor:int-intersection,cor:complement-int-is-cl} to give a new proof of \Cref{exe:union-cl}. It might be helpful to show $\overline A=X\setminus(X\setminus A)^\circ$ for subsets $A\subseteq X$.
+\end{exe}
+
+% \subsection{Limit Points}
+% \begin{definition}[limit point]
+%     Let $(X, d)$ be a metric space and $A \subseteq X$. We say that $y \in X$ is a \dfn{limit point} of $A$ if for every $\varepsilon > 0$, the neighborhood $N_{\varepsilon}(y)$ contains a point $x \in A$ such that $x \neq y$.
+% \end{definition}
+% \begin{exercise}
+%      Let $(X,d)$ be a metric space. If $x$ is a limit point of $A \subseteq X$, then show that every neighborhood of $x$ contains infinitely many points of $A$.
+% \end{exercise}
+% \begin{definition}[closure]
+%     Let $(X,d)$ be a metric space and $A \subseteq X$. Let $A'$ be the set containing all the limit points of $A$. The \dfn{closure} of $A$ is the set $\bar{A} = A \cup A'$.
+% \end{definition}
+% \begin{exercise}
+%     Let $(X,d)$ be a metric space. Show that $E \subseteq X$ is closed if and only if $X \setminus E$ (complement of E) is open. (Hint: contradiction in both directions.)
+% \end{exercise}
+% \begin{theorem}
+% If $(X,d)$ is a metric space and $E \subseteq X$, then
+% \begin{enumerate}
+%     \item $\bar{E}$ is closed
+%     \item $E = \bar{E}$ iff E is closed
+%     \item For every closed set $F \subseteq X$ such that $E \subseteq F$, we have that $\bar{E} \subseteq F$
+% \end{enumerate}
+% \end{theorem}
+% \begin{proof} 
+%     (1) We want to first show that if $(X,d)$ is a metric space and $E \subseteq X$ then $\bar{E}$ is closed. \\
+%     Let $(X,d)$ be a metric space and $E \subseteq X$. We have previously shown that a subset of a metric space is closed if and only if it's complement is open. If we can show that the complement of $\bar{E}$ is open then we can conclude that $\bar{E}$ is closed. The set $X \setminus \bar{E}$ (complement of $\bar{E}$) contains all of the points in $E$ that aren't in $\bar{E} = E \cup E'$. So for all $x \in X \setminus \bar{E}$ we know that $x \not\in E$ and $x$ is not a limit point of $E$ i.e. there exists an $\varepsilon > 0$ such that $N_{\varepsilon}(x) \cap \bar{E} = \emptyset$ which implies that $N_{\varepsilon}(x)$ is a subset of $X \setminus \bar{E}$. We can then say that for all $x \in X \setminus \bar{E}$ there exists an $\varepsilon > 0$ such that $N_{\varepsilon}(x) \subseteq X \setminus \bar{E} $ i.e. every point $x \in X \setminus \bar{E}$ is an interior point of $ X \setminus \bar{E}$, so $X \setminus \bar{E}$ is an open set which implies that $\bar{E}$ must be a closed set. \\
+%     (2) Show that if $(X,d)$ is a metric space and $E \subseteq X$ then $E = \bar{E}$ iff E is closed. We will first show that if $E = \bar{E}$ then $E$ is closed.Let $(X,d)$ be a metric space and $E \subseteq X$. If $E = \bar{E} = E \cup E'$,we know that $E' \subseteq E$ i.e. $E$ contains all of its limit points;therefore, $E$ must be a closed set. We now need to show that if E is closed then $E = \bar{E}$. Let $(X,d)$ be a metric space, $E \subseteq X$, and let $E$ be closed. Considering that the set $E$ is closed, we know that $E$ contains all of its limit points, so $E' \subseteq E$. We can then say $ \bar{E} = E' \cup E \subseteq E \cup E = E$ \\
+%     \begin{exercise}
+%         (3) If $(X,d)$ is a metric space and $E \subseteq X$, then show that for every closed set $F \subseteq X$ such that $E \subseteq F$, we have that $\bar{E} \subseteq F$
+%     \end{exercise}
+% \end{proof}
+
+% \subsection{Sequences in Metric Spaces}
+
+% \begin{definition}[infinite sequence]
+% Let $(X,d)$ be a metric space. An \dfn{(infinite) sequence} in $X$ denoted as $(x_n)^{\infty}_{n=1}=(x_1, x_2, ...,x_n, ...)$ is an infinite ordered list of $x_k \in X$ for all $k \in \mathbb{N}$.
+% \end{definition}
+
+
+% \begin{definition}[convergent/divergent sequence]
+% Let $(X,d)$ be a metric space. An infinite sequence $(x_n)^{\infty}_{n=1}$ in $X$ is said to be a \dfn{convergent sequence} if there exists a $x_0 \in X$ such that for every $\epsilon > 0$ there exists a corresponding $N_{\epsilon} \in \mathbb{Z}$ such that for all $n \in \mathbb{N}$ if $n > N_{\epsilon}$ then $d(x_n,x_0) < \epsilon$. We then write that $(x_n)^{\infty}_{n=1}$ converges to $x_0$ or $\lim_{n \to \infty}x_n = x_0$. A sequence that doesn't converge is called a \dfn{divergent sequence}
+% \end{definition}
+
+
+
+% \begin{theorem}
+% Let $(X,d)$ be a metric space and let $(x_n)^{\infty}_{n=1}$ be a convergent sequence in $X$. Then the limit of $(x_n)^{\infty}_{n=1}$ is unique.
+% \end{theorem}
+% \begin{proof}
+% Let $(X,d)$ be a metric space and let $(x_n)^{\infty}_{n=1}$ be a convergent sequence in $X$. Let $\lim_{n \to \infty}x_n = p$ and $\lim_{n \to \infty}x_n =q$ where $p, q \in X$. We need to show that $p = q$. \\
+% By the definition of a convergent sequence, we know the following: 
+% \begin{enumerate}
+%     \item For every $\epsilon_1 > 0$ there exists a $N_{\epsilon_1} \in \mathbb{Z}$ such that for every $n \in \mathbb{N}$ if $n > N_{\epsilon_1}$ then $d(x_n,p) < \epsilon_1$.
+%     \item  For every $\epsilon_2 > 0$ there exists a $N_{\epsilon_2} \in \mathbb{Z}$ such that for every $n \in \mathbb{N}$ if $n > N_{\epsilon_2} $ then $d(x_n,q) < \epsilon_2$.
+% \end{enumerate}
+
+%  \noindent Let $\epsilon > 0$. Let $\epsilon_1 = \frac{\epsilon}{2}$ and $\epsilon_2 = \frac{\epsilon}{2}$. Suppose we let $N_{\epsilon} = max\{N_{\epsilon_1}, N_{\epsilon_2} \} \in \mathbb{Z} $. Consider any $n \in \mathbb{N}$ such that $n > N_{\epsilon}$. 
+%  We then have that $d(x_n,p) < \epsilon_1$ and $d(x_n,q) < \epsilon_2$. \\
+ 
+
+ 
+%  \noindent Considering that $(X, d)$ is a metric space, we have that: 
+%   \begin{equation*}
+%     d(p,q) \leq d(p, x_n) + d(x_n, q) = d(x_n, p) + d(x_n, q) < \epsilon_1 + \epsilon_2 = \frac{\epsilon}{2} + \frac{\epsilon}{2} = \epsilon 
+%  \end{equation*}
+ 
+%  \begin{equation*}
+%     d(p,q) < \epsilon \Longrightarrow d(p,q) = 0 \Longrightarrow p = q
+%  \end{equation*}
+ 
+% \end{proof}
+
+% \begin{example}
+%     Consider $\RR$ with the usual metric. Let $x_n = \frac{1}{n}$ for all $n$ from $1$ to $\infty$. We claim that $(x_n)_{n=1}^{\infty}$ converges to $0$. For any $\epsilon > 0$, we can choose $N_{\epsilon} = \lceil \frac{1}{\epsilon} \rceil$. Note that this means $x_{N_{\epsilon}} \leq \epsilon$. For all $n > N_{\epsilon}$, we have $x_n < x_{N_{\epsilon}} < \epsilon$. In terms of the metric, this means we have found $N_{\epsilon}$ such that for all $n > N_{\epsilon}$, we have $d(x_n, 0) < \epsilon$, so $(x_n)_{n=1}^{\infty}$ converges to $0$.
+% \end{example}
+
+% \begin{exercise}
+% Let $(X,d)$ be a metric space. Let $(x_n)^{\infty}_{n=1}$ be a sequence in $X$. Prove that the sequence $(x_n)^{\infty}_{n=1}$ converges to $x_0 \in X$ if and only if every neighborhood of $x_0$ contains $x_n$ for all but finitely many $n \in \NN$
+% \end{exercise}
+% \begin{theorem}
+%     Let $(X,d)$ be a metric space. A point $x_0 \in X$ is a limit point of the set $X$ if and only if there exists a sequence $(x_n)^{\infty}_{n=1}$ in $X$ such that for all $n \in \NN $, $ x_n \neq x_0$ and $\lim_{n\to\infty}x_n = x_0$.
+% \end{theorem}
+
+
+% \begin{definition}[Cauchy Sequence]
+%     Let $(X,d)$ be a metric space. An infinite sequence $(x_n)^{\infty}_{n=1}$ in $X$ is said to be a \dfn{Cauchy Sequence} if for every $\epsilon > 0$ there exists a $N_{\epsilon} \in \mathbb{Z}$ such that for all $m,n \in \mathbb{N}$, if $m,n > N_{\epsilon}$ then $d(x_m,x_n) < \epsilon$.
+% \end{definition}
+
+% \begin{example}
+%     The sequence with $x_n = \frac{1}{n}$ for all $n$ from $1$ to $\infty$ is also a Cauchy sequence in $\RR$ with the usual metric. Let $\epsilon > 0$, and again let $N_{\epsilon} = \lceil \frac{1}{\epsilon} \rceil$. We proved in a previous example that this means for all $n > N_{\epsilon}$, we have $d(x_n, 0) < \epsilon$. Let $m, n > N_{\epsilon}$. We must show that $d(x_m, x_n) < \epsilon$. Assume without loss of generality that $n \geq m$. This means $x_n \leq x_m$ by definition of the sequence. Since $x_n$ and $x_m$ are both positive, and $x_m < \epsilon$, this means $x_m - x_n < \epsilon$, so $d(x_m, x_n) < \epsilon$. Thus $(x_n)_{n=1}^{\infty}$ is a Cauchy sequence.
+% \end{example}
+
+% \begin{definition}[bounded set]
+%     Let $(X,d)$ be a metric space and let $A \subseteq X$. $A$ is a \dfn{bounded set} if there exists a real number $\epsilon > 0$ and there exists a point $x_0 \in X$ such that for all $x \in A$, $d(x, x_0) < \epsilon$. 
+% \end{definition}
+
+
+% \begin{definition}[bounded sequence]
+%     Let $(X,d)$ be a metric space. Let $(x_n)^{\infty}_{n=1}$ be a sequence in $X$. We say that $(x_n)^{\infty}_{n=1}$ is a \dfn{bounded sequence} if the range of $(x_n)^{\infty}_{n=1}$ is a bounded set. 
+    
+% \end{definition}
+% \begin{exercise}
+%     Prove that the union of a finite number of bounded sets is bounded. Find an infinite family of bounded sets whose union is not bounded.
+% \end{exercise}
+
+% \begin{theorem}
+%     Let $(X,d)$ be a metric space. If $(x_n)^{\infty}_{n=1}$ is a convergent sequence in $X$ then $(x_n)^{\infty}_{n=1}$ is a bounded sequence.
+% \end{theorem}
+
+% \begin{proof}
+%     Let $(X,d)$ be a metric space and let $(x_n)^{\infty}_{n=1}$ be a sequence in $X$ that converges to $x_0 \in X$.We know that for every $\epsilon > 0$ there exists a $N_{\epsilon} \in \mathbb{Z}$ such that for any $n \in \mathbb{N}$ if $n > N_{\epsilon}$ then $d(x_n,x_0) < \epsilon$. Choose any $\epsilon > 0$. Let $A_1 = \{x_n: n > N_{\epsilon}\}$. We know that $A_1$ is a bounded set because for all $n \in \mathbb{N}$ if $n > N_{\epsilon}$ then $d(x_n,x_0) < \epsilon$, so there exists a $x_0 \in X$ and a $\epsilon > 0$ such that for all $x_n \in A_1$, we have that $d(x_n, x_0) < \epsilon$. Let  $A_2 = \{x_n: n \leq N_{\epsilon}\}$. We can see that $A_2$ is a finite set and is therefore a bounded set. Lastly, the union of two bounded sets, $A_1 \cup A_2$, is also bounded, so we have that the range of $(x_n)^{\infty}_{n=1}$ is a bounded set i.e. $(x_n)^{\infty}_{n=1}$ is a bounded sequence. 
+% \end{proof}
+
+% \begin{theorem}
+%     Let $(X,d)$ be a metric space. If $(x_n)^{\infty}_{n=1}$ is a Cauchy Sequence in $X$ then $(x_n)^{\infty}_{n=1}$ is also a bounded sequence.
+% \end{theorem}
+% \begin{exercise}
+%     Let $(X,d)$ be a metric space. Show that if $(x_n)^{\infty}_{n=1}$ is a Cauchy Sequence in $X$ then $(x_n)^{\infty}_{n=1}$ is also a bounded sequence.
+% \end{exercise}
+
+% \begin{definition}[subsequence]
+% Let $(X,d)$ be a metric space and $(x_n)^{\infty}_{n=1}$ be a sequence in $X$. A \dfn{subsequence} of $(x_n)^{\infty}_{n=1}$ is a sequence of the form $(x_{n_k})^{\infty}_{k=1}$ such that for every $k$ there exist a positive integer $n_k$ such that $n_1 < n_2 < ... < n_k < n_{k+1} < ...$. 
+% \end{definition}
+
+% \begin{example}
+%     Let $(x_n)_{n=1}^{\infty}$ be the sequence given by $x_n = \frac{1}{n}$. By setting $n_k = k^2$ for all positive integers $k$, we see that the sequence of reciprocals of squares is the subsequence of $(x_n)_{n=1}^{\infty}$.
+% \end{example}
+
+% \begin{exercise}
+%    Show that every subsequence of a subsequence of a given sequence is itself a subsequence of that given sequence.
+% \end{exercise}
+% \begin{exercise}
+%    Show that every sequence is also a  subsequence of itself.
+% \end{exercise}
+
+% \begin{theorem}
+% Let $(X,d)$ be a metric space and $(x_n)^{\infty}_{n=1}$ be a sequence in $X$. Let $x_0 \in X$. $(x_n)^{\infty}_{n=1}$ converges to $x_0$ if and only if every subsequence $(x_{n_k})^{\infty}_{k=1}$  of $(x_n)^{\infty}_{n=1}$ converges to $x_0$.
+% \end{theorem}
+
+% \begin{proof}
+% Let (X,d) be a metric space and $(x_n)^{\infty}_{n=1}$ be a sequence in $X$. \\
+
+% \noindent (1) We will start by showing that if $(x_n)^{\infty}_{n=1}$ converges to $x_0$ then every subsequence $(x_{n_k})^{\infty}_{k=1}$  of $(x_n)^{\infty}_{n=1}$ converges to $x_0$. \\
+
+% \noindent Let $(x_n)^{\infty}_{n=1}$ converge to some $x_0 \in X$. We know that for every $\epsilon > 0$ there exists a $N_{\epsilon} \in \mathbb{Z}$ such that for every $n \in \mathbb{N}$ if $n > N_{\epsilon}$ then $d(x_n, x_0) < \epsilon$. Let $(x_{n_k})^{\infty}_{k=1}$ be an arbitrary subsequence of $(x_n)^{\infty}_{n=1}$. We know that for every $k \in \mathbb{N}$ there exists a positive integer $n_k$ such that  $n_1 < n_2 < ... < n_k < n_{k+1} < ...$. Choose any $\epsilon > 0$. We know there exists some $K_{N_{\epsilon}} \in \mathbb{Z}$ such that if $k > K_{N_{\epsilon}}$ then $n_k > N_{\epsilon}$. Let $k >K_{N_{\epsilon}}$, we then have that $n_k >N_{\epsilon}$ which then implies that $ d(x_{n_k},x_0) < \epsilon$ i.e. the subsequence $(x_{n_k})^{\infty}_{k=1}$  of $(x_n)^{\infty}_{n=1}$ converges to $x_0$. \\
+
+% \noindent (2) We will now show that if every subsequence of $(x_n)^{\infty}_{n=1}$ converges then $(x_n)^{\infty}_{n=1}$ converges. Since $(x_n)^{\infty}_{n=1}$ is a subsequence of itself and we know that all subseqences of $(x_n)^{\infty}_{n=1}$ converge, we can then conclude that $(x_n)^{\infty}_{n=1}$ converges.
+% \end{proof}
+
+
+
+
+\subsection{Problems}
+
+\begin{homework}
+    Give a set $X$ the discrete metric $d$ defined by
+    \[d(x,y)\coloneqq\begin{cases}
+        1 & \text{if }x\ne y, \\
+        0 & \text{if }x=y.
+    \end{cases}\]
+    Suppose that a sequence $\{a_n\}_{n\in\NN}$ of elements in $X$ converges to the point $a\in X$. Show that there exists some $N$ such that $a_n=a$ for all $n>N$.
+\end{homework}
+
+\begin{homework}
+    Repeat exercise \Cref{prop:many-ints} for the closure instead of the interior.
+\end{homework}
+
+\begin{homework}
+    Consider the metric space $(\RR,d)$ where $d(x,y)\coloneqq|x-y|$. Given real numbers $a,b\in\RR$ such that $a<b$, show that $\overline{(a,b)}=[a,b]$.
+\end{homework}
+
+\begin{homework} \label{prop:line-is-closed}
+    Consider the metric space $\left(\RR^2,d\right)$, where $d((x_1,y_1),(x_2,y_2))\coloneqq\sqrt{(x_1-x_2)^2+(y_1-y_2)^2}$. Show that the set
+    \[\left\{(x,x):x\in\RR\right\}\]
+    is a closed subset of $\RR^2$.
+\end{homework}
+
+% \begin{homework}
+% If $(X, d)$ is a metric space and $E \subseteq X$ is a subset.
+% \begin{enumerate}[label=\alph*.]
+%     \item $cl(E)$ is closed.
+%     \item $E = cl(E)$ if and only if $E$ is closed.
+%     \item $cl(E) \subseteq F$ for every closed set $F \subseteq X$ such that $E \subseteq F$.
+% \end{enumerate}
+% \end{homework}
+% sequences converging in the discrete metric
+
+\begin{homework}
+    We investigate the closure of open balls.
+    \begin{listalph}
+        \item Let $(X,d)$ be a metric space. For any $a\in X$ and $r>0$, show that $\overline{B(a,r)}\subseteq\overline B(a,r)$.
+        \item Give $\RR$ the discrete metric defined by
+        \[d(x,y)\coloneqq\begin{cases}
+            1 & \text{if }x\ne y, \\
+            0 & \text{if }x=y.
+        \end{cases}\]
+        Find $r>0$ such that $\overline{B(0,r)}\ne\overline B(0,r)$.
+        \item Give $\RR$ the usual metric defined by $d(x,y)\coloneqq|x-y|$. Show that $\overline{B(a,r)}=\overline B(a,r)$ for each $a\in\RR$ and $r>0$.
+    \end{listalph}
+\end{homework}
+
+
+\end{document}

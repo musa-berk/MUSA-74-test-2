@@ -1,0 +1,752 @@
+%Read the slack post (link below) regarding syntax and formatting before you start writing lecture notes.
+% Post: https://musa-2021.slack.com/archives/C01DGR645SL/p1609187728029500
+
+
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+
+\section{Week 12: Groups}
+Groups, like partially ordered sets and metric spaces, are sets endowed with some structure. The goal of this section is to define groups and then give many examples.
+
+\subsection{Symmetries of the Square} \label{subsec:square}
+Intuitively, a group is the set of symmetries on an object. For example, let $D_4$ denote the set of symmetries of a square. There are eight elements in $D_4$, as follows.
+\begin{itemize}
+    \item One can counterclockwise rotate by $0^\circ$, but $90^\circ$, by $180^\circ$, or by $270^\circ$.
+    \begin{center}
+        \begin{asy}
+            unitsize(1cm);
+            
+            draw((1,1) -- (-1,1) -- (-1,-1) -- (1,-1) -- cycle);
+            draw((1,1) -- (-1,-1)); draw((1,-1) -- (-1,1));
+            
+            for(int i = 1; i <= 4; ++i)
+            	draw(arc((0,0), 0.2*i, 45, 45+90*i), arrow=EndArrow);
+        \end{asy}
+    \end{center}
+    \item One can also reflect along one of the following lines.
+    \begin{center}
+        \begin{asy}
+            unitsize(1cm);
+            
+            draw((1,1) -- (-1,1) -- (-1,-1) -- (1,-1) -- cycle);
+            
+            draw((1.2,1.2) -- -(1.2,1.2), dashed);
+            draw((1.2,-1.2) -- -(1.2,-1.2), dashed);
+            draw((0,1.2) -- -(0,1.2), dashed);
+            draw((1.2,0) -- -(1.2,0), dashed);
+        \end{asy}
+    \end{center}
+\end{itemize}
+There are two central points to make about our eight symmetries: we can invert them, and we can compose them. Indeed, we expect a symmetry to be some action on the square which we can undo, and that undoing action is precisely inversion. For example, we can undo a $90^\circ$ rotation by rotating $270^\circ$, as follows.
+\begin{center}
+    \begin{asy}
+        unitsize(1cm);
+        usepackage("amsmath");
+        
+        void square(pair c, real s)
+        {
+        	real r = s/2;
+        	draw(c+r*(1,1) -- c+r*(-1,1) -- c+r*(-1,-1) -- c+r*(1,-1) -- cycle);
+        }
+        
+        void labeled_square(pair c, real s, string[] verts)
+        {
+        	square(c, s);
+        	for(int i = 0; i < 4; ++i)
+                label(verts[i], c+s/1.414*dir(45+90*i), -dir(45+90*i));
+        }
+        
+        labeled_square((0,0), 2, new string[] {"$A$","$B$","$C$","$D$"});
+        labeled_square((4,0), 2, new string[] {"$D$","$A$","$B$","$C$"});
+        labeled_square((8,0), 2, new string[] {"$A$","$B$","$C$","$D$"});
+        
+        draw((1.5,0)--(2.5,0), EndArrow);
+        draw((5.5,0)--(6.5,0), EndArrow);
+        
+        square((2,0)+(0,0.5), 0.4);
+        square((6,0)+(0,0.5), 0.4); 
+        draw(arc((2,0.5), 0.35, 45, 45+90), arrow=EndArrow);
+        draw(arc((6,0.5), 0.35, 45, 45+270), arrow=EndArrow);
+    \end{asy}
+\end{center}
+(We have labeled the vertices of the square for clarity.) Similarly, we can undo any reflection by just doing the reflection again.
+\begin{center}
+    \begin{asy}
+        unitsize(1cm);
+        usepackage("amsmath");
+        
+        void square(pair c, real s)
+        {
+        	real r = s/2;
+        	draw(c+r*(1,1) -- c+r*(-1,1) -- c+r*(-1,-1) -- c+r*(1,-1) -- cycle);
+        }
+        
+        void labeled_square(pair c, real s, string[] verts)
+        {
+        	square(c, s);
+        	for(int i = 0; i < 4; ++i)
+                label(verts[i], c+s/1.414*dir(45+90*i), -dir(45+90*i));
+        }
+        
+        labeled_square((0,0), 2, new string[] {"$A$","$B$","$C$","$D$"});
+        labeled_square((4,0), 2, new string[] {"$A$","$D$","$C$","$B$"});
+        labeled_square((8,0), 2, new string[] {"$A$","$B$","$C$","$D$"});
+        
+        draw((1.5,0)--(2.5,0), EndArrow);
+        draw((5.5,0)--(6.5,0), EndArrow);
+        
+        real dash = 0.23;
+        square((2,0)+(0,0.5), 0.4);
+        draw((2,0.5)-dash*(1,1) -- (2,0.5)+dash*(1,1), dashed);
+        square((6,0)+(0,0.5), 0.4); 
+        draw((6,0.5)-dash*(1,1) -- (6,0.5)+dash*(1,1), dashed);
+    \end{asy}
+\end{center}
+It will be a general observation that we want each operation to have an inverse operation.
+
+The second central point is that we can compose two symmetries to get a third symmetry. Here, composition means that if we apply one symmetry, and then we apply a second symmetry, the total operation applied makes a symmetry. For example, if we rotate twice, we get out another rotation.
+\begin{center}
+    \begin{asy}
+        unitsize(1cm);
+        usepackage("amsmath");
+        
+        void square(pair c, real s)
+        {
+        	real r = s/2;
+        	draw(c+r*(1,1) -- c+r*(-1,1) -- c+r*(-1,-1) -- c+r*(1,-1) -- cycle);
+        }
+        
+        void labeled_square(pair c, real s, string[] verts)
+        {
+        	square(c, s);
+        	for(int i = 0; i < 4; ++i)
+                label(verts[i], c+s/1.414*dir(45+90*i), -dir(45+90*i));
+        }
+        
+        labeled_square((0,0), 2, new string[] {"$A$","$B$","$C$","$D$"});
+        labeled_square((4,0), 2, new string[] {"$D$","$A$","$B$","$C$"});
+        labeled_square((4,-4), 2, new string[] {"$B$","$C$","$D$","$A$"});
+        
+        draw((1.5,0)--(2.5,0), EndArrow);
+        draw((4,-1.5)--(4,-2.5), EndArrow);
+        draw((1.5,-1.5)--(2.5,-2.5), EndArrow);
+        
+        square((2,0)+(0,0.5), 0.4);
+        draw(arc((2,0.5), 0.35, 45, 45+90), EndArrow);
+        square((4,-2)+(0.5,0), 0.4); 
+        draw(arc((4,-2)+(0.5,0), 0.35, 45, 45+180), EndArrow);
+        square((2,-2)-(0.5,0.5), 0.4); 
+        draw(arc((2,-2)-(0.5,0.5), 0.35, 45, 45+270), EndArrow);
+    \end{asy}
+\end{center}
+More interestingly, if we rotate and then reflect, we will get out another reflection.
+\begin{center}
+    \begin{asy}
+        unitsize(1cm);
+        usepackage("amsmath");
+        
+        void square(pair c, real s)
+        {
+        	real r = s/2;
+        	draw(c+r*(1,1) -- c+r*(-1,1) -- c+r*(-1,-1) -- c+r*(1,-1) -- cycle);
+        }
+        
+        void labeled_square(pair c, real s, string[] verts)
+        {
+        	square(c, s);
+        	for(int i = 0; i < 4; ++i)
+                label(verts[i], c+s/1.414*dir(45+90*i), -dir(45+90*i));
+        }
+        
+        labeled_square((0,0), 2, new string[] {"$A$","$B$","$C$","$D$"});
+        labeled_square((4,0), 2, new string[] {"$D$","$A$","$B$","$C$"});
+        labeled_square((4,-4), 2, new string[] {"$A$","$D$","$C$","$B$"});
+        
+        draw((1.5,0)--(2.5,0), EndArrow);
+        draw((4,-1.5)--(4,-2.5), EndArrow);
+        draw((1.5,-1.5)--(2.5,-2.5), EndArrow);
+        
+        real dash = 0.23;
+        square((2,0)+(0,0.5), 0.4);
+        draw(arc((2,0.5), 0.35, 45, 45+90), EndArrow);
+        square((4,-2)+(0.5,0), 0.4); 
+        draw((4,-2)+(0.5,0)+dash*(1,0) -- (4,-2)+(0.5,0)-dash*(1,0), dashed);
+        square((2,-2)-(0.5,0.5), 0.4); 
+        draw((2,-2)-(0.5,0.5)+dash*(1,1) -- (2,-2)-(0.5,0.5)-dash*(1,1), dashed);
+    \end{asy}
+\end{center}
+\begin{exe}
+    What happens if we reflect and then rotate? What happens if we reflect and then reflect again?
+\end{exe}
+Let's start to label what's going on. Given two symmetries of the square $g$ and $h$, we will let $g\cdot h$ denote the symmetry obtained by applying $h$ and then applying $g$. The reason that we go right-to-left is to mimic function composition.
+
+Let $r$ denote the $90^\circ$ counterclockwise rotation. Then we can compute, as we did above, that $r^2=r\cdot r$ is the $180^\circ$ rotation and that $r^3=r\cdot r\cdot r$ is the $270^\circ$ rotation. Further, $r^4=r\cdot r\cdot r\cdot r$ is the $360^\circ$ rotation, but this is a special operation: rotating by $360^\circ$ does nothing, so we will call this operation $e$.\footnote{The letter $e$ stands for ``eidentity.''} Note $s\cdot e=s$ and $e\cdot s=s$ for any symmetry $s$ because applying the symmetry $e$ does nothing.
+
+Let's discuss inversion. In general, a symmetry $g\in D_4$ will have an inverse symmetry $g^{-1}\in D_4$ such that $g\cdot g^{-1}$ and $g^{-1}\cdot g$ are both the do-nothing symmetry $e$. For example, we see that $r\cdot r^3=r^4=e$, so $r^3$ is the operation ``undoing'' $r$. As such, we think of $r^3$ as the inverse symmetry to $r$, so we might write $r^3=r^{-1}$. Similarly, we can see that $r^2=\left(r^2\right)^{-1}$ or even that $\left(r^{-1}\right)^{-1}=r$.
+
+To add in reflections, we will just let $s$ denote the reflection of the square across the vertical axis. Note $s^2=s\cdot s=e$ because reflecting over an axis twice sends the square back to where it started. Now, $r$ and $s$ actually relate to each other: we claim $r\cdot s=s\cdot r^3$, which we can see directly by drawing our squares.
+\begin{center}
+    \begin{asy}
+        unitsize(1cm);
+        usepackage("amsmath");
+        
+        void square(pair c, real s)
+        {
+        	real r = s/2;
+        	draw(c+r*(1,1) -- c+r*(-1,1) -- c+r*(-1,-1) -- c+r*(1,-1) -- cycle);
+        }
+        
+        void labeled_square(pair c, real s, string[] verts)
+        {
+        	square(c, s);
+        	for(int i = 0; i < 4; ++i)
+                label(verts[i], c+s/1.414*dir(45+90*i), -dir(45+90*i));
+        }
+        
+        labeled_square((0,0), 2, new string[] {"$A$","$B$","$C$","$D$"});
+        labeled_square((4,0), 2, new string[] {"$B$","$A$","$D$","$C$"});
+        labeled_square((0,-4), 2, new string[] {"$B$","$C$","$D$","$A$"});
+        labeled_square((4,-4), 2, new string[] {"$C$","$B$","$A$","$D$"});
+        
+        draw((1.5,0)--(2.5,0), EndArrow);
+        draw((4,-1.5)--(4,-2.5), EndArrow);
+        draw((1.5,-1.5)--(2.5,-2.5), EndArrow);
+        draw((0,-1.5)--(0,-2.5), EndArrow);
+        draw((1.5,-4)--(2.5,-4), EndArrow);
+        label("$r\cdot s$", (2,-2), NE);
+        label("$s\cdot r^3$", (2,-2), SW);
+        
+        real dash = 0.23;
+        square((2,0)+(0,0.5), 0.4);
+        draw((2,0)+(0,0.5)+dash*(0,1) -- (2,0)+(0,0.5)-dash*(0,1), dashed);
+        square((4,-2)+(0.5,0), 0.4);
+        draw(arc((4,-2)+(0.5,0), 0.35, 45, 45+90), EndArrow);
+        square((2,-4)-(0,0.5), 0.4);
+        draw((2,-4)-(0,0.5)+dash*(0,1) -- (2,-4)-(0,0.5)-dash*(0,1), dashed);
+        square((0,-2)-(0.5,0), 0.4);
+        draw(arc((0,-2)-(0.5,0), 0.35, 45, 45+270), EndArrow);
+    \end{asy}
+\end{center}
+Having access to a relation like $r\cdot s=s\cdot r^3$ allows us to manipulate our symmetries algebraically without ever having to draw squares. For example, we can compute
+\begin{align*}
+    r\cdot s\cdot r\cdot s &= r\cdot (s\cdot r)\cdot s \\
+    &= r\cdot\left(r^3\cdot s\right)\cdot s \\
+    &= r^4\cdot s^2 \\
+    &= e\cdot e \\
+    &= e.
+\end{align*}
+Thus, reflecting along $s$, rotating by $r$, reflecting along by $s$, and then rotating by $r$ one more time in total does the same symmetry as nothing at all! This is not at all obvious by just stating it out loud, but it was not difficult to show with our algebraic manipulation.
+\begin{exe}
+    Verify by drawing squares that $r\cdot s\cdot r\cdot s=e$.
+\end{exe}
+\begin{remark}
+    In the above algebraic manipulation, we have used the fact that $(g\cdot h)\cdot k=g\cdot(h\cdot k)$ for symmetries $g$, $h$, and $k$. However, because symmetries are functions that we apply to a square, and function composition associates, the operation $\cdot$ that we defined will also associate.
+\end{remark}
+We close our discussion of $D_4$ by enumerating the remaining the reflections in terms of $r$ and $s$. Feel free to verify these as exercises.
+\begin{center}
+    \begin{asy}
+        unitsize(1cm);
+        usepackage("amsmath");
+        
+        void square(pair c, real s)
+        {
+        	real r = s/2;
+        	draw(c+r*(1,1) -- c+r*(-1,1) -- c+r*(-1,-1) -- c+r*(1,-1) -- cycle);
+        }
+        
+        void labeled_square(pair c, real s, string[] verts)
+        {
+        	square(c, s);
+        	for(int i = 0; i < 4; ++i)
+                label(verts[i], c+s/1.414*dir(45+90*i), -dir(45+90*i));
+        }
+        
+        // top squares
+        labeled_square((0,0), 2, new string[] {"$A$","$B$","$C$","$D$"});
+        labeled_square((4,0), 2, new string[] {"$B$","$A$","$D$","$C$"});
+        labeled_square((8,0), 2, new string[] {"$A$","$B$","$C$","$D$"});
+        labeled_square((12,0), 2, new string[] {"$C$","$B$","$A$","$D$"});
+        
+        draw((1.5,0)--(2.5,0), EndArrow);
+        draw((9.5,0)--(10.5,0), EndArrow);
+        
+        real dash = 0.23;
+        square((2,0)+(0,0.5), 0.4);
+        draw((2,0.5)-dash*(0,1) -- (2,0.5)+dash*(0,1), dashed);
+        label("$s$", (2,0)-(0,0.5));
+        
+        square((10,0)+(0,0.5), 0.4); 
+        draw((10,0.5)-dash*(-1,1) -- (10,0.5)+dash*(-1,1), dashed);
+        label("$r\cdot s$", (10,0)-(0,0.5));
+        
+        // bottom squares
+        labeled_square((0,-3), 2, new string[] {"$A$","$B$","$C$","$D$"});
+        labeled_square((4,-3), 2, new string[] {"$D$","$C$","$B$","$A$"});
+        labeled_square((8,-3), 2, new string[] {"$A$","$B$","$C$","$D$"});
+        labeled_square((12,-3), 2, new string[] {"$A$","$D$","$C$","$B$"});
+        
+        draw((1.5,-3)--(2.5,-3), EndArrow);
+        draw((9.5,-3)--(10.5,-3), EndArrow);
+        
+        real dash = 0.23;
+        square((2,-3)+(0,0.5), 0.4);
+        draw((2,-2.5)-dash*(1,0) -- (2,-2.5)+dash*(1,0), dashed);
+        label("$r^2\cdot s$", (2,-3)-(0,0.5));
+        
+        square((10,-3)+(0,0.5), 0.4); 
+        draw((10,-3+0.5)-dash*(1,1) -- (10,-3+0.5)+dash*(1,1), dashed);
+        label("$r^3\cdot s$", (10,-3)-(0,0.5));
+    \end{asy}
+\end{center}
+Notably, we see that $D_4=\left\{e,r,r^2,r^3,r\cdot s,r^2\cdot s,r^3\cdot s\right\}$.
+
+\subsection{Modular Arithmetic} \label{subsec:mods}
+In this subsection, we give another central example of a group, but it will not obvious how the group behaves as symmetries.
+\begin{definition}
+    Let $n$ be a positive integer. Let $C_n$ denote the set of equivalence classes of the equivalence relation $\sim$ on $\ZZ$ given by $a\sim b$ if and only if $n\mid(a-b)$. We will write $a\equiv b\pmod n$ instead of $a\sim b$. We will denote an equivalence class by $[a]_n$, where the equivalence class is represented by $a\in\ZZ$.
+\end{definition}
+Later on, we will use the notation $\ZZ/n\ZZ$ instead of $C_n$, but we will not do so until we can explain this notation.
+\begin{example} \label{ex:mod-5}
+    For every integer $k\in\ZZ$, there exists exactly one element in $a\in\{0,1,2,3,4\}$ such that $k-a$ is divisible by $5$: indeed, divide $k$ by $5$ and take the remainder to retrieve $a$. Thus, we see $C_5=\{[0]_5,[1]_5,[2]_5,[3]_5,[4]_5\}$.
+\end{example}
+To generalize \Cref{ex:mod-5}, we will need to be precise about what we mean by ``division.'' For our purposes, we will want the division algorithm.
+\begin{theorem} \label{thm:division}
+    Let $a$ be an integer, and let $b$ be a positive integer. Then there exists integers $q$ and $r$ such that
+    \[a=bq+r,\]
+    where $0\le r<b$.
+\end{theorem}
+\begin{proof}
+    The idea is to keep subtracting $b$s away from $a$ until we get a remainder which is less than $b$. Intuitively, we know that this process should terminate eventually, though we don't necessarily know how long it will take. Because we don't know how long it will take, we will use the well-ordering principle to non-constructively tell us how long it should take. Indeed, we claim that the set of our possible remainders
+    \[R\coloneqq\{a-bq:q\in\ZZ\}\]
+    contains a nonnegative integer. Indeed, if $a\ge0$, then we can take $q\coloneqq0$ so that $a=a+bq\in R$ is the needed nonnegative integer. Otherwise, $a<0$, so we set $q\coloneqq a$ so that $a-bq=-a(b-1)$. But if $a<0$, then $-a>0$, and $b-1\ge0$ because $b$ is a positive integer, so $a-bq=-a(b-1)$ is a nonnegative integer which is in $R$.
+    
+    Because $R$ contains a nonnegative integer, the well-ordering principle implies that $R$ contains a least nonnegative integer, which we denote $r$. We expect $r$ to be the desired remainder. By definition of $S$, we know that there exists an integer $q\in\ZZ$ such that $a-bq=r$, or
+    \[a=bq+r.\]
+    It remains to show that $0\le r<b$. Because $r$ is a nonnegative integer, we know that $r\ge0$ automatically, so we have left to show $r<b$.
+    
+    Suppose for the sake of contradiction that $r\ge b$. Continuing our intuition, having a remainder which is greater than or equal to $b$ means that we can actually subtract out an additional $b$: set $r'\coloneqq r-b$ and $q'\coloneqq q+1$, and we see
+    \[a-bq'=a-bq-b=r-b=r',\]
+    so $r'\in R$. However, $0\le r'<r$, so $r'$ is a strictly smaller nonnegative integer in $R$, which violates the construction of $r$. This completes the proof.
+\end{proof}
+\begin{corollary}
+    For any positive integer $n$, we have $C_n=\{[0]_n,[1]_n,\ldots,[n-1]_n\}$. In particular, $C_n$ has $n$ elements.
+\end{corollary}
+\begin{proof}
+    Note that each $k\in\{0,1,\ldots,n-1\}$ does indeed produce an equivalence class $[k]_n\in C_n$. Furthermore, we see that these are all the needed equivalence classes by \Cref{thm:division}: for any integer $a$, there exist integers $q$ and $r\in\{0,1,\ldots,n-1\}$ such that
+    \[a=nq+r,\]
+    so $a\equiv r\pmod n$ follows, meaning $[a]_n=[r]_n$.
+    
+    To finish up, we show that all the equivalence classes listed are in fact distinct. In other words, if $k$ and $\ell$ are distinct elements of $\{0,1,\ldots,n-1\}$, then $[k]_n$ and $[\ell]_n$ are distinct equivalence classes. To show this, we argue by contraposition: we show that if $k,\ell\in\{0,1,\ldots,n-1\}$ have $[k]_n=[\ell]_n$, then $k=\ell$. Indeed, $[k]_n=[\ell]_n$ implies
+    \[n\mid(k-\ell).\]
+    Now, without loss of generality, suppose $k\ge\ell$. Then $k,\ell\in\{0,1,2\ldots,n-1\}$, so $0\le k-\ell\le(n-1)<n$. But for $k-\ell$ to be divisible by $n$, we see that the only option here is for $k-\ell=0$, so $k=\ell$. This completes the proof.
+\end{proof}
+For now, our focus will be on the fact that we can add elements of $C_n$ together. Observe that there is some ambiguity here. To see this, suppose we wanted to add elements of $C_5$ together to get an element of $\ZZ$. We might hope that we can just do
+\[[a]_5+[b]_5\coloneqq a+b.\]
+However, this addition operation isn't well-defined! For example, we would have
+\[[0]_5+[0]_5=0+0=0,\]
+but surely $[0]_5=[5]_5$ because $5\equiv0\pmod5$, so we would also have
+\[[5]_5+[5]_5=5+5=10.\]
+Thus, our addition has suddenly required that $0=10$, which is false!
+
+To fix this issue, we will add two elements in $C_n$ together to produce a third element of $C_n$. Nonetheless, it still requires a bit of work to show that this addition operation is well-defined.
+\begin{lemma}
+    The function $+\colon C_n\times C_n\to C_n$ given by $[a]_n+[b]_n\coloneqq[a+b]_n$ for any $[a]_n,[b]_n\in C_n$ is a well-defined function.
+\end{lemma}
+\begin{proof}
+    We check that ambiguities of the type described above do not arise. Namely, if $[a]_n=[a']_n$ and $[b]_n=[b']_n$, we must show that $[a]_n+[b]_n=[a']_n+[b']_n$. Unwinding how we defined $+$, we want to show
+    \[[a+b]_n=[a'+b']_n.\]
+    Because $[a]_n=[a']_n$, know that $n\mid(a-a')$, so there exists $k\in\ZZ$ such that $a-a'=kn$. Similarly, $[b]_n=[b']_n$ implies that there exists $\ell\in\ZZ$ such that $b-b'=\ell n$, so we see
+    \[(a+b)-(a'+b')=(a-a')+(b-b')=kn+\ell n=(k+\ell)n.\]
+    Thus, $n\mid(a+b)-(a'+b')$, meaning $[a+b]_n=[a'+b']_n$.
+\end{proof}
+Let's try to draw a few parallels between $D_4$ with its operation $\cdot$ and $C_n$ with its operation $+$.
+\begin{itemize}
+    \item Both $D_4$ and $C_n$ have constructed a way to construct a third element via the operation if given two elements.
+    \item Note $D_4$ has a special ``do-nothing'' element $e\in D_4$ such that $g\cdot e=e\cdot g=g$ for all $g\in D_4$. Similarly, $C_n$ has a special ``zero'' element $[0]_n\in C_4$ such that
+    \[[k]_n+[0]_n=[k+0]_n=[k]_n\qquad\text{and}\qquad[0]_n+[k]_n=[0+k]_n=[k]_n\]
+    for all $[k]_n\in C_n$.
+    \item Lastly, for $D_4$, we saw that each symmetry $g\in D_4$ had an inverse symmetry $g^{-1}$ such that $g\cdot g^{-1}=g^{-1}\cdot g=e$. Similarly, each $[k]_n\in C_n$ has the element $[-k]_n\in C_n$ such that
+    \[[k]_n+[-k]_n=[k+-k]_n=[0]_n\qquad\text{and}\qquad[-k]_n+[k]_n=[-k+k]_n=[0]_n.\]
+\end{itemize}
+The goal of group theory is to give one generalized theory that is able to talk about both of the above examples in a clean way.
+
+\subsection{Defining Groups}
+Having done two extended examples, we will now give the abstract definition of a group. Similar to metric spaces, a group will be a set endowed with a special function satisfying some properties. The function of interest has a special name.
+\begin{definition}[binary operation]
+    A \dfn{binary operation} on a set $S$ is a function $S \times S \to S$.
+\end{definition}
+Intuitively a binary operation on $S$ is rule to combine two elements of $S$ into another elements of $S$. Here are some examples.
+\begin{example} \label{ex:d4-comp}
+    Let $D_4$ denote the set of symmetries of square. Then we defined the operation $\cdot\colon D_4\to D_4$ by composition: given $g,h\in D_4$, we defined $g\cdot h$ as the symmetry obtained by applying $h$ and then applying $g$ to the square.
+\end{example}
+\begin{example} \label{ex:add-is-bin-op}
+    The function $f\colon\NN\times\NN\to\ZZ$ by $f(m,n)\coloneqq m+n$ is a binary operation.
+\end{example}
+\begin{example}
+    The function $f\colon\NN\times\NN\to\QQ$ by $f(m,n)\coloneqq m/n$ is a binary operation.
+\end{example}
+\begin{example} \label{ex:comp-is-bin-op}
+    Let $X$ be a set, and let $S\coloneqq\op{Mor}(X,X)$ denote the set of functions $X\to X$. Then composition is a binary operation $\circ\colon S\times S\to S$: given two functions $f,g\colon X\to X$, we produce a third function $(f\circ g)\colon X\to X$.
+\end{example}
+Notation for binary operations differs from usual functions though, as we usually write the operation symbol in between the inputs, as in \Cref{ex:d4-comp,ex:add-is-bin-op,ex:comp-is-bin-op}.
+% For example given a binary operation $\oplus$ on $S$, instead of writing $\oplus(a,b)=c$, we write $a \oplus b=c$. Symbols used for binary operations tend to look like addition or multiplication, such as $+,\times, \cdot, \oplus,\otimes$ among others.
+In fact, when the operation is clear from context the symbol is often omitted all together and "$a$ times $b$" can be written as just $ab$.
+
+We are now ready to define groups.
+\begin{definition} \label{defi:group}
+    A \dfn{group} is an ordered pair $(G,\cdot)$ consisting of a set $G$ along with a binary operation $\cdot\colon G \times G \to G$ satisfying the following axioms.
+    \begin{itemize}
+        \item Associativity: for all $a,b,c \in G$, we have that $(a \cdot b) \cdot c = a \cdot (b \cdot c)$.
+        \item Identity: there exists an element $e \in G$ such that, for all $a \in G$, we have that $a \cdot e = e \cdot a = a$. We call $e$ the ``identity element.''
+        \item Inverse: for each $a \in G$, there exists $b\in G$ such that $a \cdot b=b \cdot a = e$. We call $b$ the ``inverse'' of $a$.
+    \end{itemize}
+    We notably do not require the operation $\cdot$ on the group $G$ to satisfy $g\cdot h=h\cdot g$. Such groups are called \dfn{commutative} or \dfn{abelian}.
+\end{definition}
+% When being very formal, a group is written as $(G, \oplus)$, where $G$ is the underlying set and $\oplus$ is the binary operation. However,
+In practice, we will write the group as just its underlying set $G$, with the binary operation left implied. With this convention, most group operators are written ``multiplicatively" where the multiplication is denoted $a \cdot b$ or simply $ab$. We'll adopt this convention when proving general theorems.
+% A notable exception to this convention is when a group is commutative (i.e. $x \cdot y = y \cdot x$) in which case we use "additive notation," so the binary operation is written $a+b$. (The reason for this convention is to make the notation for "rings" consistent with operations on numbers, which you can learn about by taking Math 113.)
+
+Here are some examples of groups. For each, be sure that you are convinced that axioms (a)--(c) of \Cref{defi:group} are satisfied, though do not feel compelled to write them all out on paper.
+\begin{example}
+    From \cref{subsec:square}, the set $D_4$ forms a group under the operation $\cdot$.
+\end{example}
+\begin{example}
+    From \cref{subsec:mods}, the set $C_n$ forms a group under the operation $+$, for any positive integer $n$.
+\end{example}
+\begin{example}
+    The set of integers form a group with operation given by addition $(\ZZ, +)$. The same holds with the set of rationals $\QQ$, the set of reals $\RR$, and the set of complex numbers $\CC$.
+\end{example}
+\begin{example}
+    Let $\RR^{\times}$ denote the nonzero real numbers. Then $\RR^\times$ forms a group with operation given by multiplication. The same holds for $\CC^\times$.
+\end{example}
+\begin{example}
+    The set $\op{GL}_n(\CC)$ of invertible $n\times n$ matrices with complex coefficients forms a group under matrix multiplication. Similarly, the set $\op{SL}_n(\CC)$ of invertible $n\times n$ matrices with complex coefficients and determinant $1$ forms a group under matrix multiplication.
+\end{example}
+\begin{exe}
+    Which of the above groups are commutative?
+\end{exe}
+Here are a few non-examples.
+\begin{nex}
+    The set $\ZZ$ of integers does not form a group under the operation subtraction $-\colon\ZZ\times\ZZ\to\ZZ$. Indeed, $-$ is not even associative: note that
+    \[(1-2)-3=-4\ne2=1-(2-3).\]
+\end{nex}
+\begin{nex}
+    Let $\ZZ^\times$ denote the set of nonzero integers. Then $\ZZ^\times$ does not form a group under multiplication. Indeed, the only possible identity element $e\in\ZZ^\times$ such that $e\cdot a=a\cdot e=a$ is $e=1$: taking $a=1$, we see
+    \[e=e\cdot1=1.\]
+    However, with identity $1$, we don't have inverses: there is no integer $b\in\ZZ^\times$ such that $2\cdot b=b\cdot 2=1$.
+\end{nex}
+\begin{nex}
+    Let $S$ denote the set of functions $\ZZ\to\ZZ$. Then $S$ does not form a group under the operation of composition. Again, the problem is that we do not have inverses. Indeed, suppose for the sake of contradiction that $S$ does form a group. Let $e\in S$ denote the identity. Note that the identity function $i\colon\ZZ\to\ZZ$ defined by $i(x)\coloneqq x$ must then have
+    \[e(x)=e(i(x))=(e\circ i)(x)=i(x)=x\]
+    because $e\circ i=i$. Thus, $e=i$. But this implies that each $f\in S$ has some $g\in S$ such that $f\circ g=i$. For example, taking $f\colon\ZZ\to\ZZ$ defined by $f(x)\coloneqq0$ for all $x\in\ZZ$. Then such a function $g$ implies
+    \[1=i(1)=(f\circ g)(1)=f(g(1))=0,\]
+    which is a contradiction.
+\end{nex}
+The previous two non-examples are both a bit technical because we must know what the identity is before we can actually talk intelligently about inverses. The trick we used to extract the identity element from the operation will be used again shortly in \Cref{lem:id-is-uniq}.
+
+% Similarly, $\QQ^{\times}$ and $\CC^{\times}$ form groups under multiplication. However, $\ZZ^{\times}$ does not.
+% \begin{example}
+% $\ZZ_p^{\times}$ is a group under multiplication for $p$ prime.
+% \end{example}
+
+% $\ZZ_n^{\times}$ does not form a group under multiplication for composite $n$.
+
+% \begin{example}
+% The set of all $n \times n$ real matrices forms a group under addition $(M_n, +)$
+% \end{example}
+
+% \begin{example}
+% The set of all $n \times n$ real matrices with nonzero determinant forms a group under matrix multiplication. This group is denoted $GL_n(\RR)$.
+% \end{example}
+
+\subsection{Basic Group Theory}
+Let's collect a few lemmas about groups.
+\begin{lemma} \label{lem:id-is-uniq}
+    Let $(G,\cdot)$ be a group. Then the identity element of $G$ is unique.
+\end{lemma}
+The above lemma justifies us saying ``the'' identity of the group.
+\begin{proof}
+    For a uniqueness statement like this, we suppose that we have two identities $e$ and $e'$, and we show that $e=e'$. For this, we must use the definition of the identity, which tells us that $e\cdot g=g\cdot e=g$ and $e'\cdot g=g\cdot e'=g$ for all $g\in G$. Well, plugging these into each other, we see
+    \[e=e\cdot e'=e',\]
+    which is what we wanted.
+\end{proof}
+\begin{lemma} \label{lem:inv-uniq}
+    Let $(G,\cdot)$ be a group. Given $g\in G$, the inverse of $g$ is unique.
+\end{lemma}
+Again, the above lemma justifies us saying ``the'' inverse of $g$.
+\begin{proof}
+    Suppose that both $h$ and $h'$ are inverses of $g$, and we show $h=h'$. Letting $e$ denote the identity of $G$, we thus see $g\cdot h=h\cdot g=e$ and $g\cdot h'=h'\cdot g=e$. Now, the key trick to make these interact is to write $h=h\cdot e$. Then
+    \[h=h\cdot e=h\cdot(g\cdot h')=(h\cdot g)\cdot h'=e\cdot h'=h'.\]
+    Notably, we have applied the associativity of $\cdot$ above.
+\end{proof}
+\begin{notation}
+    Let $(G,\cdot)$ be a group. We will let $e_G$ or sometimes just $e$ denote the identity of $G$. For each $g\in G$, we will let $g^{-1}$ denote the inverse of $G$. Extending the negative exponents, we will write $g^{-k}\coloneq\left(g^{-1}\right)^k$ for any positive integer $k$.
+\end{notation}
+To explain the exponents, we will say out loud that $g^{a+b}=g^a\cdot g^b$ and $\left(g^a\right)^b=g^{ab}$ for any integers $a,b\in\ZZ$. Checking this rigorously is somewhat annoying, so we will leave it only for the particularly determined.
+
+Here are a few short properties of inverses.
+\begin{lemma} \label{lem:inv-inv}
+    Let $(G,\cdot)$ be a group. For each $g\in G$, we have $\left(g^{-1}\right)^{-1}=g$.
+\end{lemma}
+\begin{proof}
+    By definition of $g^{-1}$, we see $g\cdot g^{-1}=g^{-1}\cdot g=e$. However, these equations also imply that $g$ is the inverse of $g^{-1}$! In other words, $\left(g^{-1}\right)^{-1}=g$, which is what we wanted.
+\end{proof}
+Here are a few exercises for you to try.
+\begin{exe} \label{exe:inverse-prod}
+    Let $(G,\cdot)$ be a group. For $g,h\in G$, we have $(g\cdot h)^{-1}=h^{-1}\cdot g^{-1}$. Note that the order of the terms has switched!
+\end{exe}
+\begin{exe}
+    Let $(G,\cdot)$ be a group, and fix $a,b,c\in G$. Show the following.
+    \begin{listalph}
+        \item If $ab=ac$, then $b=c$.
+        \item If $ba=ca$, then $b=c$.
+    \end{listalph}
+    This is called the ``cancellation law.''
+\end{exe}
+Thinking about groups as symmetries means that we expect the elements to be bijections of some kind. We can rigorize this intuition into the following lemma.
+\begin{proposition} \label{prop:mult-is-bij}
+    Let $(G,\cdot)$ be a group, and fix $g\in G$. Then the function $\mu_g\colon G\cdot G$ given by $\mu_g(h)\coloneqq g\cdot h$ is a bijection with inverse given by $\mu_{g^{-1}}$.
+\end{proposition}
+\begin{proof}
+    To show $\mu_g$ is a bijection it suffices to define the inverse function, and we should expect the inverse element to give the inverse function. As such, let $g^{-1}$ denote the inverse of $g$, and define the function $\mu_{g^{-1}}\colon G\to G$ by $\mu_{g^{-1}}(h)\coloneqq g^{-1}\cdot h$. To check that the functions $\mu_g$ and $\mu_{g^{-1}}$ are inverse, for each $h\in H$ we compute
+    \[\mu_g\left(\mu_{g^{-1}}(h)\right) = \mu_g\left(g^{-1}\cdot h\right) = g\cdot g^{-1}\cdot h=e\cdot h=h,\]
+    and
+    \[\mu_{g^{-1}}(\mu_g(h))=\mu_{g^{-1}}(g\cdot h)=g^{-1}\cdot g\cdot h=e\cdot h=h,\]
+    which is what we wanted.
+\end{proof}
+\begin{exe}
+    Show the left-side analogue of \Cref{prop:mult-is-bij}: for $g\in G$, show that the function $\mu_g\colon G\cdot G$ given by $\mu_g(h)\coloneqq h\cdot g$ is a bijection.
+\end{exe}
+
+\subsection{Subgroups}
+Sometimes, it feels like there is a group ``inside'' of another group. For example, the integers $\ZZ$ forms a group under addition, but $\QQ$ also forms a group under addition, and $\ZZ$ is contained in $\QQ$. It will be useful for us to have language to describe this relationship.
+\begin{definition}[subgroup]
+    Let $(G,\cdot)$ be a group. A subset $H\subseteq G$ is a \dfn{subgroup} if and only if $(H,\cdot)$ forms a group, where we have restricted $\cdot$ to $H$ appropriately. More precisely, $H\subseteq G$ is a subgroup if and only if the following conditions hold.
+    \begin{itemize}
+        \item Closure: if $h,h'\in H$, then $h\cdot h'\in H$.
+        \item Identity: the identity $e$ of $G$ has $e\in H$.
+        \item Inverse: for each $h\in H$, the inverse $h^{-1}$ is in $H$.
+    \end{itemize}
+\end{definition}
+\begin{remark}
+    Note that the identity element of $G$ remains the identity element of $H$, and the inverses element from $G$ remain the inverse elements of $H$. To see the first claim, we note that
+    \[h\cdot e=e\cdot h=h\]
+    for all $h\in H$ because in fact $h\in G$, and $e$ is the identity of $G$. A similar argument shows that the inverse of $h\in H$ in the subgroup $H$ is also the inverse element in $G$.
+\end{remark}
+Let's see some examples.
+\begin{example}
+    Let $(\QQ,+)$ denote group of rationals under addition. Then $\ZZ\subseteq\QQ$ is a subgroup. Here are our checks.
+    \begin{itemize}
+        \item Identity: the identity of $(\QQ,+)$ is $0$, which is an integer.
+        \item Closure: if $a,b\in\ZZ$, then $a+b$ is also an integer.
+        \item Inverse: for each $a\in\ZZ$, the inverse for addition is $-a$, which is an integer.
+    \end{itemize}
+\end{example}
+\begin{exe}
+    Show that $\QQ$ is a subgroup of $(\RR,+)$.
+\end{exe}
+\begin{example}
+    Consider the group $D_4$ of symmetries of the square, with operation given by $\cdot$. Then the set $R\coloneqq\left\{e,r,r^2,r^3\right\}$ is a subgroup. Here are our checks.
+    \begin{itemize}
+        \item Identity: the identity $e\in D_4$ is in $R$ by construction.
+        \item Closure: given two $r^a,r^b\in R$ where $a,b\in\{0,1,2,3\}$, we note $r^a\cdot r^b=r^{a+b}$ is in $R$ after taking $a+b\pmod4$. For example,
+        \[r^2\cdot r^3=r^5=r\cdot r^4=r\cdot e=r.\]
+        Convince yourself that this works in general.
+        \item Inverse: for each $r^a\in R$ for $a\in\{0,1,2,3\}$, we note that $r^{4-a}\in R$ still, and
+        \[r^a\cdot r^{4-a}=r^4=e.\]
+    \end{itemize}
+\end{example}
+\begin{exe}
+    Show that $\{e,s\}$ is a subgroup of $(D_4,\cdot)$.
+\end{exe}
+Here are some non-examples.
+\begin{nex}
+    The set of positive integers $\ZZ^+$ is not a subgroup of $(\ZZ,+)$. Indeed, the identity element $0\in\ZZ$ is not a positive integer.
+\end{nex}
+\begin{nex}
+    The set of nonnegative integers $\ZZ_{\ge0}$ is not a subgroup of $(\ZZ,+)$. Indeed, even though $3\in\ZZ_{\ge0}$, the inverse $-3$ is not in $\ZZ_{\ge0}$.
+\end{nex}
+\begin{nex}
+    Let $(D_4,\cdot)$ denote the group of symmetries of the square. Then the subset $S\coloneqq\left\{e,s,rs,r^2s,r^3s\right\}$ is not a subgroup. Indeed, $s\in S$ and $rs\in S$, but
+    \[rs\cdot s=r\cdot s^2=r\cdot e=r\]
+    is not in $S$.
+\end{nex}
+Here are a few more abstract examples.
+\begin{proposition} \label{prop:center}
+    Let $(G,\cdot)$ be a group. Then the subset
+    \[Z(G)\coloneqq\{g\in G:g\cdot h=h\cdot g\text{ for all }h\in G\}\]
+    is a subgroup of $G$.
+\end{proposition}
+\begin{proof}
+    We check our conditions by hand.
+    \begin{itemize}
+        \item Identity: note that $e\cdot h=h=h\cdot e$ for all $h\in G$. Thus, $e\in Z(G)$.
+        \item Closure: suppose that $g,g'\in Z(G)$. We would like to show that $g\cdot g'\in Z(G)$. Well, for each $h\in G$, we want to show
+        \[(g\cdot g')\cdot h\stackrel?=h\cdot(g\cdot g').\]
+        For this, we associate and use the fact that $g,g'\in Z(G)$, rearranging as
+        \begin{align*}
+            g\cdot g'\cdot h &= g\cdot (g'\cdot h) \\
+            &= g\cdot(h\cdot g') \\
+            &= (g\cdot h)\cdot g' \\
+            &= (h\cdot g)\cdot g' \\
+            &= h\cdot (g\cdot g'),
+        \end{align*}
+        which is what we wanted.
+        \item Inverse: suppose that $g\in Z(G)$. We would like to show that $g^{-1}\in Z(G)$. Well, for any $h\in H$, we want to show
+        \begin{equation}
+            g^{-1}\cdot h\stackrel?=h\cdot g^{-1}. \label{eq:inv-in-center}
+        \end{equation}
+        We should use the fact that $h\cdot g=g\cdot h$, so we take this equation and multiply both sides by $g^{-1}$, giving
+        \[g^{-1}\cdot(h\cdot g)\cdot g^{-1}=g^{-1}\cdot(g\cdot h)\cdot g^{-1}.\]
+        Simplifying both sides of the above equation yields \eqref{eq:inv-in-center}.
+        \qedhere
+    \end{itemize}
+\end{proof}
+\begin{exe}
+    Let $(D_4,\cdot)$ be the symmetries of the square. Show that $Z(D_4)=\left\{e,r^2\right\}$.
+\end{exe}
+\begin{exe} \label{exe:easy-subgroups}
+    Let $(G,\cdot)$ be a group. Show that the subsets $\{e\}$ and $G$ are a subgroup of $G$.
+\end{exe}
+In general, it can be an interesting question to classify the subgroups of a particular group. As an example, let's classify the subgroups of $(\ZZ,+)$.
+\begin{exe}
+    Let $H$ be a subgroup of $(\ZZ,+)$. If $H$ contains $5$ and $3$, then show that $H$ contains $2$. In fact, show that $H$ contains $1$.
+\end{exe}
+\begin{proposition}
+    Let $(\ZZ,+)$ denote the group of integers.
+    \begin{listalph}
+        \item For each $d\in\ZZ$, the subset $d\ZZ\coloneqq\{dk:k\in\ZZ\}$ is a subgroup of $\ZZ$. Here, $d\ZZ$ is the set of multiples of $d$.
+        \item If $H\subseteq\ZZ$ is a subgroup, then there exists a nonnegative integer $d\in\ZZ$ such that $H=d\ZZ$.
+    \end{listalph}
+\end{proposition}
+\begin{proof}
+    We show the parts separately.
+    \begin{listalph}
+        \item We run the checks directly.
+        \begin{itemize}
+            \item Identity: we see $0=d\cdot 0$ lives in $d\ZZ$.
+            \item Closure: given $da,db\in d\ZZ$ where $a,b\in\ZZ$, we see that $da+db=d(a+b)$ is again an element of $d\ZZ$.
+            \item Inverse: for any $dk\in\ZZ$, we see that its inverse is $-(dk)=d\cdot(-k)$, which is again in $d\ZZ$.
+        \end{itemize}
+        
+        \item This proof requires us to be a little careful because we must account for the subgroup $\{0\}$ of $\ZZ$. Indeed, if $H$ contains no nonzero integers, then we note that $H$ must certainly contain the identity $0$, so $H=\{0\}$. Thus, $H=0\ZZ=\{0k:k\in\ZZ\}$.
+        
+        Otherwise, $H$ contains a nonzero integer $h$. Now, the main difficulty in this proof is finding the element $d$. Note that either $h$ or $-h$ is positive, so $H$ also contains a positive integer. By the well-ordering principle, $H$ thus contains a least positive integer $d$.
+        
+        Thus, we claim that $H=d\ZZ$. We have two inclusions to show. We begin by showing $d\ZZ\subseteq H$. For each positive integer $k$, we see that
+        \[dk=\underbrace{d+\cdots+d}_k\]
+        will live in $H$ as well because $H$ is closed under $+$.\footnote{More formally, one can show this claim by induction, but we won't bother.} Additionally, $d\cdot0=0$ lives in $H$. Lastly, for each negative integer $k$, we note that $-dk=d\cdot -k$. But then $-k$ is a positive integer, so $d\cdot -k$ lives in $H$. However, $H$ is also closed under taking inverses, so $-dk\in H$ forces $dk\in H$.
+        
+        Lastly, we show that $H\subseteq d\ZZ$. This requires using \Cref{thm:division}. Pick up some $h\in H$. By \Cref{thm:division}, there is are integers $q,r\in\ZZ$ such that
+        \[h=dq+r,\]
+        where $0\le r<d$. We would like to show that $r=0$, for this would imply $h=dq\in d\ZZ$.
+        
+        The fact that $r=0$ will follow from the minimality of $d$---note we have used this minimality yet! Indeed, note $r\in H$: indeed, $dq\in d\ZZ$ is in $H$, so $-dq\in H$, so $r=h+-dq$ is also in $H$. Further, $r<d$ by definition of $d$, but $d$ is the least positive integer in $H$, so $r$ cannot be a positive integer! Because $r\ge0$, we conclude that $r=0$ is forced. This completes the proof.
+        \qedhere
+    \end{listalph}
+\end{proof}
+
+% \begin{example}
+% $\ZZ \leq \QQ \leq \RR \leq \CC$
+% \end{example}
+
+% \begin{example}
+% If $n$ divides $m$, then $\ZZ_n \leq \ZZ_m$.
+% \end{example}
+
+% \begin{example}
+% Let $SL_n(\RR)$ denote the $n \times n$ real matrices with determinant $1$. Then $SL_n(\RR) \leq GL_n(\RR)$.
+% \end{example}
+
+% \begin{theorem}
+% If $G$ is a group and $H$ is a nonempty subset of $G$ closed under multiplication and taking inverses, then $H$ is a subgroup of $G$.
+% \end{theorem}
+
+% "Closed under multiplication" means that if $a,b \in G$ are in $H$, then their product $ab$ is also in $H$. "Closed under inverses" means that if $a \in G$ is in $H$, then so is its inverse $\overline{a}$.
+
+% \begin{proof}
+% First we need to check that $G$ induces a well-defined binary operation on $H$. Since $H$ is closed under multiplication, the image of $H \times H$ under the multiplication map is contained in $H$, so we get a binary operation $H \times H \to H$. Next, if $a,b,c \in H$, then $a \cdot (b \cdot c) = (a \cdot b) \cdot c$, viewed as elements of $G$, and so also as elements in $H$. Thus, multiplication is associative in $H$. Since $H$ is nonempty, there exists some $h \in H$. Now we need to check that $H$ has an identity element. Since $H$ is closed under taking inverses, its inverse $\overline{h}$ is in $H$, so $h \cdot \overline{h}=e$, the identity of $G$. Since $H$ is closed under multiplication, this shows that $e$ is in $H$. Since $e$ acts as the identity on every element of $G$, it in particular acts as the identity on every element of $H$, so $e$ is the identity for $H$. Finally, since $H$ is closed under taking inverses, and the identity of $G$ is the same as the identity of $H$, every element of $H$ has an inverse in $H$.
+% \end{proof}
+
+% \begin{exercise}
+% If $H$ is a subgroup of $G$, show that the rule $x \sim y$ if and only if $\overline{x} \cdot y \in H$ is an equivalence relation on $G$. The equivalence classes of this relation are called the left cosets of $H$ in $G$. 
+% \end{exercise}
+
+% In particular, we can quotient $G$ by this equivalence relation to get a set of equivalences classes. We denote this quotient $G/H$. We can also define an analogous equivalence relation $x \sim y$ if and only if $x \cdot \overline{y} \in H$, whose equivalence classes are called the right cosets. Its quotient is denoted $H \backslash G$. A natural question to ask is whether $G/H$ inherits a group structure from $G$. It turns out the answer is: not always. Next lecture we'll look at when this quotient can be made into a group and the properties of these quotient groups.
+
+\subsection{Problems}
+
+% \begin{homework}
+% The kernel of a group homomorphism is a subgroup of the domain.
+% \end{homework}
+
+\begin{homework} \label{prop:sym-groups}
+    Let $X$ be a set, and let $\op{Sym}(X)$ denote the set of bijections $X\to X$. Show that this forms a group under function composition $\circ$. The group $(\op{Sym}(X),\circ)$ is called the ``symmetric group'' of $X$. In the case where $X=\{1,2,\ldots,n\}$, we might write $S_n\coloneqq\op{Sym}(X)$.
+\end{homework}
+
+% Nir's problems
+\begin{homework}
+    Let $X$ be a set. For two subsets $A,B\subseteq X$, recall the definition of the symmetric differences
+    \[A\operatorname{\triangle}B\coloneqq(A\setminus B)\cup(B\setminus A).\]
+    Show that the operation $\operatorname{\triangle}$ on the set of all subsets $\mathcal P(X)$ is a group.
+\end{homework}
+
+\begin{homework}
+    Determine if the following are groups. No justification is required.
+    \begin{enumerate}[label=(\alph*)]
+        \item The integers $\ZZ$ where the operation is subtraction.
+        \item The integers $\ZZ$ where the operation is multiplication.
+        \item The nonzero integers $\ZZ\setminus\{0\}$ where the operation is multiplication.
+        \item The positive rational numbers $\QQ^+$ where the operation is addition.
+        \item The positive rational numbers $\QQ^+$ where the operation is multiplication.
+        \item The set $\ZZ\times\ZZ$ of ordered pairs of integers, where the operation is given by $(a,b)\cdot(c,d)\coloneqq(a+b,c+d)$.
+    \end{enumerate}
+\end{homework}
+
+\begin{homework}
+    Let $(G,\cdot)$ be a finite group, where $G=\{g_1,g_2,\ldots,g_n\}$. Further, suppose that the group is abelian. Define $p\coloneqq g_1\cdot g_2\cdot\ldots\cdot g_n$. Show that $p^2=e$, where $e$ is the identity element of $G$.
+\end{homework}
+
+% \begin{homework}
+%     Consider the group $(\ZZ,+)$.
+%     \begin{enumerate}[label=\alph*.]
+%         \item For any integer $d\in\ZZ$, show that the set $d\ZZ\coloneqq\{dn:n\in\ZZ\}$ is a subgroup of $\ZZ$.
+%         \item Suppose a subgroup $H\subseteq\ZZ$ has a least positive element $d\in\ZZ$. Show that every element of $H$ is a multiple of $d$ and thus $H=d\ZZ$.
+%         \item If $H\subseteq\ZZ$ is a subgroup, show that $H=d\ZZ$ for some integer $d$.
+%     \end{enumerate}
+% \end{homework}
+
+\begin{homework}
+    Let $n$ be a positive integer.
+    \begin{listalph}
+        \item If $[a]_n=[a']_n$ and $[b]_n=[b']_n$ for integers $a,a',b,b'\in\ZZ$, then $[a\cdot a']_n=[b\cdot b']_n$. Conclude that the binary operation $\cdot\colon C_n\times C_n\to C_n$ given by
+        \[[a]_n\cdot [b]_n\coloneqq[a\cdot b]_n\]
+        is well-defined.
+        \item Set $n=5$. Does $C_n$ form a group under the operation $\cdot\colon C_n\times C_n\to C_n$?
+    \end{listalph}
+\end{homework}
+
+\begin{homework}
+    Let $n$ be a positive integer.
+    \begin{listalph}
+        \item Suppose that $d\in\ZZ$. Show that $\{[dk]_n:k\in\ZZ\}$ is a subgroup of $C_n$.
+        \item Suppose that $H\subseteq C_n$ is a subgroup. Show that
+        \[\{k\in\ZZ:[k]_n\in H\}\]
+        is a subgroup of $\ZZ$. Conclude that there exists an integer $d\in\ZZ$ such that $H=\{[dk]_n:k\in\ZZ\}$.
+    \end{listalph}
+\end{homework}
+
+\begin{homework}
+    Let $(G,\cdot)$ be a group. Given a subset $S\subseteq G$, define the \textit{centralizer} by
+    \[C_G(S)\coloneqq\{g\in G:g\cdot s=s\cdot g\text{ for all }s\in S\}.\]
+    For example, $C_G(\{e\})=G$, where $e\in G$ is the identity element.
+    \begin{enumerate}[label=(\alph*)]
+        \item Show that $C_G(S)$ is a subgroup of $G$.
+        \item Given subsets $S,T\subseteq G$, show that $S\subseteq C_G(T)$ implies $T\subseteq C_G(S)$.
+        \item Given subsets $S,T\subseteq G$, show that $S\subseteq T$ implies $C_G(T)\subseteq C_G(S)$.
+        \item Show that $S\subseteq C_G(C_G(S))$.
+        \item Use the above parts to show that $C_G(C_G(C_G(S)))\subseteq C_G(S)$ and $C_G(S)\subseteq C_G(C_G(C_G(S)))$. Conclude that $C_G(C_G(C_G(S)))=C_G(S)$.
+    \end{enumerate}
+\end{homework}
+
+\end{document}

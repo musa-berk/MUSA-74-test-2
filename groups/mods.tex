@@ -1,0 +1,62 @@
+%Read the slack post (link below) regarding syntax and formatting before you start writing lecture notes.
+% Post: https://musa-2021.slack.com/archives/C01DGR645SL/p1609187728029500
+
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+
+\section{Intermission: Modular Arithmetic} \label{sec:mods}
+Roughly speaking, algebra is the study of objects where it makes sense to solve equations. You already know how to do algebra with numbers, and you may have even seen algebra with things like matrices. This turns out to only be the tip of the iceberg when it comes to algebraic objects. We'll start by studying a classic example known as modular arithmetic, then define and analyze objects called groups. While we won't talk about this, know that there are many more types of algebraic objects: rings, modules, vector spaces, lie algebras, and many more! These all have different definitions, but many of the principles discussed here apply to all of them.
+ 
+ Modular arithmetic or "clock arithmetic" is about adding numbers as if they wrap around on themselves on a clock face. In Proposition 4.12 we defined an equivalence relation given by $a \equiv c \pmod{n}$ if $a-b$ is a multiple of $n$. In words, we say that $a$ and $b$ are equivalent modulo $n$.
+ 
+ \begin{theorem}
+ Fix some positive integer $n$. If $a,b,c,d$ are integers such that $a \equiv c \pmod{n}$ and $b \equiv d \pmod{n}$, then $a+b \equiv c+d \pmod{n}$ and $ab \equiv cd \pmod{n}$.
+ \end{theorem}
+
+\begin{proof}
+Since $a \equiv c \pmod{n}$, there exists some integer $j$ such that $a-c=nj$. Similarly, there exists an integer $k$ such that $b-d=nk$. Adding these equations we see that $(a+b)-(c+d)=n(j+k)$. Thus, $(a+b)-(c+d)$ is a multiple of n and $a+b \equiv c+d \pmod{n}$. To prove the second part, we'll rewrite our equations as $a=c+nj$ and $b=d+nk$. Multiplying these equations we get $ab=(c+nj)(d+nk)=cd+n(ck+bj+njk)$. So, $ab-cd=n(ck+bj+njk)$ and $ab \equiv cd \pmod{n}$.
+\end{proof}
+
+In other words, addition and multiplication respect equivalence classes modulo $n$. Why do we care? In Example 4.14 we defined the quotient of this equivalence relation, given by the set of equivalence classes modulo $n$. We'll denote it $\ZZ_n=\{[0],[1],\dots,[n-1]\}$, where $[k]$ denotes the equivalence class of $k$. The above theorem allows us to define a way to "add" and "multiply" equivalence classes of integers by the rules $[a]+[b]=[a+b]$ and $[a][b]=[ab]$.
+
+\begin{exercise}
+We need to justify that the equivalence classes $[0],[1],\dots,[n-1]$ in $\ZZ_n$ really are all of them. Prove that every integer is in exactly one of these equivalence classes modulo $n$.
+\end{exercise}
+[Hint: You may assume Euclid's Division Lemma, which says that for any integer $a$ there exist unique integers $r$ and $q$ such that $0 \leq r < n$ and $a=qn+r$.]
+
+\begin{exercise}
+Addition and multiplication in $\ZZ_n$ are associative and commutative.
+\end{exercise}
+[Hint: How can you use the fact that addition and multiplication are associative and commutative in $\ZZ$?]
+
+\begin{theorem}[Euclid's Lemma]
+If $a,b,c$ are integers such that $a$ is coprime to $b$ and $a$ divides $bc$, then $a$ divides $c$.
+\end{theorem}
+
+\begin{proof}
+Since $a$ divides $bc$, there exists some integer $k$ such that $bc=ak$. Recall Theorem 3.25 (Bézout's Lemma), since $a$ and $b$ are coprime, there exist integers $n$ and $m$ such that $na+mb=1$, thus $nac+mbc=c$. Thus, $c=nac+mak=a(nc+mk)$ and $a$ divides $c$.
+\end{proof}
+
+\begin{exercise}
+Find a positive integer $n$ and integers $a,b,c$ such that $[a][b]=[a][c]$ in $\ZZ_n$, but $[b] \neq [c]$ in $\ZZ_n$.
+\end{exercise}
+
+\begin{theorem}
+Fix some positive integer $n$. If $a,b,c$ are integers such that $a$ is relatively prime to $n$ and $ab \equiv ac \pmod{n}$, then $b \equiv c \pmod{n}$.
+\end{theorem}
+
+\begin{proof}
+Since $ab \equiv ac \pmod{n}$, there exists an integer $k$ such that $ab-ac=nk$, so $a(b-c)=nk$. Then, by Euclid's Lemma there exists an integer $j$ such that $b-c=nj$, so $b \equiv c \pmod{n}$.
+\end{proof}
+
+You can think of this of this theorem as saying that if $a$ is coprime to $n$, then we cancel $[a]$ from both sides of an equation in $\ZZ_n$. For example, since $[2][5]=[2][8]$ in $\ZZ_3$, we can conclude that $[5]=[8]$ in $\ZZ_3$. Note that the assumption that $a$ and $n$ are coprime is necessary here.
+
+\begin{theorem}[Fermat's Little Theorem]
+Fix a prime $p$. If $a$ is an integer coprime to $p$, then $a^{p-1} \equiv 1 \pmod{p}$.
+\end{theorem}
+
+\begin{proof}
+Consider the function $\varphi:\ZZ_p \to \ZZ_p$ that sends $[k] \mapsto [ak]$. We'll first prove that this is a bijection. Suppose that $k$ and $j$ are integers such that $[ak]=[aj]$, then there exists an integer $m$ such that $ak-aj =mp$. Then, by Euclid's lemma, since $a$ and $p$ are coprime and $a(k-j)$ is a multiple of $p$, $k-j$ is a multiple of $p$. So, $[k]=[j]$, and thus $\varphi$ is injective. Then, by Proposition 4.27, since $\ZZ_p$ is finite, $\varphi$ is bijective. Thus the set $\{[0], [a],[2a],\dots,[(p-1)a]\}$ is exactly $\ZZ_p$. Removing $[0]$ from both, we see that $\{[1],[2],\dots,[p-1]\}=\{[a],[2a],\dots,[(p-1)a]\}$. Now comes the clever step: since the elements of these sets are equal, the product of all their elements are equal modulo $p$. Thus, $$[1][2]\cdots[p-1]=[a][2a]\cdots[(p-1)a],$$ so  $$[(p-1)!]=[a^{p-1}][(p-1)!].$$ Now, since $p$ is prime, $(p-1)!$ is coprime to $p$, so we can use Euclid's lemma to cancel the $[(p-1)!]$ on both sides and conclude $[1]=[a^{p-1}]$.
+\end{proof}
+
+\end{document}

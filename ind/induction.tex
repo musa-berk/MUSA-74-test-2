@@ -1,0 +1,180 @@
+%Read the slack post (link below) regarding syntax and formatting before you start writing lecture notes.
+% Post: https://musa-2021.slack.com/archives/C01DGR645SL/p1609187728029500
+
+
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+
+\section{Week 7: Mathematical Induction}
+In science, ``inductive reasoning'' is the act of using empirical evidence about the world we live in to come to some sort of conclusion. For example, the following is a valid inductive argument.
+\begin{enumerate}
+    \item The sun rose in the east every day of my life so far.
+    \item Therefore, the sun will rise in the east tomorrow.
+\end{enumerate}
+However, the above reasoning is not valid in mathematics! For example, consider the following reasoning.
+\begin{badtheorem}
+    For any nonnegative integer $k \in \ZZ$, the number $2^{2^k} + 1$ is prime.
+\end{badtheorem}
+\begin{proof}[Bad proof]
+    The numbers $2^{2^0} + 1 = 3$, $2^{2^1} + 1 = 5$, $2^{2^2} + 1 = 17$, $2^{2^3} + 1 = 257$, and $2^{2^4} + 1$ are all prime, so by inductive reasoning every number of the form $2^{2^k} + 1$ is prime.
+\end{proof}
+However $2^{2^5} + 1$ is not prime: it factors as $641 \cdot 6700417$. So, the above sort of inductive reasoning is invalid in mathematics. Instead, we will often make use of mathematical induction, a powerful proof technique which we will use to prove claims about certain types of infinite sets.
+
+\subsection{Induction}
+Here is mathematical induction.
+\begin{theorem}[Principle of induction] \nirindex{Principle of induction} \label{thm:induction}
+    Let $P$ be a statement indexed by $\NN$, the set of all natural numbers. To show $P(n)$ is true for all $n$, it suffices to show the following.
+    \begin{enumerate}
+        \item Base case: $P(0)$ is true.
+        \item Inductive step: Let $k \in \NN$. If $P(k)$ is true, then $P(k + 1)$ is true.
+    \end{enumerate}
+\end{theorem}
+For philosophical reasons, we will not provide a formal proof of induction, but we will explain why you should believe it.\footnote{From some perspectives, the principle of induction is a defining property of $\NN$ and therefore is not proven.}
+\begin{proof}[Explanation]
+    To begin, we observe that by the base case $P(0)$ is true. But $0 \in \NN$, so by the inductive step $P(1)$ is also true. Again, since $1 \in \NN$ and $P(1)$ is true, by the inductive step $P(2)$ is also true. Proceeding in this fashion, we conclude that $P(n)$ is true for any $n \in \NN$ because
+    \[n = (n - 1) + 1 = \cdots = 0 + \underbrace{1 + \dots + 1}_n.\]
+    In other words, by starting at $0$ and repeatedly applying the inductive step, we can reach any natural number $n$, making $P(n)$ true.
+\end{proof}
+We note that we did not need to start at $0$; in other words, our base case need not be proving that $P(0)$ is true. Here is an example with a different base case.
+\begin{example}
+    Let's show that every positive integer greater than $4$ is at least $5$. We show this using induction.
+    \begin{enumerate}
+        \item Base case: we use $5$, where we see $5\ge 5$.
+        \item Inductive step: if $k \geq 5$ then $k + 1 \geq k \geq 5$, so by the transitivity of $\geq$ we conclude that $k + 1 \geq 5$ as well.
+    \end{enumerate}
+\end{example}
+\begin{exercise}
+    Explain why we can freely change the base case of an inductive proof. Could we start with a negative number? Can you perform induction on $\ZZ$? If not, is it possible to adapt the principle of induction so that it can be used on $\ZZ$?
+\end{exercise}
+Let's try a harder example.
+\begin{example} \label{exe:perfect-square}
+    For all $n\in\NN$, the number $S_n\coloneqq1+3+\cdots+(2n+1)$ is a perfect square; in other words, there is some integer $j$ such that $j^2 = S_n$.
+\end{example}
+\begin{proof}[Proof Attempt]
+    We proceed by induction.
+    \begin{enumerate}
+        \item For our base case, we see that $S_0=1$, but $1=1^2$ is a perfect square.
+        \item For the inductive step, assume that we have shown that $S_k$ is a perfect square. For the induction step we have 
+        \[S_{k+1}=1+3+\ldots+2k-1+2k+1=S_k+2k+1 \]
+        By assumption $S_k$ is a perfect square so $S_{k+1}=j^2+2k+1$ for some $j\in \NN$.
+        
+        At first glance, you might think that this is the perfect square $(j+1)^2 = j^2 + 2j + 1$. However, we don't know that $k = j$, so we're stuck.
+        \qedhere
+    \end{enumerate}
+\end{proof}
+Because we're stuck, let's try computing a few simple cases. This is often a good way to get a feel for what you're actually trying to prove. Indeed,
+\begin{align*}
+    S_0 &= 1 \\
+        &= 1 = 1^2 \\
+    S_1 &= 1 + 3 \\
+        &= 4 = 2^2 \\
+    S_2 &= 1 + 3 + 5 \\
+        &= 9 = 3^2 \\
+    S_3 &= 1 + 3 + 5 + 7 \\
+        &= 16 = 4^2.
+\end{align*}
+It seems that $S_n = (n+1)^2$, which is a stronger statement than what we were supposed to prove, but maybe we can show that instead.
+\begin{proof}[Proof of \Cref{exe:perfect-square}]
+    We claim that $S_n=(n+1)^2$ for each $n\in\NN$. The base case is the same as before, so we focus on the inductive step.
+    
+    Indeed, let us assume that $S_k = k^2$. Then
+    \begin{align*}
+        S_{k+1} &= (1 + \dots + (2k - 1)) + (2k + 1) \\
+            &= S_k + (2k + 1) \\
+            &= k^2 + 2k + 1 \\
+            &= (k+1)^2,
+    \end{align*} 
+    so we're done.
+\end{proof}
+Here's a similar example for you to try.
+\begin{exercise}
+    Prove that for each positive integer $n$ we have
+    \[1+2+\cdots+n = \frac{n(n + 1)}{2}.\]
+\end{exercise}
+Induction can do more than prove equalities.
+\begin{example}
+    We show $2^n > n$ for each positive integer $n$.
+\end{example}
+\begin{proof}
+    We proceed by induction.
+    \begin{enumerate}
+        \item Base case: using $n=1$ as our base case, we see $2^n = 2^1 = 2>1$.
+        \item Inductive step: suppose $2^k > k$ for some positive integer $k$. We aim to show that $2^{k + 1} > k + 1$. To accomplish this, we first note that $2^{k + 1} = 2 \cdot 2^k$. But $2^k > k$ by the inductive hypothesis, so
+        \[2^{k + 1} > 2k.\]
+        Finally, since $k \geq 1$ we have $2k = k + k \geq k + 1$, so putting everything together, we have
+        \[2^{n + 1} = 2 \cdot 2^n > 2n \geq n + 1.\]
+        This completes the induction.
+        \qedhere
+    \end{enumerate}
+\end{proof}
+Here is a more conceptual inductive result, which we used in the proof of \Cref{prop:finite-inj-surj-bij}.
+\begin{prop} \label{prop:dedekind-finite}
+    Let $X$ be a finite set with $n$ elements, where $n\in\NN$. If $A$ is a subset of $X$ with $n$ elements, then $A=X$.
+\end{prop}
+\begin{proof}
+    Because of the way we have arranged our definitions, this statement has some content. Unsurprisingly, we will induct on $n$.
+    \begin{enumerate}
+        \item Base case: when $n=0$, we see $X$ has no elements, so $X=\emp$. Thus, $A\subseteq X$ forces $A=\emp=X$, which is what we wanted.
+        \item Inductive step: suppose that all $k$-element subsets $A'$ of $k$-elements sets $X'$ have $A'=X'$. Now, let $X$ be a set with $k+1$ elements and $A$ be a subset with $k+1$ elements. Because $A$ has more than one elements, we can find $a\in A$. Then
+        \[A\setminus\{a\}\subseteq X\setminus\{a\},\]
+        but $A\setminus\{a\}$ and $X\setminus\{a\}$ both have $(k+1)-1=k$ elements! Thus, $A\setminus\{a\}=X\setminus\{a\}$ by the inductive hypothesis, so we conclude $A=X$ after adding the element $a$ back in.
+        \qedhere
+    \end{enumerate}
+\end{proof}
+We close this section with a few more examples for you.
+\begin{exercise}
+    Show that $2^{2n} - 1$ is divisible by 3 for each positive integer $n$.
+\end{exercise}
+\begin{exercise}
+    The ``factorial,'' denoted $n!$, is the product of the first $n$ positive integers:
+    \[n!\coloneqq1\cdot2\cdot3\cdot\ldots\cdot n,\]
+    and by convention, $0!\coloneqq1$. Additionally, we define the ``gamma function'' $\Gamma\colon \NN \to \RR$ by
+    \begin{equation*}
+        \Gamma(n) \coloneqq \int_0^\infty x^{n - 1}e^{-x} dx.
+    \end{equation*}
+    Prove that $\Gamma(n + 1) = n!$ for each $n \in \NN$.
+\end{exercise}
+The moral to this section is as follows.
+\begin{idea}
+    whenever you see which looks like
+    \begin{center}
+        ``For all natural numbers $n \in \NN$, property $P(n)$ is true,''
+    \end{center}
+    you should try induction first.
+\end{idea}
+
+\subsection{Problems}
+\begin{homework}
+    Show that
+    \[1^2+2^2+\cdots +n^2=\frac{n(n+1)(2n+1)}{6}\]
+    for each positive integer $n$.
+\end{homework}
+\begin{homework}
+    Show that
+    \[1^3+2^3+\cdots+n^3=\left(\frac{n(n+1)}2\right)^2\]
+    for each positive integer $n$.
+\end{homework}
+\begin{homework} \label{hw:basel}
+    Show that $$1+\frac{1}{4}+\cdots +\frac{1}{n^2} \le 2-\frac{1}{n}$$ for each positive integer $n$.
+\end{homework}
+\begin{homework} \label{hw:fib}
+    Define the Fibonacci sequence $F_0,F_1,F_2,\ldots$ by $F_n=F_{n-1}+F_{n-2}$ and $F_0=0$ and $F_1=1$. Show
+    \[F_0+F_1+\cdots+F_n=F_{n+2}-1.\]
+    for each positive integer $n$.
+\end{homework}
+\begin{homework}
+    Using induction and \Cref{thm:de-morgan}, prove the following.
+    \begin{theorem}[generalized de Morgan's laws] \label{thm:general-de-morgan}
+        Let $n$ be a positive integer, and suppose $A_1, \dots, A_n$ are sets such that each $A_i$ is contained in a set $X$. Then
+        \begin{enumerate}[label=(\alph*)]
+            \item $\Big(\bigcap_{i = 1}^nA_i\Big)^c = \bigcup_{i = 1}^n A_i^c$
+            \item $\Big(\bigcup_{i = 1}^nA_i\Big)^c = \bigcap_{i = 1}^n A_i^c$
+        \end{enumerate}
+    \end{theorem}
+    If you would like, prove \Cref{thm:general-de-morgan} again without induction.
+\end{homework}
+\begin{homework}
+    Let $a_1,a_2,a_3,\ldots$ be a sequence of real numbers such that $a_{m+n}=a_m+a_n$ for any positive integers $m$ and $n$. Show that $a_n=n\cdot a_1$ for each positive integer $n$.
+\end{homework}
+
+\end{document}

@@ -1,0 +1,448 @@
+%Read the slack post (link below) regarding syntax and formatting before you start writing lecture notes.
+% Post: https://musa-2021.slack.com/archives/C01DGR645SL/p1609187728029500
+
+
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+
+\section{Week 11: Continuity}
+In this section, we use our understanding of open and closed sets to discuss continuity. At the end, we give a small taste of topology.
+
+\subsection{Continuous Functions}
+Roughly speaking, the idea here is that mathematical objects are not understood in isolation but in how they relate to one another. Metric spaces relate to each other by continuous maps.
+\begin{definition}[continuous]
+    Let $(X,d)$ and $(X',d')$ be metric spaces. A function $f\colon X\to X'$ is \dfn{continuous} at an element $x_0\in X$ if and only if, for all $\varepsilon>0$, there exists some $\delta>0$ such that
+    \[d(x_0,x)<\delta\implies d'(f(x_0),f(x))<\varepsilon.\]
+    The function $f$ is \textit{continuous} if and only if it is continuous at all elements $x_0\in X$.
+\end{definition}
+The intuition here is that points $x$ sufficiently close to $x_0$ should have $f(x)$ sufficiently close to $f(x_0)$. The definition makes this statement rigorous. Here is the image for continuous functions $\RR\to\RR$, where $\RR$ has been given the usual metric $d(x,y)\coloneqq|x-y|$.
+\begin{center}
+    \begin{asy}
+        import graph;
+        
+        unitsize(2.5cm);
+        
+        real f(real x)
+        {
+        	return x*x;
+        }
+        
+        draw((-0.5,0) -- (1.414,0));
+        draw((0,-0.2) -- (0,2));
+        draw(graph(f, -0.5, 1.414));
+        
+        real x = 1;
+        real eps = 0.25;
+        real del = 0.1;
+        
+        draw((x-del,0) -- (x-del,2), dashed);
+        draw((x+del,0) -- (x+del,2), dashed);
+        draw((0,f(x)-eps) -- (1.414,f(x)-eps), dashed);
+        draw((0,f(x)+eps) -- (1.414,f(x)+eps), dashed);
+        draw((x,0) -- (x,f(x)) -- (0,f(x)));
+        
+        dot((x,f(x)));
+        dot("$x$", (x,0), S);
+        dot("$f(x)$", (0,f(x)), W);
+        dot("$x-\delta$", (x-del,0), NW);
+        dot("$x+\delta$", (x+del,0), NE);
+        dot("$f(x)-\varepsilon$", (0,f(x)-eps), W);
+        dot("$f(x)+\varepsilon$", (0,f(x)+eps), W);
+    \end{asy}
+\end{center}
+Let's see a few examples.
+\begin{example}
+    Give $\RR$ the metric $d(x,y)\coloneqq|x-y|$. Then the function $f\colon\RR\to\RR$ defined by $f(x)\coloneqq3x+5$ is continuous.
+\end{example}
+\begin{proof}[Proof 1]
+    We would like to show that $f$ is continuous at any given $x_0\in\RR$. This means that, for any $\varepsilon>0$, we must find some $\delta>0$ such that $|x_0-x|<\delta$ implies $|f(x_0)-f(x)|<\varepsilon$.
+
+    The conclusion $|f(x_0)-f(x)|<\varepsilon$ is currently mysterious to us, so we will try to simplify that. Expanding, we see
+    \[|f(x_0)-f(x)|=|(3x_0+5)-(3x+5)|=3|x_0-x|.\]
+    Because we want $|f(x_0)-f(x)|<\varepsilon$, we see that it will be enough for $|x_0-x|<\varepsilon/3$. As such, we set $\delta\coloneqq\varepsilon/3$ and can compute that $|x_0-x|<\delta$ implies
+    \[|f(x_0)-f(x)|=3|x_0-x|<3\delta=\varepsilon,\]
+    which is what we wanted.
+\end{proof}
+In the above proof, note that $\delta$ depended on $\varepsilon$. This is a common feature in such proofs.
+
+Now, the above proof was written to explain why we chose $\delta$ from that $\varepsilon$. For clarity reasons, it is more common for a proof to simply construct $\varepsilon$ without this intermediate explanation. Here is what that looks like.
+\begin{proof}[Proof 2]
+    We would like to show that $f$ is continuous at any given $x_0\in\RR$. Well, for any $\varepsilon>0$, set $\delta\coloneqq\varepsilon/3$. Then $d(x_0,x)<\delta$ implies
+    \[d(f(x_0),f(x))=|(3x_0+5)-(3x+5)|=3|x_0-x|<3\delta=\varepsilon,\]
+    which is what we wanted.
+\end{proof}
+For the remainder of this subsection, we will write two proofs of each our continuity results (one explaining how $\delta$ is chosen, and one where $\delta$ is merely constructed), but we will opt for the second style of proof afterwards. On homework, it is encouraged to write proofs closer to the second proofs.
+\begin{example}
+    Give $\RR$ the metric $d(x,y)\coloneqq|x-y|$. Then the function $f\colon\RR\to\RR$ defined by $f(x)\coloneqq x^2$ is continuous.
+\end{example}
+\begin{proof}[Proof 1]
+    This argument is harder. We would like to show that $f$ is continuous at any given $x_0\in\RR$. Namely, for any $\varepsilon>0$, we would like some $\delta>0$ such that $|x_0-x|<\delta$ implies $|f(x_0)-f(x)|<\varepsilon$.
+
+    Again, we begin by simplifying $|f(x_0)-f(x)|$ as
+    \[|f(x_0)-f(x)|=\left|x_0^2-x^2\right|=|(x_0-x)(x_0+x)|=|x_0-x|\cdot|x_0+x|.\]
+    Now, we can force $|x_0-x|$ to be small (because we enforce $|x_0-x|<\delta$), but it's not obvious how to make $|x_0+x|$ to be small. It will actually be enough to just make $|x_0+x|$ have some bounded size. Explicitly, note that $|x_0-x|\le1$ implies that $-1\le x-x_0\le1$ and so
+    \[-(2|x_0|+1)\le2x_0-1\le x+x_0\le2x_0+1\le2|x_0|+1,\]
+    so $|x+x_0|\le2|x_0|+1$ follows. Thus, we see that
+    \[|f(x_0)-f(x)|=|x_0-x|\cdot|x_0+x|\le|x_0-x|\cdot(2|x_0|+1),\]
+    where we have also plugged in $|x_0-x|<\delta$. To make the right-hand side less than $\varepsilon$, we see that we must also have $|x_0-x|<\varepsilon/(2|x_0|+1)$.
+
+    In total, the above argument requires $|x_0-x|\le1$ and $|x_0-x|<\varepsilon/(2|x_0|+1)$. Thus, we set $\delta\coloneqq\frac12\min\{1,\varepsilon/(2|x_0|+1)\}$ so that both of these conditions are satisfied; note $\delta>0$. Tracking through the argument of the previous paragraph, we see that $|x_0-x|<\delta$ implies
+    \[|f(x_0)-f(x)|\le|x_0-x|\cdot(2|x_0|+1)<\delta\cdot(2|x_0|+1)=\varepsilon,\]
+    which is what we wanted.
+\end{proof}
+\begin{proof}[Proof 2]
+    We would like to show that $f$ is continuous at a given $x_0\in\RR$. Well, for any $\varepsilon>0$, set $\delta\coloneqq\frac12\min\{1,\varepsilon/(2|x_0|+1)\}$. We show that $d(x_0,x)<\delta$ implies $d(f(x_0),f(x))<\varepsilon$.
+
+    To begin, we note $d(x_0,x)<\delta$ implies $|x_0-x|<1$. Then we see $-1<x-x_0<1$, so $2x_0-1<x+x_0<2x_0+1$, so
+    \[|x+x_0|<2|x_0|+1.\]
+    But now we can bound
+    \[d(f(x_0),f(x))=\left|x_0^2-x^2\right|=|x_0-x|\cdot|x_0+x|<\delta\cdot(2|x_0|+1).\]
+    By definition of $\delta$, the right-hand side above is less than $\varepsilon$, which completes the proof.
+\end{proof}
+In the above proofs, we see that $\delta$ depended on both $\varepsilon$ and $x_0$. This is also common.
+\begin{exercise}
+    Give $\RR$ the metric $d(x,y)\coloneqq|x-y|$. Show that the function $f\colon\RR\to\RR$ defined by $f(x)\coloneqq\frac1{x^2+1}$ is continuous.
+\end{exercise}
+Let's start working with different metric spaces now.
+\begin{example}
+    Give $\RR$ the metric $d(x,y)\coloneqq|x-y|$, and give $\RR^2$ the Euclidean metric $d_2((x,y),(x',y'))\coloneqq\sqrt{(x-x')^2+(y-y')^2}$. Then the function $f\colon\RR^2\to\RR$ defined by $f(x,y)\coloneqq x+y$ is continuous.
+\end{example}
+\begin{proof}[Proof 1]
+    Fix some point $(x_0,y_0)\in\RR^2$ so that we would like to show that $f$ is continuous at $(x_0,y_0)$. Namely, for any $\varepsilon>0$, we would like $\delta>0$ such that
+    \[d_2((x_0,y_0),(x,y))<\delta\stackrel?\implies d(f(x_0,y_0),f(x,y))<\varepsilon.\]
+    Unwinding our definitions, we we want
+    \[\sqrt{(x_0-x)^2+(y_0-y)^2}<\delta\stackrel?\implies|(x_0-x)+(y_0-y)|<\varepsilon.\]
+    To compress our information somewhat, we set $a\coloneqq(x_0-x)$ and $b\coloneqq(y_0-y)$ to be some real numbers, and we want
+    \[\sqrt{a^2+b^2}<\delta\stackrel?\implies|a+b|<\varepsilon.\]
+    Now, the idea is that $\sqrt{a^2+b^2}<\delta$ should actually force both $a$ and $b$ to be small, which makes $|a+b|$ also small. Indeed, $|a|<\sqrt{a^2+b^2}$, so $|a|<\delta$ is forced. Similarly, we see $|b|<\delta$, and then it follows $|a+b|\le|a|+|b|<2\delta$. Thus,
+    \[\sqrt{a^2+b^2}<\delta\implies|a+b|<2\delta.\]
+    Setting $\delta\coloneqq\varepsilon/2$ completes the proof.
+\end{proof}
+\begin{proof}[Proof 2]
+    We would like to show that $f$ is continuous at a given $(x_0,y_0)\in\RR^2$. Well, for any $\varepsilon>0$, we set $\delta\coloneqq\varepsilon/2$. Then $d_2((x_0,y_0),(x,y))<\delta$ implies
+    \[|x_0-x|<\sqrt{(x_0-x)^2+(y_0-y)^2}=d_2((x_0,y_0),(x,y))<\delta.\]
+    Similarly, we see $|y_0-y|<\delta$. It follows
+    \[d(f(x_0,y_0),f(x,y))=|(x_0+y_0)-(x+y)|\le|x_0-x|+|y_0-y|<2\delta=\varepsilon,\]
+    which finishes the proof.
+\end{proof}
+
+\subsection{Working with Abstract Metric Spaces}
+As an intermission, here are a few examples of continuous functions between abstract metric spaces.
+\begin{example} \label{ex:const-is-cont}
+    Let $(X,d)$ and $(X',d')$ be metric spaces. Fixing some point $a'\in X'$, define the function $f\colon X\to X'$ by $f(x)\coloneqq a'$ for all $x\in X$. Then the function $f$ is continuous: at any $x_0\in X$, for each $\varepsilon>0$, we may set $\delta\coloneqq1$ so that
+    \[d(x_0,x)<\delta\implies d'(f(x_0),f(x))=d'(a,a)=0<\varepsilon.\]
+\end{example}
+\begin{example} \label{exe:discrete-is-cont}
+    Let $(X',d')$ be a metric space. Give a nonempty set $X$ the discrete metric
+    \[d(x,y)\coloneqq\begin{cases}
+        1 & \text{if }x\ne y, \\
+        0 & \text{if }x=y.
+    \end{cases}\]
+    Then any function $f\colon X\to X'$ is continuous.
+\end{example}
+\begin{proof}
+    This is a bit silly. To show that $f$ is continuous at $x_0\in X$, for any $\varepsilon>0$, we set $\delta\coloneqq1$. Then $d(x_0,x)<\delta$, meaning $d(x_0,x)<1$. However, checking the definition of $d$, we see $d(x_0,x)<1$ forces $d(x_0,x)=0$ and so $x_0=x$. But then $f(x_0)=f(x)$, so $d'(f(x_0),f(x))=0<\varepsilon$, as needed.
+\end{proof}
+\begin{example}
+    Let $(X,d)$ be a metric space. Further, give $X\times X$ the metric $d_1((x,y),(x',y'))\coloneqq d(x,x')+d(y,y')$ of \Cref{exe:general-taxi-metric}, and give $\RR$ the usual metric $d_\RR(x,y)\coloneqq|x-y|$. Then the metric function $d\colon X\times X\to\RR$ is continuous.
+\end{example}
+This statement is scary, so we will give our two proofs, as in the previous subsection.
+\begin{proof}[Proof 1]
+    Fix some $(x_0,y_0)\in X\times X$ so that we will show $d$ is continuous at $(x_0,y_0)$. Indeed, fix any $\varepsilon>0$, and we need $\delta>0$ such that
+    \[d_1((x_0,y_0),(x,y))<\delta\stackrel?\implies d_\RR(d(x_0,y_0),d(x,y))<\varepsilon.\]
+    Unwinding our definitions, we are asking for
+    \[d(x_0,x)+d(y_0,y)<\delta\stackrel?\implies|d(x_0,y_0)-d(x,y)|<\varepsilon.\]
+    Now, the idea is that $d(x_0,x)+d(y_0,y)<\delta$ forces $x_0$ and $x$ to be close together and forces $y_0$ and $y$ to be close together. Thus, the distance between $x_0$ and $y_0$ should be approximately equal to the distance between $x$ and $y$. Here is the image, where the solid lines are small distances.
+    \begin{center}
+        \begin{asy}
+            unitsize(2cm);
+            
+            real delta=0.3;
+            pair x0 = (0,0);
+            pair y0 = (2,0);
+            pair x = delta/2*dir(120);
+            pair y = y0+delta/2*dir(20);
+            
+            draw(x0 -- y0 ^^ x -- y, dashed);
+            draw(x -- x0 ^^ y -- y0);
+            
+            dot("$x_0$", x0, S);
+            dot("$y_0$", y0, S);
+            dot("$x$", x, dir(120));
+            dot("$y$", y, dir(20));
+        \end{asy}
+    \end{center}
+    With this in mind, we use $d(x_0,x)+d(y_0,y)<\delta$ and the triangle inequality to bound
+    \[d(x_0,y_0)\le d(x_0,x)+d(x,y_0)\le d(x_0,x)+d(x,y)+d(y,y_0)<d(x,y)+\delta.\]
+    Reversing the roles of $(x_0,y_0)$ and $(x,y)$, we see
+    \[d(x,y)<d(x_0,y_0)+\delta.\]
+    Thus, we see
+    \[d(x_0,x)+d(y_0,y)<\delta\implies|d(x_0,y_0)-d(x,y)|<\delta.\]
+    As such, we set $\delta\coloneqq\varepsilon$ to complete the proof.
+\end{proof}
+\begin{proof}[Proof 2]
+    We show that $d$ is continuous at a given $(x_0,y_0)\in X\times X$. Indeed, for any $\varepsilon>0$, we set $\delta\coloneqq\varepsilon$. Then $d_1((x_0,y_0),(x,y))<\delta$ means
+    \[d(x_0,x)+d(y_0,y)<\varepsilon.\]
+    Now, by the triangle inequality, we see
+    \[d(x_0,y_0)\le d(x_0,x)+d(x,y)+d(y,y_0)\le d(x,y)+\varepsilon.\]
+    A similar argument shows $d(x,y)\le d(x_0,y_0)+\varepsilon$, so
+    \[d_\RR(d(x_0,y_0),d(x,y))=|d(x_0,y_0)-d(x,y)|<\varepsilon,\]
+    which is what we wanted.
+\end{proof}
+\begin{exercise}
+    Let $(X,d)$ be a metric space. Further, give $X\times X$ the metric $d_1((x,y),(x',y'))\coloneqq d(x,x')+d(y,y')$ of \Cref{exe:general-taxi-metric}. Show that the projection function $p_1\colon X\times X\to X$ given by $p_1(x,y)\coloneqq x$ is continuous.
+\end{exercise}
+\begin{exercise} \label{exe:id-is-cont}
+    Let $(X,d)$ be a metric space. Show that the function $i\colon X\to X$ defined by $i(x)\coloneqq x$ is continuous.
+\end{exercise}
+\begin{exercise} \label{exe:comp-is-cont}
+    Let $(X,d)$ and $(X',d')$ and $(X'',d'')$ be metric spaces. If the functions $f\colon X\to X'$ and $f'\colon X'\to X''$ are continuous, show that the function $(f'\circ f)\colon X\to X''$ is also continuous.
+\end{exercise}
+
+\subsection{Continuity by Open Sets}
+Now that we are familiar with continuous functions, we explain how they relate to open sets. The idea is that the statement
+\[d(x_0,x)<\delta\implies d'(f(x_0),f(x))<\varepsilon\]
+can be restated as
+\[f(B(x_0,\delta))\subseteq B(f(x_0),\varepsilon),\]
+or
+\[B(x_0,\delta)\subseteq f^{-1}(B(f(x_0),\varepsilon)).\]
+(Be careful: the two open balls live in different metric spaces!) Indeed, the condition $x\in B(x_0,\delta)$ is the same as $d(x_0,x)<\delta$. Further, the condition $x\in f^{-1}(B(f(x_0),\varepsilon)$ is equivalent to $f(x)\in B(f(x_0),\varepsilon)$, which is equivalent to $d'(f(x_0),f(x))<\varepsilon$.
+
+The above paragraph explains how pre-images are going to enter our discussion.
+\begin{theorem} \label{thm:cont-by-opens}
+    Let $(X,d)$ and $(X',d')$ be metric spaces, and let $f\colon X\to X'$. The following are equivalent.
+    \begin{listalph}
+        \item $f$ is continuous.
+        \item For all open subsets $U'\subseteq X'$, the set $f^{-1}(U')\subseteq X$ is also open.
+    \end{listalph}
+\end{theorem}
+\begin{proof}
+    We have two implications to show.
+    \begin{itemize}
+        \item We show that (a) implies (b). Suppose that $U'\subseteq X'$ is open, and we want to show that $f^{-1}(U')$ is open. Well, fix some $x_0\in f^{-1}(U')$, and we would like some $\delta>0$ such that $B(x_0,\delta)\subseteq f^{-1}(U')$.
+
+        However, we note that $f(x_0)\in U'$, and $U'$ is open, so there exists some $\varepsilon$ such that $B(f(x_0),\varepsilon)\subseteq U'$. Arguing as above, we note that continuity of $f$ promises some $\delta>0$ such that
+        \[d(x_0,x)<\delta\implies d'(f(x_0),f(x))<\varepsilon.\]
+        But now, $d'(f(x_0),f(x))<\varepsilon$ implies $f(x)\in B(f(x_0),\varepsilon)$, implying $f(x)\in U'$, implying $x\in f^{-1}(U')$. Thus, $B(x_0,\delta)\subseteq f^{-1}(U')$, which completes the proof.
+
+        \item We show (b) implies (a). We would like to show that $f$ is continuous at a given $x_0\in X$. Indeed, for any $\varepsilon>0$, we would like some $\delta>0$ such that $d(x_0,x)<\delta$ implies $d'(f(x_0),f(x))<\varepsilon$.
+
+        Well, we know $B(f(x_0),\varepsilon)$ is open by \Cref{prop:open-ball-is-open}, so $f^{-1}(B(f(x_0),\varepsilon))$ is also open by hypothesis on $f$. However, $x_0\in f^{-1}(B(f(x_0),\varepsilon))$, so by definition of an open set, there exists $\delta>0$ such that
+        \[B(x_0,\delta)\subseteq f^{-1}(B(f(x_0),\varepsilon)).\]
+        As explained previously, this is equivalent to the assertion $d(x_0,x)<\delta$ implies $d'(f(x_0),f(x))<\varepsilon$.
+        \qedhere
+    \end{itemize}
+\end{proof}
+\Cref{thm:cont-by-opens} is a very powerful result because we understand how open sets behave reasonably well, so we will be able to show properties of continuous functions fairly cleanly by appealing to facts about open sets. As an example, we will give a new proof of \Cref{exe:comp-is-cont}, which is fairly annoying with \Cref{thm:cont-by-opens}.
+\begin{proof}[Proof of \Cref{exe:comp-is-cont}]
+    Using \Cref{thm:cont-by-opens}, for any open subset $U''\subseteq X''$, we would like to show that $(f'\circ f)^{-1}(U'')$ is open in $X$. Well, we compute
+    \[(f'\circ f)^{-1}(U'')=\{x\in X:f'(f(x))\in U''\}=\left\{x\in X:f(x)\in(f')^{-1}(U'')\right\}=f^{-1}\left((f')^{-1}(U'')\right).\]
+    Now, because $f'$ is continuous, we see $(f')^{-1}(U'')$ is open by \Cref{thm:cont-by-opens}, and $f^{-1}\left((f')^{-1}(U'')\right)$ is also open for the same reason. This completes the proof.
+\end{proof}
+\begin{exercise}
+    Give new proofs of \Cref{ex:const-is-cont}, \Cref{exe:discrete-is-cont}, and \Cref{exe:id-is-cont} using \Cref{thm:cont-by-opens}.
+\end{exercise}
+
+\subsection{Primer on Point-Set Topology}
+To close out this section, we make a few remarks on point-set topology. The idea here is that \Cref{thm:complement-closed-is-open,thm:cont-by-opens} explain that open sets are central to the way we understand metric spaces, arguably more central than the metric itself in some respects. In point-set topology, this idea becomes key, and we totally forget about the metric and focus on the open sets only.
+
+So how should we define an open set of some ``space'' $X$? Well, the trick is that we're not going to! We are simply going to declare that some of the sets in $X$ are open. To ensure that these open sets behave as we would expect, we are going to requite that they satisfy \Cref{ex:emp-is-open,ex:space-is-open,prop:intersect-open-sets,prop:union-open-sets}. Here is our definition.
+\begin{definition}[topology]
+    Let $X$ be a set. A collection $\mc T$ of subsets of $X$ is a \dfn{topology} on $X$ if and only if it satisfies the following conditions.
+    \begin{itemize}
+        \item $\emp,X\in\mc T$.
+        \item Arbitrary union: for a subcollection $\mc U\subseteq\mc T$, the union $\bigcup_{U\in\mc U}U$ lives in $\mc T$.
+        \item Finite intersection: for $U,V\in\mc T$, we have $U\cap V\in\mc T$.
+    \end{itemize}
+    In this case, we call the ordered pair $(X,\mc T)$ a \dfn{topological space}, and the sets in $\mc T$ are called \dfn{open} sets.
+\end{definition}
+\begin{example} \label{ex:indiscrete-top}
+    Let $X$ be a set. Then the collection $\mc T\coloneqq\{\emp,X\}$ is a topology on $X$, called the ``indiscrete topology.'' Here are the checks.
+    \begin{itemize}
+        \item Note $\emp,X\in\mc T$ by assumption.
+        \item Arbitrary union: fix a subcollection $\mc U\subseteq\mc T$. If $\mc U$ does not contain $X$, then we must have $\mc U\subseteq\{\emp\}$, so $\bigcup_{U\in\mc U}U=\emp$, which is in $\mc T$. Otherwise, $\mc U$ does contain $X$, so $\bigcup_{U\in\mc U}U=X$.
+        \item Finite intersection: fix $U,V\in\mc T$. If $U=\emp$ or $V=\emp$, then $U\cap V=\emp$, so $U\cap V\in\mc T$. Otherwise, $U=V=X$, so $U\cap V=X$, which is still in $\mc T$.
+    \end{itemize}
+\end{example}
+\begin{exe} \label{ex:discrete-top}
+    Let $X$ be a set. Show that the collection $\mc T\coloneqq\mc P(X)$ of all subsets of $X$ is a topology on $X$, called the ``discrete topology.''
+    % Here are our checks.
+    % \begin{itemize}
+    %     \item We note $\emp,X\in\mc T$.
+    %     \item Arbitrary union: for a subcollection $\mc U\subseteq\mc T$, the union $\bigcup_{U\in\mc U}U$ is a subset of $X$ and thus in $\mc T$.
+    %     \item Finite intersection: for $U,V\in\mc T$, we see $U\cap V$ is a subset of $X$ and thus in $\mc T$.
+    % \end{itemize}
+\end{exe}
+\begin{exe} \label{exe:metric-topology}
+    Let $(X,d)$ be a metric space. Show that the collection $\mc T$ of open sets forms a topology on $X$.
+\end{exe}
+\begin{remark}
+    In fact, \Cref{exe:metric-topology} is a generalization of \Cref{ex:discrete-top}. Indeed, any subset $U$ of $X$ is open when $X$ is given the discrete metric.
+\end{remark}
+However, \Cref{ex:indiscrete-top} does not come from a metric in general. To see this, suppose that $X$ is a set with at least two distinct elements $x,y\in X$. Then we show that the discrete topology $\mc T$ does not come from any metric $d$ on $X$. Indeed, suppose for the sake of contradiction that $\mc T$ is the set of open sets of some metric $d\colon X\times X\to \RR$. But then the set
+\[U\coloneqq B(x,d(x,y))\]
+is an open set in $X$ by \Cref{prop:open-ball-is-open}, so $U\in\mc T$. However, $x\in U$, but $d(x,y)$ is not less than $d(x,y)$, so $y\notin U$. This is a contradiction because the only nonempty set in $\mc T$ is $X$, so $x\in U$ forces $U=X$, but then this would imply $y\in U$.
+
+Thus, we see that considering topological spaces is in fact more general than just thinking about metric spaces. Let's begin trying to push the rest of the theory we developed into our new framework. We will be very fast in our exposition, leaving most of this to exercises, because many arguments are similar to ones we've already given. For interiors, we note that \Cref{exe:int-by-opens} provides a construction of the interior which only discusses open sets, so we will use this as our definition.
+\begin{definition}[interior]
+    Let $(X,\mc T)$ be a topological space. For a subset $A\subseteq X$, we define the \dfn{interior} to be
+    \[A^\circ\coloneqq\bigcup_{\substack{U\in\mc T\\U\subseteq A}}U.\]
+    Here, the union is over all open sets contained in $A$.
+\end{definition}
+\begin{example}
+    We generalize \Cref{lem:all-opens-in-interior}. Let $(X,\mc T)$ be a topological space. If $A\subseteq X$ has $U\in\mc T$ and $U\subseteq A$, then the definition of $A^\circ$ gives $U\subseteq A^\circ$.
+\end{example}
+\begin{exe}
+    Let $(X,\mc T)$ be a topological space. Show the following properties of the interior for subsets $A,B\subseteq X$, generalizing the case of metric spaces.
+    \begin{itemize}
+        \item $\emp^\circ=\emp$ and $X^\circ=X$.
+        \item $A^\circ\subseteq A$.
+        \item $A\in\mc T$ if and only if $A^\circ=A$.
+        \item $(A^\circ)^\circ=A^\circ$.
+        \item $(A\cap B)^\circ=A^\circ\cap B^\circ$.
+    \end{itemize}
+\end{exe}
+Now, we discuss closed sets. \Cref{thm:complement-closed-is-open} tells us how to think about closed sets purely in terms of open sets, so we will take this as our definition.
+\begin{definition}[closed]
+    Let $(X,\mc T)$ be a topological space. A subset $A\subseteq X$ is \dfn{closed} if and only if $X\setminus A\in\mc T$.
+\end{definition}
+\begin{exe}
+    Let $(X,\mc T)$ be a topological space. By taking complements in the definition of a topology, show the following.
+    \begin{itemize}
+        \item $\emp$ and $X$ are closed.
+        \item Arbitrary intersection: given a collection $\mc C$ of closed sets, the intersection $\bigcap_{C\in\mc C}C$ is closed.
+        \item Finite union: given closed sets $A$ and $B$, the set $A\cup B$ is also closed.
+    \end{itemize}
+\end{exe}
+\begin{remark}
+    By taking complements, note also that $A\subseteq X$ is open if and only if $X\setminus A$ is closed. Thus, we could also have defined open sets in terms of closed ones.
+\end{remark}
+We note that we can also build an analogue to our original definition \Cref{defi:closed} of a closed set by replacing open balls $B(a,\varepsilon)$ with general open sets $U$.
+\begin{proposition}
+    Let $(X,\mc T)$ be a topological space. For subsets $A\subseteq X$, the following are equivalent.
+    \begin{listalph}
+        \item $A$ is closed.
+        \item If $a\in X$ makes the sets $A\cap U$ nonempty for all $U\in\mc T$ containing $a$, then $a\in A$.
+    \end{listalph}
+\end{proposition}
+\begin{proof}
+    We have two implications to show.
+    \begin{itemize}
+        \item We show (a) implies (b). We will show the contrapositive: if $a\in X\setminus A$, then there exists $U\in\mc T$ containing $a$ such that $A\cap U$ is empty. Indeed, we see that $X\setminus A$ is open because $A$ is closed, so $U\coloneqq(X\setminus A)$ will both contain $a$ and make $A\cap U$ empty.
+        \item We show (b) implies (a). We would like to show that $X\setminus A$ is open. Well, by taking the contrapsitive of (b), we know that any $a\in X\setminus A$ has some $U_a\in\mc T$ containing $a$ such that $A\cap U_a$ is empty. Now, $A\cap U_a$ being empty means that all elements of $U_a$ live in $X\setminus A$, so $U_a\subseteq X\setminus A$. Looping through all $a\in X\setminus A$, we see
+        \[X\setminus A=\bigcup_{a\in X\setminus A}\{a\}\subseteq\bigcup_{a\in X\setminus A}U_a\subseteq\bigcup_{a\in X\setminus A}X\setminus A.\]
+        Thus, equality of all the above sets holds, so
+        \[X\setminus A=\bigcup_{a\in X\setminus A}U_a.\]
+        It follows that $X\setminus A$ is the union of some sets $U_a\in\mc T$, so $X\setminus A\in\mc T$ because $\mc T$ is a topology on $X$.
+        \qedhere
+    \end{itemize}
+\end{proof}
+Next up, we discuss closures. Similar to our discussion of interiors, we have the statement \Cref{exe:cl-is-intersection-closed} which defines the closure just in terms of closed sets, so we will use this as our definition.
+\begin{definition}[closure]
+    Let $(X,\mc T)$ be a topological space. For a subset $A\subseteq X$, we define the \dfn{closure} to be
+    \[\overline A\coloneqq\bigcap_{\substack{X\setminus C\in\mc T\\A\subseteq C}}C.\]
+    Here, the intersection is over all closed sets $C$ containing $A$.
+\end{definition}
+Here are the appropriate generalizations of our facts about closures.
+\begin{proposition} \label{prop:cl-by-int}
+    Let $(X,\mc T)$ be a topological space. For any subset $A\subseteq X$, we have $\overline{X\setminus A}=X\setminus A^\circ$.
+\end{proposition}
+\begin{proof}
+    We directly compute
+    \[X\setminus A^\circ=X\mathbin{\bigg\backslash}\bigcup_{\substack{U\in\mc T\\U\subseteq A}}U=\bigcap_{\substack{U\in\mc T\\U\subseteq A}}(X\setminus U).\]
+    The main claim, now, is that the last intersection is precisely $\overline{X\setminus A}$. We now define the collection $\mc C\coloneqq\{X\setminus U:U\in\mc T,U\subseteq A\}$. Note that each $U\in\mc T$ with $U\subseteq A$ produces a closed set $X\setminus U$ such that $X\setminus A\subseteq X\setminus U$. Thus, each set in $\mc C$ is a closed set containing $X\setminus A$.
+    
+    Conversely, if $C$ is a closed set containing $X\setminus A$, then $U\coloneqq X\setminus C$ is an open set contained in $A$, so $C=X\setminus U$ is in $\mc C$. Thus, $\mc C$ is exactly the collection of closed sets containing $X\setminus A$, so
+    \[X\setminus A^\circ=\bigcap_{C\in\mc C}C=\overline{X\setminus A}.\]
+    This completes the proof.
+\end{proof}
+\begin{remark}
+    \Cref{prop:cl-by-int} tells us that we could also have defined the closure as $\overline A\coloneqq X\setminus(X\setminus A)^\circ$.
+\end{remark}
+\begin{exe}
+    Let $(X,\mc T)$ be a topological space. Show the following properties of the closure for subsets $A,B\subseteq X$.
+    \begin{itemize}
+        \item $\overline\emp=\emp$ and $\overline X=X$.
+        \item $A\subseteq\overline A$.
+        \item $A$ is closed if and only if $\overline A=A$.
+        \item $\overline{\overline A}=\overline A$.
+        \item $\overline{A\cup B}=\overline A\cup\overline B$.
+    \end{itemize}
+\end{exe}
+\begin{exe}
+    Show the following generalization of \Cref{defi:cl}: let $(X,\mc T)$ be a topological space, and let $A\subseteq X$ be a subset. Then $a\in\overline A$ if and only if $A\cap U$ is nonempty for all open subsets $U\in\mc T$ containing $a$.
+\end{exe}
+Lastly, we discuss continuous functions. \Cref{thm:cont-by-opens} tells us what our definition should be.
+\begin{definition}[continuous]
+    Let $(X,\mc T)$ and $(X',\mc T')$ be topological spaces. A function $f\colon X\to X'$ is \dfn{continuous} if and only if, for all $U'\in\mc T'$, we have $f^{-1}(U')\in\mc T$.
+\end{definition}
+Here are some immediate consequences of this definition.
+\begin{example}
+    Let $(X,\mc T)$ and $(X',\mc T')$ be topological spaces, where $\mc T'=\{\emp,X'\}$. (In other words, $\mc T'$ is the indiscrete topology on $X'$.) Then any function $f\colon X\to X'$ is continuous. Indeed, we just have to compute $f^{-1}(\emp)=\emp$ and $f^{-1}(X')=X$ are both in $\mc T$.
+\end{example}
+\begin{exe}
+    Let $(X,\mc T)$ and $(X',\mc T')$ be topological spaces, where $\mc T=\mc P(X)$. (In other words, $\mc T$ is the discrete topology on $X$.) Show that any function $f\colon X\to X'$ is continuous.
+\end{exe}
+\begin{exe}
+    Let $(X,\mc T)$ be a topological space. Show that the function $i\colon X\to X$ defined by $i(x)\coloneqq x$ is continuous.
+\end{exe}
+\begin{exe}
+    Let $(X,\mc T)$ and $(X',\mc T')$ and $(X'',\mc T'')$ be topological spaces. Given continuous functions $f\colon X\to X'$ and $f'\colon X'\to X''$, show that $f'\circ f$ is continuous.
+\end{exe}
+
+\subsection{Problems}
+
+\begin{homework}
+    Give $\RR$ the metric $d(x,y)\coloneqq|x-y|$. Show the following.
+    \begin{listalph}
+        \item The function $f(x)=|x|$ is continuous.
+        \item The function $f(x)\coloneqq\sqrt{|x|}$ is continuous at each $x_0\ne0$.
+        \item The function $f(x)\coloneqq\sqrt{|x|}$ is continuous at $x_0=0$.
+        \item The function
+        \[f(x)\coloneqq\begin{cases}
+            1 & \text{if }x>0, \\
+            0 & \text{if }x=0, \\
+            -1 & \text{if }x<0,
+        \end{cases}\]
+        is not continuous at $x_0=0$.
+    \end{listalph}
+\end{homework}
+\begin{homework}
+    Give $\RR$ the metric $d(x,y)\coloneqq|x-y|$. Show the following.
+    \begin{listalph}
+        \item If $f,g\colon\RR\to\RR$ are continuous functions, then $f+g$ is continuous. Here, $(f+g)\colon\RR\to\RR$ is defined by $(f+g)(x)\coloneqq f(x)+g(x)$.
+        \item If $f\colon\RR\to\RR$ is continuous, and $a\in\RR$, then the function $af$ is continuous. Here, $(af)\colon\RR\to\RR$ is defined by $(af)(x)\coloneqq a\cdot f(x)$.
+    \end{listalph}
+\end{homework}
+\begin{homework}
+    Let $(X,d)$ and $(X',d')$ be metric spaces. Suppose that the function $f\colon X\to X'$ has some real number $c\in\RR$ such that
+    \[d'(f(x_1),f(x_2))\le c\cdot d(x_1,x_2)\]
+    for any $x_1,x_2\in X$. Show that $f$ is continuous.
+\end{homework}
+\begin{homework}
+    We solve \Cref{prop:line-is-closed} another way. Let $\left(\RR^2,d\right)$ be a metric space, where $d((x_1,y_1),(x_2,y_2))\coloneqq\sqrt{(x_1-x_2)^2+(y_1-y_2)^2}$. Further, let $(\RR,d)$ be a metric space, where $d(x,y)\coloneqq|x-y|$.
+    \begin{listalph}
+        \item Define $p\colon\RR^2\to\RR$ by $p(x,y)\coloneqq y-x$. Show that $p$ is continuous.
+        \item Show that $\left\{(x,y)\in\RR^2:y\ne x\right\}$ is an open subset of $\RR^2$.
+        \item Show that $\{(x,x):x\in\RR\}$ is a closed subset of $\RR^2$.
+    \end{listalph}
+\end{homework}
+\begin{homework}
+    Let $(X,\mc T)$ and $(X',\mc T')$ be topological spaces. Given a function $f\colon X\to X'$, show that the following are equivalent.
+    \begin{listalph}
+        \item $f$ is continuous.
+        \item For all closed subsets $A'\subseteq X'$, the set $f^{-1}(A')\subseteq X$ is also closed.
+    \end{listalph}
+\end{homework}
+\begin{homework}
+    Let $(X,\mc T)$ be a topological space. Given some $A\subseteq X$, we define the \textit{boundary} of $A$ as $\del A\coloneqq\overline A\setminus A^\circ$.
+    \begin{listalph}
+        \item Give $\RR$ the usual metric $d(x,y)\coloneqq|x-y|$. Show that $\del\QQ=\RR$ and $\del\RR=\emp$.
+        \item Given $A\subseteq X$, show that $\del A$ is closed.
+        \item If $A\subseteq X$ is closed, show that $\del A\subseteq A$. In particular, show $\del(\del A)\subseteq\del A$.
+        \item If $A\subseteq X$ is closed, show that $(\del A)^\circ=\emp$. Deduce $\del(\del A)=A$ in this case.
+        \item Given $A\subseteq X$, show that $\del(\del(\del A))=\del(\del A)$.
+    \end{listalph}
+\end{homework}
+
+\end{document}

@@ -1,0 +1,127 @@
+\documentclass[../main.tex]{subfiles}
+ 
+\begin{document}
+
+\setcounter{chapter}{-1}
+\chapter{Preface} %\addcontentsline{toc}{chapter}{Preface}
+\epigraph{I was never this afraid, but I swear to God I was never this determined.}
+{---Winston Rowntree, \cite{people-watching-nostalgia}}
+
+Stepping into your first upper division math course can be a scary thing.
+Unlike other subjects, the difference between lower and upper division courses in math can be quite overwhelming, the two main culprits being writing proofs and abstract concepts.
+
+In this course we will address these issues head-on. In particular, we will learn how to write proofs and develop good mathematical style and we will give students more familiarity with the mathematical objects appearing in upper division mathematics.
+
+\section{For the Reader}
+We briefly explain some of the writing conventions and notations in these notes.
+
+This text has many examples and exercises contained in the text of each section. Some already have solutions, but some do not. The reader is encouraged to do as many of these unsolved exercises as they can stomach, for one learns mathematics by doing. There are also problems at the end of each chapter intended to solidify understanding. If you do no exercises or problems, Nir Elber will find you and smack you over the head with \cite{rosen}.
+
+We use the notation $\coloneqq$ for definitions. For example, the statement $x\coloneqq2$ means that we are defining $x$ to equal $2$. We hope this will help the reader distinguish equalities which are definitions (for which we use $\coloneqq$) from equalities which might require explanation (such as $3^2+4^2=5^2$).
+
+A ``theorem'' is a proven result which is a main attraction of the section, chapter, or even of the entire course. For example, the following is a theorem.
+\begin{theorem}[Wiles] \label{thm:root-2-is-irrational}
+    The real number $\sqrt2$ is irrational.
+\end{theorem}
+\begin{proof}
+    Omitted until later in the course!
+\end{proof}
+The name ``theorem'' should be used reverently. For example, the following is not a theorem.
+\begin{theorem}
+    We have $1+1=2$.
+\end{theorem}
+Instead, a proven result which is not a main attraction is called a ``proposition.''
+\begin{proposition}
+    We have $1+1=2$.
+\end{proposition}
+In contrast to a theorem or proposition, a ``corollary'' is a result which quickly follows from a theorem or proposition. For example, here is a corollary to \Cref{thm:root-2-is-irrational}.
+\begin{corollary}
+    There do not exist positive integers $a$ and $b$ such that $a^2+a^2=b^2$.
+\end{corollary}
+\begin{proof}
+    Rearranging $a^2+a^2=b^2$, one sees $\sqrt2=\frac ab$. However, $\sqrt2$ is irrational by \Cref{thm:root-2-is-irrational}, so this doesn't make any sense!
+\end{proof}
+A ``lemma'' is a result which used to help prove a result. (Usually, the result is a theorem or proposition.) For example, the following result could be a lemma for \Cref{thm:root-2-is-irrational}.
+\begin{lemma}
+    The real number $\sqrt2$ is not an integer.
+\end{lemma}
+\begin{proof}
+    Note that $1<2<4$, so $1<\sqrt2<2$. However, there are no integers strictly between $1$ and $2$, so $\sqrt2$ cannot be an integer.
+\end{proof}
+One might scoff at the above naming conventions and think that it is easier to just call everything a ``theorem'' and not have to worry about these extra words. However, it is nonetheless helpful to tell the reader explicitly how important various results we prove are and how they fit into the bigger picture. Calling every a result a ``theorem'' is the mathematical equivalent of screaming every sentence you speak.
+
+As a final note, occasionally in these notes we will want to warn against some bad reasoning but still state the claim we are making. We do so by labeling the result as a ``bad theorem.''
+\begin{badtheorem}
+    We have $1+1=3$.
+\end{badtheorem}
+
+\section{For the Teacher}
+The exposition in these notes tends to take the point of view that the written word should be precise and correct. As such, proofs which are a little incorrect but perhaps still containing the correct intuition are not favored compared to proofs which are more technically correct. Nonetheless, these notes do make an effort to include the intuitive ideas, just not in the course of an argument.
+
+All of this is to say that a teacher may wish to modify some of the exposition presented here while lecturing to a class. For example, these notes discuss induction after some more difficult set theory in order to more properly be able to state the well-ordering principle. It might be preferable in a class to introduce induction earlier on but wait to discuss the well-ordering principle.
+
+\section{Transition to Upper Division}
+The bulk of these notes concerns mathematics, but let us say a few words first about the transition to upper division classes more broadly. Of course, these tips will not all be the ideal solution for all students, but as you read, think about whether such study habits might help you, and if not, how else you might achieve the same goals.
+
+A big difference between lower and upper division math classes is that upper division classes focus much less on learning how to follow a particular procedure to achieve a computational result. In other words, you will be asked to construct arguments or lines of reasoning that you have never seen fully-formed before. Rather, you must learn to put together individual parts of the material you have learned in a clever way to prove novel results.
+
+In order to adjust to these changes, it is important to engage with class material in a truly deep way. This can take the form of asking yourself questions about the objects and concepts you learn about, for example. It can also entail bringing in outside sources to get additional perspectives on the material. We propose a few big and small ways to help you make the most of the time you spend studying.
+
+\begin{proposition}
+    Start early.
+\end{proposition}
+Perhaps, not much needs to be said about this theorem, because we all know procrastination is bad, and we all still do it. However, passively contemplating a problem throughout the week is so much more enjoyable, and so much better for learning, than trying to slap a solution together at the last minute, that it really does bear repeating. Know when to take breaks, and do not overwork yourself, but if you can add one model-student habit to your repertoire, make it reading over your assignments as early as you can.
+\begin{proposition}
+    Find a study group.
+\end{proposition}
+Ideally early on in your courses, chat with people sitting near you and offer to establish communication with them to work on homework or reviewing material. If you are brave, make a class Discord server (or similar) and ask the professor to send out the invite to all students. Talking about math with other people will help you pick out what's important and what's challenging. It will also make the learning process a lot more fun!
+\begin{corollary}
+    Ask questions!
+\end{corollary}
+What makes study groups so helpful is that they establish a two-way conversation that makes you think harder. Asking questions during lecture, in the MUSA office, or elsewhere achieves the same goal. While it can be nerve-wracking to ask questions in class, especially if they feel elementary, keep in mind that teaching is also more fun as a dialogue than as a monologue. Get yourself in the habit of speaking up in class, and you will find that it becomes easier.
+\begin{proposition}
+    Take notes, but don't get lost in taking notes.
+\end{proposition}
+Taking notes is a delicate art form that everyone must master for themselves. Spend real time thinking about how notes can help you learn, and try different styles. A few things to consider: Does taking notes keep you from zoning out during lectures, or does it distract you from doing the mental work of understanding what is being taught? Does it help you complete assignments, or study for exams? Does it help you keep track of important definitions and theorems from lecture that you can refer back to once a relevant board has been erased? Whatever purpose you choose to prioritize, make sure you take the right kind of notes for that purpose.
+
+Some professors lecture very fast, and you may not always be able to keep up as much as you would like. Some people have trouble writing and thinking at the same time, so it is not always wise to try to write everything down. If you must make trade-offs with your note-taking, it is better to write definitions and theorems, then think about examples and applications. Long proofs might be better reviewed from the textbook, but if you can jot down the main steps, you will thank yourself later.
+\begin{corollary}
+    Read ahead if you can.
+\end{corollary}
+Although it may feel redundant, reading the content of a lecture prior to attending it can transform your lecture experience from one of scrambling to pick up information to one of getting a fresh explanation of the material that helps you remember it by adding intuition. When reading, you can pause at confusing parts and skim over the obvious things, making it a worthwhile way for many students to learn. It also makes taking notes a lot easier---just write down what didn't stick the first time around, or what feels significant after two passes.
+
+If you're apprehensive about investing the extra time, know that having a little extra familiarity with class content pays dividends later on. Having a working knowledge of the material makes homework and exams much less of an ordeal, and prevents big gaps in your understanding, which might require reading the textbook later on anyway.
+\begin{corollary}
+    Takes notes while reading.
+\end{corollary}
+Mathematics is a large and intricate machine, and it is incredibly difficult to fit the entire picture in your head at once. Making matter worse, mathematical language is created to be precise and unambiguous, so authors will often say important points exactly once. This is in contrast to most other English writing, where communicating ideas is an imprecise problem and requires much repetition. This lack of repetition makes reading mathematics much slower and requiring more effort.
+
+Taking notes while reading alleviates many of these difficulties. For example, noting down important definitions or results forces you to repeat important points, as you might when reading any other text. However, be careful to not just copy the text you are reading verbatim onto your notes---at that point you are just rewriting the text! As with other note-taking, finding a medium which works for you will pay back in spades.
+\begin{proposition}
+    Focus on the big picture, but make sure to think about examples.
+\end{proposition}
+Upper division math involves a large amount of detail. Trying to stomach everything at once isn't always feasible. Instead, try to summarize bite-sized chunks, such as one lecture, one chapter, or even one exercise, in your mind, and think about patterns or the ways in which concepts connect to each other.
+
+On the other hand, doing math in constant abstraction doesn't work for most students, either. Examples are your friend, and most professors will present some to you. This text itself and has examples scattered throughout, whether labeled examples, exercises, or problems, and you are encouraged to think through as many of them as you can stomach. Solidify in your mind what they demonstrate about the abstract concepts you are studying, and return to them when you are presented with new questions or new objects. This is a good way to build intuition.
+\begin{proposition}
+    Use office hours for your own benefit.
+\end{proposition}
+There are many good reasons to go to office hours---either your professor's or your GSI's---and none of them are that professors and grad students are gods who must occasionally receive an offering. Don't be afraid to come with homework or lecture questions, be they specific or general, but also feel free to ask what your instructor feels you should focus on. Seeing new definitions and ideas for the first time can make it hard to see the forest for the trees, and talking to someone with more experience can make a big difference in the intuition you gain. In particular, professors are great sources of interesting and relevant examples. Of course, you can also talk to professors about the big life questions for after graduation.
+
+On the other hand, don't try to force a relationship with a professor you don't vibe with. Just like anyone else, not all professors are fun to talk to, and that's OK. Don't let the expectations of networking and getting good letters of recommendation blind you to the importance of your own enjoyment of a good mentoring relationship.
+\begin{theorem}
+    Hold on to the things that matter to you.
+\end{theorem}
+Whatever the reason you are reading this text, make sure you keep it in mind as you forage ahead. You may not find joy in all aspects of your study, but make a point to observe and remember the aspects that brought you to this point. More than any extrinsic success metric, these are what will keep you in math.
+
+\section{Acknowledgements}
+A brief history of these notes follows.
+\begin{itemize}
+    \item The first draft of these notes was written by Cailan Li and the first class of students taking MUSA 74, in Spring 2018.
+    \item In preparation for Spring 2019, Aidan Backus, Andrew DeLapo, and Java Villano edited these notes.
+    \item In preparation for Spring 2021, Aidan Backus, Katie Lamar, Audrey Litvak, Chris Randall, Bryce Goldman and Tina Li edited these notes.
+    \item In preparation for Spring 2023, Nir Elber and Rhea Kommerell edited these notes.
+\end{itemize}
+It would be nice to turn these notes into a textbook some day, but that day is far away.
+
+\end{document}

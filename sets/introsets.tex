@@ -1,0 +1,203 @@
+%Read the slack post (link below) regarding syntax and formatting before you start writing lecture notes.
+% Post: https://musa-2021.slack.com/archives/C01DGR645SL/p1609187728029500
+
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+
+\section{Week 4: Sets and Set Operations}
+Together with propositional logic, set theory underpins the vast majority of modern mathematics, and is a crucial component of almost any proof you will encounter in any upper division course. The language of set theory provides us with a framework to formalize many mathematical concepts that we are intuitively familiar with---namely, collections of data and functions between them. Throughout the remainder of this course, and almost certainly beyond it, set theory will be used extensively.
+
+\subsection{Sets}
+We begin with the definition of a set.
+\begin{definition}[set, element]
+    A \dfn{set} $X$ is a collection of objects. An object $x$ in a set $X$ is called an \dfn{element} or \emph{member}. If $x$ is an element of $X$, then we write $x \in X$. Similarly, if $x$ is not an element of $X$, then we write $x \notin X$. Two sets are equal if and only if they have the same elements.
+\end{definition}
+\begin{example}[empty set]
+    There is a set, denoted $\emp$, which contains no elements. We call $\emp$ the \dfn{empty set}.
+\end{example}
+Note that $X = \{1, 1, 1, 1\}$ is the same set as $Y = \{1\}$. After all, $1 \in X$, and $1$ is the only number with this property. So sets don't recognize multiple ``copies" of their elements. Sets also do not respect order; for example, $\{1, 2, 3\} = \{3, 2, 1\}$.
+
+We will also often want to talk about a set contained within some other, larger set.
+\begin{definition}[subset]
+    Let $X$ and $Y$ be sets. If $y\in Y$ implies $y\in X$ for all $y$, then we say that $Y$ is a \dfn{subset} of $X$, and we write $Y \subseteq X.$ If also $Y \neq X$, we write $Y \subsetneq X,$ and we say that $Y$ is a \dfn{proper subset} of $X$.
+\end{definition}
+\begin{warn}
+    Some authors will use $Y \subset X$ to mean either that $Y$ is a subset or a proper subset of $X$! While both conventions are acceptable, it's best to choose one of the two and be as consistent with this choice as possible in your writing; to avoid ambiguity, it also helps to explicitly state when a subset is proper.
+\end{warn}
+For example, Barack Obama (let's denot him $O$) is an element of the set $P$ of all presidents of the United States, so we can write $O\in P$. To write down all the elements of $P$, we can say
+\[P = \{\text{Joe Biden}, \text{Donald Trump}, \text{Barack Obama}, \text{George W. Bush}, \dots\}.\]
+If $Q$ denotes the set of all world leaders, then $P \subset Q$. For example, $O \in Q$. Is $P \in Q$? No, because the set of all presidents is not a world leader.
+
+Next, let's define some special sets, written in blackboard font to emphasize their importance.
+\begin{definition}
+    The following sets will be used throughout your mathematical career.
+    \begin{itemize}
+        \item $\NN$ is the set of all natural numbers: $\NN \coloneqq \{0, 1, 2, \dots\}$.
+        \item $\ZZ$ is the set of all integers: $\ZZ \coloneqq \NN \cup \{-1, -2, \dots\}$.
+        \item $\QQ$ is the set of all rational numbers.
+        \item $\RR$ is the set of all real numbers.
+        \item $\CC$ is the set of all complex numbers.
+    \end{itemize}
+\end{definition}
+\begin{warn}
+    Some authors use $\NN$ to refer to the set of positive integers $\{1,2,3,\ldots\}$. We will use the notation $\ZZ^+$ to refer to this set.
+\end{warn}
+Notice that
+\[\NN \subsetneq \ZZ \subsetneq \QQ \subsetneq \RR \subsetneq \CC.\]
+Also note that some mathematicians exclude 0 from $\NN$. If it matters whether $0 \in \NN$, we'll try to indicate whether it's true or not.
+
+\subsection{Set Operations}
+Now, we will define several useful sets and operations on them, many of which you will encounter in almost any upper division math class.
+
+The simplest operations involve two sets, so we begin with those.
+We begin with operations which act on single sets.
+\begin{definition}[union, intersection, product]
+    Let $X$ and $Y$ be sets.
+    \begin{itemize}
+        \item The \dfn{union} of $X$ and $Y$, written $X \cup Y$, is the set consisting of elements in $X$ or $Y$:
+        \[X \cup Y \coloneqq \{z: z \in X \text{ or } z \in Y\}.\]
+        \item The \dfn{intersection} of $X$ and $Y$, written $X \cap Y$, is the set consisting of elements in $X$ and $Y$:
+        \[X \cap Y \coloneqq \{z: z \in X \text{ and } z \in Y\}.\]
+        \item The \dfn{product} of $X$ and $Y$, written $X \times Y$, is the set of all ordered pairs of elements in $X$ and in $Y$:
+        \[X \times Y \coloneqq \{(x, y): x \in X \text { and } y \in Y\}.\]
+    \end{itemize}
+\end{definition}
+With that said, there are operations on single sets.
+\begin{definition}[power set, union, intersection]
+    Let $X$ be a set.
+    \begin{itemize}
+        \item The \dfn{power set} of $X$, written $\mathcal P(X)$ or $2^X$, is the set of all subsets of $X$:
+        \[\mathcal P(X) \coloneqq \{Y: Y \text{ is a set and } Y \subseteq X\}.\]
+        \item If $\mc F=X$ is a ``collection'' or ``family'' of sets (i.e., a set containing sets), then the \emph{union} of all the sets in $\mathcal F$, written $\bigcup \mathcal F$, is
+        \[\bigcup \mathcal F \coloneqq \{z: \text{there is a set } Z \in \mathcal F \text{ such that } z \in Z\}.\]
+        \item If $\mc F=X$ is a collection of sets, then the \emph{intersection} of all the sets in $\mathcal F$, written $\bigcap \mathcal F$, is
+        \[\bigcap \mathcal F \coloneqq \{z: z\in Z\text{ for all sets } Z \in \mathcal F\}.\]
+    \end{itemize}
+\end{definition}
+\begin{example}
+    The intersection of the set $P$ of presidents of the United States and the set $R$ of royalty of the United Kingdom is empty: $P \cap R = \varnothing$. Their product $P \times R$ consists of all the different ways we could pair a president with a royal; for example, $(\text{Abraham Lincoln},\text{Queen Elizabeth I})\in P \times R$.
+\end{example}
+\begin{remark}
+    An ordered pair is not the same thing as a set with two elements: ordered pairs allows for repetition, and order matters.
+\end{remark}
+% For example,   Note that  So this element should not be confused with the set $\{\text{Abraham Lincoln},\text{Queen Elizabeth I}\}$.
+Here are a few exercises for you to try.
+\begin{exercise}
+    Explain why it's true that every element of $\varnothing$ is even. Is it also true that every element of $\varnothing$ is odd? 
+\end{exercise}
+\begin{exercise}
+    Suppose $A$, $B$, $C$, and $D$ are sets. Is it true that $(A \times B) \cup (C \times D) = (A \cup C) \times (B \cup D)$? If yes, prove this claim; if not, find a counterexample, and decide whether one of these sets contains the other.
+\end{exercise}
+\begin{exercise}
+    Let $X$ be the set $\{1, 2, 3\}$. Determine the following.
+    \begin{enumerate}[label=(\alph*)]
+        \item What is the power set $\mathcal{P}(X)$?
+        \item Is $1$ an element of $\mathcal{P}(X)$? What about $\{1\}$?
+        \item Is $\{2, 3\}$ a subset of $\mathcal{P}(X)$? What about $\{\{2, 3\}\}$? What about $\{\{2\}, \{3\}\}$?
+        \item Is $\varnothing$ an element of $\mathcal{P}(X)$? Is $\varnothing$ a subset of $\mathcal{P}(X)$?
+        \item Is $X$ an element of $\mathcal{P}(X)$? Is $X$ a subset of $\mathcal{P}(X)$?
+    \end{enumerate}
+\end{exercise}
+Let's give a few examples of theorems about sets.
+\begin{theorem} \label{thm:px-is-poset}
+    Let $X$, $Y$, and $Z$ be sets. Then the following are true.
+    \begin{enumerate}[label=(\alph*)]
+        \item $X \subseteq X$.
+        \item If $X \subseteq Y$ and $Y \subseteq X$ then $X = Y$.
+        \item If $X \subseteq Y$ and $Y \subseteq Z$ then $X \subseteq Z$.
+    \end{enumerate}
+\end{theorem}
+\begin{proof}
+    We show these one at a time.
+    \begin{enumerate}[label=(\alph*)]
+        \item For every $x \in X$, we see $x \in X$. So $X \subseteq X$.
+        \item Assume $X \subseteq Y$ and $Y \subseteq X$. Then $x \in X$ if and only if $x \in Y$, so $X=Y$ follows.
+        \item Assume $X \subseteq Y$ and $Y \subseteq Z$. Let $x \in X$; we must show $x \in Z$. Because $x \in X$, it follows that $x \in Y$. Because $x \in Y$, it follows that $x \in Z$.
+        \qedhere
+    \end{enumerate}
+\end{proof}
+\begin{remark}
+    When we study relations in \cref{sec:relations}, we will see that \autoref{thm:px-is-poset} implies that the relation $\subseteq$ is a ``partial order'' of $\mc P(X)$. One also says that $\pset(X)$ is a ``poset,'' for ``partially ordered set.''
+\end{remark}
+% Any \emph{binary relation} (symbol you can write between a pair of elements of a set --- we will discuss relations in greater detail in chapter 4) that has these properties is called a \dfn{partial ordering}. So we have just proved that for any set $X$, $\subseteq$ is a partial ordering of $\pset(X)$. ()
+Here is the last operation of this section, requiring two or three sets depending on viewpoint.
+\begin{definition}[complement]
+    Suppose $A$ and $B$ are sets, both contained in a set $X$. The \emph{complement} of $A$ in $X$, denoted $A^c$, is the set
+    $$A^c = \{x \in X: x \notin A\}$$
+    Similarly, write $A - B$ or $A \setminus B$ for the \emph{relative complement} (or \emph{set difference}) of $A$ with $B$,
+    $$A \setminus B = \{x \in A : x \notin B\}$$
+\end{definition}
+\begin{exercise}
+    If $A$ is a subset of a set $X$, express $A^c$ as a relative complement.
+\end{exercise}
+\begin{exercise}
+    Let $A$ and $B$ be subsets of a set $X$ Prove the following.
+    \begin{enumerate}[label=(\alph*)]
+        \item $A \subseteq A \cup B$.
+        \item $A \cap B \subseteq B$.
+        \item $A \setminus B \subseteq A$.
+    \end{enumerate}
+\end{exercise}
+\begin{theorem}[de Morgan's laws] \nirindex{de Morgan's laws} \label{thm:de-morgan}
+    Suppose that $A$, $B$, and $C$ are subsets of $X$. Then the following are true.
+    \begin{enumerate}[label=(\alph*)]
+        \item $(A^c)^c = A$.
+        \item $(A\cap B)^c = A^c \cup B^c$.
+        \item $(A\cup B)^c = A^c \cap B^c$.
+    \end{enumerate}
+\end{theorem}
+\begin{proof}
+    Generally speaking, to show that two sets are equal, it suffices by \Cref{thm:px-is-poset} to show that they are subsets of each other. We will use this approach for (b) and (c).
+    \begin{enumerate}[label=(\alph*)]
+        \item By definition, $x \in (A^c)^c$ if and only if $x$ is not in $A^c$. But $A^c$ consists of precisely those elements of $X$ not in $A$, so $x \notin A^c$ if and only if $x \in A$. In total,
+        \[x\in(A^c)^c\text{ if and only if }x\in A,\]
+        so $A=(A^c)^c$ follows.
+        
+        \item In one direction, let $x \in (A \cap B)^c$, and we show $x\in A^c\cup B^c$. Then $x \notin A \cap B$. If $x \in A$ and $x \in B$, then this is a contradiction, so $x \notin A$ or $x \notin B$. So $x \in A^c \cup B^c$. Therefore, $(A \cap B)^c \subseteq A^c \cup B^c$.
+        
+        For the other direction, let $x \in A^c \cup B^c$, and we show $x\in(A\cap B)^c$. Well, either $x \notin A$ or $x \notin B$, so $x \notin A \cap B$, so $x \in (A \cap B)^c$. Therefore, $(A \cap B)^c \supseteq A^c \cup B^c$.
+        
+        \item This proof is similar to (b). In one direction, let $x \in (A \cup B)^c$. Thus, $x\notin A\cup B$, so $x\notin A$ or $x\notin B$. It follows $x\in A^c\cap B^c$ and so $(A\cup B)^c\subseteq A^c\cap B^c$.
+        
+        In the other direction, let $x\in A^c\cup B^c$. Then $x\notin A$ and $x\notin B$, so $x\notin A\cup B$. It follows $x\in(A\cup B)^c$ and so $(A^c\cup B^c)\subseteq(A\cup B)^c$.
+        \qedhere
+    \end{enumerate}
+\end{proof}
+
+\subsection{Problems}
+\begin{homework}
+    Let $X$, $Y$, and $Z$ be sets. Show the following.
+    \begin{enumerate}[label=(\alph*)]
+        \item $X \cap (Y \cup Z) = (X \cap Y) \cup (X \cap Z)$.
+        \item $X \cup (Y \cap Z) = (X \cup Y) \cap (X \cup Z)$.
+    \end{enumerate}
+    (Hint: Try drawing a Venn diagram to visualize each set!)
+\end{homework}
+\begin{homework}
+    Suppose $A, B, C$ are subsets of $X$. Write $A \operatorname{\triangle} B$ for the \dfn{symmetric difference} of $A$ and $B$ in $X$, which is
+    $$A \operatorname{\triangle} B = (A \setminus B) \cup (B \setminus A).$$
+    In the Venn diagram of $A$ and $B$, $A \operatorname{\triangle} B$ consists of the parts of the diagram that are in exactly one of $A$ and $B$, but not both.
+    
+    Show the following.
+    \begin{enumerate}[label=(\alph*)]
+        \item $x \in X$ has $x \in A \operatorname{\triangle} B$ if and only if $x \in A$ or $x \in B$ but not both.
+        \item $(A \operatorname{\triangle} B) \operatorname{\triangle} {(B \operatorname{\triangle} C)} = A \operatorname{\triangle} C$. (Hint: break each step into cases and apply part 1)
+        %Removed part 3 because this problem is already very long, and the last part is not very interesting
+        %\item $A \cap (B \Delta C) = (A \cap B) \Delta (A \cap C)$.
+        \item $(A \operatorname{\triangle} B)\operatorname{\triangle}C=A\operatorname{\triangle}{}(B\operatorname{\triangle}C)$.
+        \item $A\cap(B\operatorname{\triangle}C)=(A\cap B)\operatorname{\triangle}{}(A\cap C)$.
+    \end{enumerate}
+\end{homework}
+\begin{homework}
+    Suppose $X$ is some set.
+    \begin{enumerate}[label=(\alph*)]
+        \item Find a subset $E_1\subseteq X$ such that for every $A \subseteq X$, we have $E_1 \cup A = A$. Is $E_1$ unique?
+        \item Find a subset $E_2\subseteq X$ such that for every $A \subseteq X$, we have $E_2 \cap A = A$. Is $E_2$ unique?
+        \item Find a subset $E_3\subseteq X$ such that for every $A \subseteq X$, we have $A \setminus E_3 = A$. Is $E_3$ unique?
+    \end{enumerate}
+\end{homework}
+\begin{homework}
+    Let $X$ be a set. Show that $\bigcup \mathcal P(X) = X$ and $\bigcap \mathcal P(X) = \varnothing$.
+\end{homework}
+
+\end{document}

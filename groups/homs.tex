@@ -1,0 +1,568 @@
+%Read the slack post (link below) regarding syntax and formatting before you start writing lecture notes.
+% Post: https://musa-2021.slack.com/archives/C01DGR645SL/p1609187728029500
+
+
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+
+\section{Week 14: Homomorphisms}
+In mathematics, objects are not understood in isolation but in how they relate to each other by functions. With metric spaces, the special functions were continuous functions. With groups, the special functions are homomorphisms.
+
+\subsection{Isomorphisms}
+We begin with an extended example. In \Cref{ex:double-quotient-is-z3z}, we saw that the group $(\ZZ/6\ZZ)/(3\ZZ/6\ZZ)$ looks a lot like the group $\ZZ/3\ZZ$. Note that our association between these two groups was stronger than merely a bijection: we also noted that the group laws looked very similar: for example,
+\[([1]_6+3\ZZ/6\ZZ)+([2]_6+3\ZZ/6\ZZ)=[3]_6+3\ZZ/6\ZZ=[0]_6+3\ZZ/6\ZZ\]
+in $(\ZZ/6\ZZ)/(3\ZZ/6\ZZ)$, and
+\[[1]_3+[2]_3=[0]_3\]
+in $\ZZ/3\ZZ$. If we write out all possible additions $k+\ell$ in both groups, we can make the following tables.
+\begin{center}
+    $\begin{array}{c|ccc}
+        +               & [0]_6+3\ZZ/6\ZZ & [1]_6+3\ZZ/6\ZZ & [2]_6+3\ZZ/6\ZZ \\\hline
+        {}[0]_6+3\ZZ/6\ZZ & [0]_6+3\ZZ/6\ZZ & [1]_6+3\ZZ/6\ZZ & [2]_6+3\ZZ/6\ZZ \\
+        {}[1]_6+3\ZZ/6\ZZ & [1]_6+3\ZZ/6\ZZ & [2]_6+3\ZZ/6\ZZ & [0]_6+3\ZZ/6\ZZ \\
+        {}[2]_6+3\ZZ/6\ZZ & [2]_6+3\ZZ/6\ZZ & [0]_6+3\ZZ/6\ZZ & [1]_6+3\ZZ/6\ZZ 
+    \end{array}$
+    \qquad
+    $\begin{array}{c|ccc}
+        +     & [0]_3 & [1]_3 & [2]_3 \\\hline
+        {}[0]_3 & [0]_3 & [1]_3 & [2]_3 \\
+        {}[1]_3 & [1]_3 & [2]_3 & [0]_3 \\
+        {}[2]_3 & [2]_3 & [0]_3 & [1]_3
+    \end{array}$
+\end{center}
+Checking visually, it really looks like these groups are the same, up to some relabeling. What is this relabeling? Well, we define the function $f\colon(\ZZ/6\ZZ)/(3\ZZ/6\ZZ)$ by $f([k]_6+3\ZZ/6\ZZ)\coloneqq[k]_3$. From what we've already worked out about these two groups, we see that $f$ is a well-defined function and a bijection.\footnote{If this sentence worries you, feel free to check it by hand.} (This is what we mean by $f$ being a ``relabeling.'')
+
+Additionally, we can summarize the fact that the relabeling $f$ also ``preserves the table'' by the equation
+\[f(([k]_6+3\ZZ/6\ZZ)+([\ell]_6+3\ZZ/6\ZZ))=f([k]_6+3\ZZ/6\ZZ)+f([\ell]_6+3\ZZ/6\ZZ).\]
+Indeed, we are saying that we can add elements in $(\ZZ/6\ZZ)/(3\ZZ/6\ZZ)$ first and then check where $f$ relabels the sum, or we can relabel the elements to put them in $\ZZ/3\ZZ$ and then add the elements in $\ZZ/3\ZZ$.
+
+This discussion motivates the following definition.
+\begin{definition}[isomorphism]
+    Let $(G,\cdot)$ and $(G',\cdot')$ be groups. Then a function $f\colon G\to G'$ is an \dfn{isomorphism} if and only if $f$ is a bijection and
+    \[f(g\cdot h)=f(g)\cdot'f(h)\]
+    for any $g,h\in G$. Note that $g\cdot h$ is an operation which happens in $G$. If there is an isomorphism between $G$ and $G'$, we will say that $G$ and $G'$ are \textit{isomorphic} and write $G\cong G'$.
+\end{definition}
+Here are some examples.
+\begin{example}
+    Let $(D_4,\cdot)$ be the group of symmetries of the square. Note that $R\coloneqq\left\{e,r,r^2,r^3\right\}$ is a subgroup of $D_4$. There is a function $f\colon\ZZ/4\ZZ\to S$ given by
+    \[f([0]_4)\coloneqq e,\qquad f([1]_4)\coloneqq r,\quad f([2]_4)\coloneqq r^2,\quad f([3]_4)\coloneqq r^3.\]
+    We claim that $f$ is an isomorphism. We can see from the definition that $f$ is a bijection. For the last check, we first note that $f([4]_4)=f([0]_4)=e=r^4$ and $f([5]_4)=f([1]_4)=r=r^5$ and $f([6]_4)=f([2]_4)=r^2=r^6$, so in fact $f([k]_4)=r^k$ for $k\in\{0,1,2,3,4,5,6\}$.
+    
+    Thus, for any $[a]_4,[b]_4\in\ZZ/2\ZZ$ with $a,b\in\{0,1,2,3\}$, we see $a+b\in\{0,1,2,3,4,5,6\}$, so
+    \[f([a]_4+[b]_4)=f([a+b]_4)=r^{a+b}=r^a\cdot r^b=f([a]_4)\cdot f([b]_4).\]
+\end{example}
+\begin{exe}
+    Let $(D_4,\cdot)$ be the group of symmetries of the square. Note that $S\coloneqq\{e,s\}$ is a subgroup of $D_4$. Show $S\cong\ZZ/2\ZZ$.
+\end{exe}
+\begin{exe}
+    Convince yourself that the function $f\colon(\ZZ/6\ZZ)/(3\ZZ/6\ZZ)\to\ZZ/3\ZZ$ defined above as $f([k]_6+3\ZZ/6\ZZ)\coloneqq[k]_3$ is a well-defined function and in fact an isomorphism.
+\end{exe}
+\begin{exe}
+    Show that the function $f\colon\ZZ/3\ZZ\to(\ZZ/6\ZZ)/(3\ZZ/6\ZZ)$ defined by $f([k]_3)\coloneqq[k]_6+3\ZZ/6\ZZ$ is a well-defined function and in fact an isomorphism.
+\end{exe}
+\begin{example}
+    Consider the group $(\ZZ,+)$ and define the function $f\colon\ZZ\to\ZZ$ by $f(k)\coloneqq-k$. Then $f$ is an isomorphism. To see that $f$ is bijective, we note that $f$ is its own inverse: for any $k\in\ZZ$, we have
+    \[f(f(k))=f(-k)=-(-k)=k.\]
+    To see that $f$ is an isomorphism, we also note that
+    \[f(k+\ell)=-(k+\ell)=-k+-\ell=f(k)+f(\ell)\]
+    for any $k,\ell\in\ZZ$.
+\end{example}
+Here are some more abstract examples.
+\begin{example} \label{ex:groups-of-ord-1}
+    Let $(G,\cdot)$ and $(G',\cdot')$ be group such that $|G|=|G'|=1$. Then we see $G=\{e\}$ and $G'=\{e'\}$, where $e$ and $e'$ are the identities. We claim that $G\cong G'$. Indeed, define $f\colon G\to G'$ by
+    \[f(e)\coloneqq e'.\]
+    We can see that $f$ is a bijection. To finish, because $G$ has just one element, it suffices to calculate
+    \[f(e\cdot e)=f(e)=e'=e'\cdot'e'=f(e)\cdot'f(e).\]
+\end{example}
+\begin{exe} \label{exe:groups-of-order-2}
+    Let $(G,\cdot)$ be a group such that $|G|=2$. Then we can write $G=\{e,g\}$, where $e$ is the identities, and $g$ is the non-identity elements of $G$ respectively. Show that the function $f\colon\ZZ/2\ZZ\to G$ defined by
+    \[f([0]_2)\coloneqq e\qquad\text{and}\qquad f([1]_2)\coloneqq g\]
+    is an isomorphism.
+\end{exe}
+The above two examples say that there is exactly one group of order $1$ and $2$ ``up to isomorphism,'' respectively.
+
+Typically we think of isomorphic groups as being essentially the same. As such, we should expect isomorphisms to form an equivalence relation. This is roughly the case but requires some attention.
+\begin{lemma} \label{lem:id-is-iso}
+    Suppose $(G,\cdot)$ is a group. Define the function $i\colon G\to G$ given by $i(g)\coloneqq g$ for each $g\in G$. Then $i$ is an isomorphism.
+\end{lemma}
+\begin{proof}
+    We can see directly that $i$ is a bijection. For example, to show that $i$ is injective, note $i(g)=i(g')$ implies $g=i(g)=i(g')=g'$ for any $g,g'\in G$.
+    
+    To finish, we must show that
+    \[i(g\cdot g')=i(g)\cdot i(g')\]
+    for any $g,g'\in G$. Well, both sides of the above equation are $g\cdot g'$, so we are done.
+\end{proof}
+\begin{lemma} \label{lem:inv-iso}
+    Suppose $(G,\cdot)$ and $(G',\cdot')$ are groups. If $f\colon G\to G'$ is an isomorphism, then there exists an isomorphism $f'\colon G'\to G$ such that $f'(f(g))=g$ and $f(f'(g'))=g'$ for all $g\in G$ and $g'\in G'$.
+\end{lemma}
+\begin{proof}
+    By \Cref{prop:bij-is-iso}, the fact that $f$ is a bijection promises us an inverse function $f'\colon G'\to G$ such that $f'(f(g))=g$ and $f(f'(g'))=g'$ for all $g\in G$ and $g'\in G'$. It remains to show that $f'$ is an isomorphism. Namely, given any $g',h'\in G'$, we must show
+    \[f'(g'\cdot'h')\stackrel?=f'(g')\cdot f'(h').\]
+    The trick here is to relate everything about $f'$ back to $f$ because we know that $f$ is an isomorphism. Indeed, $f$ is injective, so it suffices to show
+    \[f(f'(g'\cdot'h'))\stackrel?=f(f'(g')\cdot f'(h')).\]
+    However, we can show this directly by computing
+    \begin{align*}
+        f(f'(g')\cdot f'(h')) &= f(f'(g'))\cdot'f(f'(h')) \\
+        &= g'\cdot'h' \\
+        &= f(f'(g'\cdot'h')),
+    \end{align*}
+    which is what we wanted. Note we have used the fact that $f$ is an isomorphism in the first equality.
+\end{proof}
+\begin{lemma} \label{lem:comp-iso}
+    Suppose $(G,\cdot)$ and $(G',\cdot')$ and $(G'',\cdot'')$ are groups. If $f\colon G\to G'$ and $f'\colon G'\to G''$ are isomorphisms, then $(f'\circ f)\colon G\to G'$ is an isomorphism.
+\end{lemma}
+\begin{proof}
+    By \Cref{prob:compose-injs-surjs}, we already know that $(f'\circ f)$ is a bijection. To finish the proof, we must show that
+    \[(f'\circ f)(g\cdot h)=(f'\circ f)(g)\cdot''(f'\circ f)(h)\]
+    for any $g,h\in G$. Well, using the fact that $f$ and $f'$ are already isomorphisms, we compute
+    \begin{align*}
+        (f'\circ f)(g\cdot h) &= f'(f(g\cdot h)) \\
+        &= f'(f(g)\cdot'f(h)) \\
+        &= f'(f(g))\cdot''f'(f(h)) \\
+        &= (f'\circ f)(g)\cdot''(f'\circ f)(h),
+    \end{align*}
+    which is what we wanted.
+\end{proof}
+\begin{proposition}
+    Suppose $(G,\cdot)$ and $(G',\cdot')$ and $(G'',\cdot'')$. The following are true.
+    \begin{listalph}
+        \item $G\cong G$.
+        \item If $G\cong G'$, then $G'\cong G$.
+        \item If $G\cong G'$ and $G'\cong G''$, then $G\cong G''$.
+    \end{listalph}
+\end{proposition}
+\begin{proof}
+    Here, (a) follows from \Cref{lem:id-is-iso}. To show (b), if $G\cong G'$, then there is an isomorphism $f\colon G\to G'$, so \Cref{lem:inv-iso} grants an inverse isomorphism $f'\colon G'\to G$, so $G'\cong G$. Lastly, to show (c), if $G\cong G'$ and $G'\cong G''$, then there are isomorphisms $f\colon G\to G'$ and $f'\colon G'\to G''$, so the isomorphism $(f'\circ f)\colon G\to G''$ show $G\cong G''$.
+\end{proof}
+
+\subsection{Homomorphisms}
+Isomorphisms dictate when two groups are basically the same. However, we do want to know how groups relate to each other even if they are not literally the same. This is the goal of homomorphisms. To avoid forcing groups with a homomorphism being literally the same, we will remove the bijective condition. Here is our definition.
+\begin{definition}[homomorphism]
+    Let $(G,\cdot)$ and $(G',\cdot')$ be groups. A function $f\colon G\to G'$ is a \dfn{homomorphism} if and only if
+    \[f(g\cdot h)=f(g)\cdot'f(h)\]
+    for all $g,h\in G$.
+\end{definition}
+Notably, any isomorphism is automatically a homomorphism, so all the examples from the previous subsection apply here. Furthermore, by definition, an isomorphism is bijective homomorphism.
+
+Let's give a few more examples.
+\begin{example} \label{ex:real-part-hom}
+    Consider the groups $(\CC,+)$ and $(\RR,+)$. Then the function $r\colon\CC\to\RR$ defined by $r(a+bi)\coloneqq a$ is a homomorphism. Indeed, for any $a+bi,a'+b'i\in\CC$, we compute
+    \[r((a+bi)+(a'+b'i))=r((a+a')+(b+b')i)=a+a'=r(a+bi)+r(a'+b'i).\]
+\end{example}
+\begin{nex}
+    Consider the groups $(\CC^\times,\cdot)$ and $(\RR^\times,\cdot)$. Then the function $r\colon\CC\to\RR$ defined by $r(a+bi)\coloneqq a$ is not a homomorphism. For example, we can compute
+    \[r(i\cdot i)=r(-1)=-1\ne0=0\cdot0=r(i)\cdot r(i).\]
+\end{nex}
+\begin{example} \label{ex:det-hom}
+    Let $n$ be a positive integer. Let $(\op{GL}_n(\CC),\cdot)$ be the group of invertible $n\times n$ matrices with complex coefficients. Then the function $\det\colon\op{GL}_n(\CC)\to\CC^\times$ defines a group homomorphism. (Note that this function makes sense because the determinant of an invertible matrix is nonzero.) Indeed, it is a property of the determinant that
+    \[\det(A\cdot B)=(\det A)\cdot(\det B)\]
+    for any $A,B\in\op{GL}_n(\CC)$.
+\end{example}
+\begin{example} \label{ex:double-z-hom}
+    Consider the group $(\ZZ,+)$ and define the function $f\colon\ZZ\to\ZZ$ by $f(k)\coloneqq2k$. Then $f$ is a homomorphism: for any $k,\ell\in\ZZ$,
+    \[f(k+\ell)=2(k+\ell)=2k+2\ell=f(k)+f(\ell)\]
+\end{example}
+\begin{example} \label{ex:z-to-d4}
+    Consider the groups $(\ZZ,+)$ and $(D_4,\cdot)$. Define the function $f\colon\ZZ\to D_4$ by $f(k)\coloneqq r^k$. Then $f$ is a homomorphism: for any $k,\ell\in\ZZ$,
+    \[f(k+\ell)=r^{k+\ell}=r^k\cdot r^\ell=f(k)\cdot f(\ell).\]
+\end{example}
+\begin{exe}
+    Consider the groups $(\ZZ/4\ZZ,+)$ and $(D_4,\cdot)$. Show that the function $f\colon\ZZ/4\ZZ\to D_4$ given by $f([k]_4)\coloneqq r^k$ is well-defined and a homomorphism.
+\end{exe}
+\begin{example} \label{ex:cyclic-subgroup-hom}
+    More generally, let $(G,\cdot)$ be a group, and fix some $g\in G$. Then the function $f\colon\ZZ\to G$ given by $f(k)\coloneqq g^k$ is a homomorphism: for any $k,\ell\in\ZZ$, we see $f(k+\ell)=g^{k+\ell}=g^k\cdot g^\ell=f(k)\cdot f(\ell)$.
+\end{example}
+\begin{example} \label{ex:z6z-to-z3z}
+    Consider the groups $(\ZZ/6\ZZ,+)$ and $(\ZZ/3\ZZ,+)$ and define the function $f\colon\ZZ/6\ZZ\to\ZZ/3\ZZ$ by $f([k]_6)\coloneqq[k]_3$. Note that $f$ is well-defined: if $[k]_6=[\ell]_6$, then $k-\ell$ is divisible by $6$. But then we see that $k-\ell$ is also divisible by $3$, so $f([k]_6)=[k]_3$ is equal to $f([\ell]_6)=[\ell]_3$.
+    
+    In fact, $f$ is a homomorphism: for any $k,\ell\in\ZZ$, we see
+    \[f([k]_6+[\ell]_6)=f([k+\ell]_6)=[k+\ell]_3=[k]_3+[\ell]_3=f([k]_6)+f([\ell_6]).\]
+\end{example}
+\begin{exe}
+    Generalize \Cref{ex:z6z-to-z3z} as follows: let $a$ be a positive integer divisible by the positive integer $b$. Show that the function $f\colon\ZZ/a\ZZ\to\ZZ/b\ZZ$ defined by $f([k]_a)\coloneqq[k]_b$ is well-defined and a homomorphism.
+\end{exe}
+\begin{exe}
+    Let $(G,\cdot)$ and $(G',\cdot')$ and $(G'',\cdot'')$ be groups. Given homomorphisms $f\colon G\to G'$ and $f'\colon G'\to G''$, show that the function $(f'\circ f)\colon G\to G''$ is a homomorphism. One way to do this is to adapt the proof of \Cref{lem:comp-iso}.
+\end{exe}
+\begin{exe} \label{exe:subgroup-hom}
+    Let $(G,\cdot)$ be a group and $H\subseteq G$ a subgroup. Show that the function $i\colon H\to G$ defined by $i(h)\coloneqq h$ is an injective homomorphism.
+\end{exe}
+Here are a few quick facts about homomorphisms seen in the above examples.
+\begin{lemma} \label{lem:basic-hom}
+    Let $f\colon G\to G'$ be a homomorphism between the groups $(G,\cdot)$ and $(G',\cdot')$.
+    \begin{listalph}
+        \item We have $f(e)=e'$, where $e$ and $e'$ are the identities of $G$ and $G'$, respectively.
+        \item For any $g\in G$, we have $f\left(g^{-1}\right)=f(g)^{-1}$.
+    \end{listalph}
+\end{lemma}
+\begin{proof}
+    Here we go.
+    \begin{listalph}
+        \item The point here is that $f(e)$ behaves a lot like the identity element of $G'$; for example,
+        \[f(e)\cdot'f(e)=f(e\cdot e)=f(e).\]
+        Already this is enough to show $f(e)=e'$: indeed, multiplying both sides by $f(e)^{-1}$, we see
+        \[f(e)=f(e)\cdot e'=f(e)\cdot'f(e)\cdot'f(e)^{-1}=f(e)\cdot'f(e)^{-1}=e',\]
+        which is what we wanted.
+        \item The point here is that inverses are unique in $G'$. Thus, we check that
+        \[f(g)\cdot'f\left(g^{-1}\right)=f\left(g\cdot g^{-1}\right)=f(e)=e',\]
+        and
+        \[f\left(g^{-1}\right)\cdot'f(g)=f\left(g^{-1}\cdot g\right)=f(e)=e',\]
+        so \Cref{lem:inv-uniq} promises $f\left(g^{-1}\right)=f(g)^{-1}$.
+        \qedhere
+    \end{listalph}
+\end{proof}
+We now take a moment to appreciate how simple one-element groups are.
+\begin{proposition} \label{prop:trivial-homs}
+    Let $(G,\cdot)$ be a one-element group with identity $e$. Given any other group $(G',\cdot')$, there exists exactly one homomorphsim $f\colon G\to G'$ and exactly one homomorphism $f\colon G'\to G$.
+\end{proposition}
+\begin{proof}
+    We show the two directions of homomorphism independently.
+    \begin{itemize}
+        \item We show there is a unique homomorphism $f\colon G\to G'$. Well, we merely have to decide where $f$ goes, but \Cref{lem:basic-hom} tells us that the identity $G$ goes to the identity of $G'$, so $f(e)\coloneqq e'$ is forced.
+        
+        Thus, there is at most one homomorphism $G\to G'$ because they must all send $e\mapsto e'$. It remains to show that $f(e)\coloneqq e'$ defines a homomorphism, for which we just have to check
+        \[f(e\cdot e)=f(e)=e'=e'\cdot'e'=f(e)\cdot'f(e)\]
+        because $e$ is the only element of $G$. Thus, we have shown there is at least one homomorphism $G\to G'$.
+        
+        \item We show there is a unique homomorphism $f\colon G'\to G$. Well, for each $g'\in G$, we must have $f(g')\coloneqq e$ because $e\in G$ is the only possible output.
+        
+        Thus, there is at most one homomorphism $G\to G'$ because they must all send $g'\mapsto e$ for each $g'\in G$. It remains to show that $f(g')\coloneqq e$ defines a homomorphism, for which we compute
+        \[f(g'\cdot'h')=e=e\cdot e=f(g')\cdot f(h')\]
+        for any $g',h'\in G$.
+        \qedhere
+    \end{itemize}
+\end{proof}
+In general, it is a hard problem to determine all the homomorphisms in and out of a given group. Roughly speaking, this requires perfect knowledge of the group.
+
+We close this subsection with a special homomorphism.
+\begin{theorem}[Cayley] \label{thm:cayley}
+    Let $(G,\cdot)$ be a group, and let $(\op{Sym}(G),\circ)$ be the group of bijections $G\to G$ under composition defined in \Cref{prop:sym-groups}. For each $g\in G$, define the function $\mu_\bullet\colon G\to G$ by $\mu_g\colon g'\mapsto(g\cdot g')$. Then the function $\mu_\bullet\colon G\to\op{Sym}(G)$ is an injective homomorphism.
+\end{theorem}
+\begin{proof}
+    Note that $\mu_\bullet\colon G\to G$ is a bijection for each $g\in G$ by \Cref{prop:mult-is-bij}, so the function $\mu\colon G\to\op{Sym}(G)$ at least makes sense. It remains to check that $\mu_\bullet$ is an injective homomorphism.
+    \begin{itemize}
+        \item We show that $\mu_\bullet$ is injective. Indeed, suppose that $\mu_{g_1}=\mu_{g_2}$ as functions $G\to G$. The idea here is that we can ``read'' of $g$ from the function $\mu(g)$. The quickest way to see this is that $\mu_g(e)=g\cdot e=g$ for any $g\in G$, so it follows
+        \[g_1=\mu_{g_1}(e)=\mu_{g_2}(e)=g_2.\]
+        \item We show that $\mu$ is a homomorphism. Namely, for any $g_1,g_2\in G$, we must show
+        \[\mu_{g_1\cdot g_2}\stackrel?=\mu_{g_1}\circ\mu_{g_2}.\]
+        Well, two functions are equal if and only if they are equal on all inputs, so we pick up any $g\in G$ and compute
+        \begin{align*}
+            \mu_{g_1\cdot g_2}(g) &= (g_1\cdot g_2)\cdot g \\
+            &= g_1\cdot(g_2\cdot g) \\
+            &= \mu_{g_1}(g_2\cdot e) \\
+            &= \mu_{g_1}(\mu_{g_2}(g)) \\
+            &= (\mu_{g_1}\circ\mu_{g_2})(g),
+        \end{align*}
+        which is what we wanted.
+        \qedhere
+    \end{itemize}
+\end{proof}
+\begin{remark}
+    The reason why \Cref{thm:cayley} has a name is that it says that all groups are (isomorphic to) some subgroup of a symmetric group. As such, we can think any group $(G,\cdot)$ as the permutations (i.e., bijections) of some object (here, the set $G$).
+\end{remark}
+
+\subsection{Kernels and Images}
+We claimed that homomorphisms tell us how groups relate to one another, but it is undeniable that some homomorphisms are more informative than others. For example, an isomorphism tell us that two groups are basically the same, but a homomorphism $\{e\}\to G$ from the one-element group doesn't really tell us anything at all about $G$ because (by \Cref{prop:trivial-homs}) there is only one such.
+
+Kernels and images provide us with a way to measure what is lost in a group homomorphism $G\to G'$. Roughly speaking, if the kernel is small, then the homomorphism does a good job mapping $G$ to $G'$. On the other hand, if the image is large, then the homomorphism does a good job covering $G'$. Here are our definitions.
+\begin{definition}[kernel, image]
+    Let $f\colon G\to G'$ be a homomorphism of groups $(G,\cdot)$ and $(G',\cdot')$. Let $e'$ be the identity of $G'$.
+    \begin{itemize}
+        \item The \dfn{kernel} of $f$ is $\ker f\coloneqq\{g\in G:f(g)=e\}$. Note $\ker f\subseteq G$.
+        \item The \dfn{image} of $f$ is $\im f\coloneqq f(G)$. Note $\im f\subseteq G'$.
+    \end{itemize}
+\end{definition}
+Let's see some examples.
+\begin{example} \label{ex:real-part-ker-im}
+    Consider the homomorphism $r$ of \Cref{ex:real-part-hom}.
+    \begin{itemize}
+        \item We see $\ker r$ consists of the complex numbers $a+bi$ where $r(a+bi)=a$ is equal to $0$. Thus, $\ker r=\{bi:b\in\RR\}$.
+        \item We see $\im r=\RR$. For example, for any real number $a\in\RR$, we see $r(a)=a$, so $a\in\im r$.
+    \end{itemize}
+\end{example}
+\begin{example}
+    Consider the homomorphism $f$ of \Cref{ex:double-z-hom}.
+    \begin{itemize}
+        \item To compute $\ker f$, we see $f(k)=2k$ is zero if and only if $2k=0$, which is equivalent to $k=0$. Thus, $\ker f=\{0\}$.
+        \item For $\im f$, we compute $\im f=\{f(k):k\in\ZZ\}=\{2k:k\in\ZZ\}=2\ZZ$.
+    \end{itemize}
+\end{example}
+\begin{example} \label{ex:z-to-d4-ker-im}
+    Consider the homomorphism $f\colon\ZZ\to D_4$ of \Cref{ex:z-to-d4}. We compute $\ker f$ and $\im f$.
+\end{example}
+\begin{proof}
+    We run our computations separately.
+    \begin{itemize}
+        \item We claim $\ker f=4\ZZ$. We have two inclusions to show. In one direction, if $n\in4\ZZ$, then $r=4q$ for some $q\in\ZZ$, so $f(n)=r^{4q}=\left(r^4\right)^q=e^q=e$. Thus, $4\ZZ\subseteq\ker f$.
+        
+        In the other direction, for any integer $n$, note \Cref{thm:division} promises an integers $q\in\ZZ$ and $x\in\{0,1,2,3\}$ such that $n=4q+x$. Now, $f(n)=e$ if and only if $r^n=e$, which we expand as
+        \[r^n=r^{4q+x}=\left(r^4\right)^q\cdot r^x=e^q\cdot r^x=e\cdot r^x=r^x.\]
+        However, this means $r^n=e$ if and only if $r^x=e$, but because $x\in\{0,1,2,3\}$, we can say $r^x=e$ if and only if $x=0$. Thus, $n=4q\in4\ZZ$. It follows $\ker f\subseteq4\ZZ$.
+        
+        \item We claim $\im f=\left\{e,r,r^2,r^3\right\}$. We have two inclusions to show. In one direction, note $f(n)=r^n$ for each $n\in\ZZ$, so the outputs $\{f(0),f(1),f(2),f(3)\}$ show $\left\{e,r,r^2,r^3\right\}\subseteq\im f$.
+        
+        In the other direction, the previous point showed that, for any $n\in\ZZ$, we have $f(n)=r^x$ for some $x\in\{0,1,2,3\}$. Thus, $f(n)\in\left\{e,r,r^2,r^3\right\}$ for any $n\in\ZZ$, so $\im f\subseteq\left\{e,r,r^2,r^3\right\}$.
+        \qedhere
+    \end{itemize}
+\end{proof}
+\begin{example}
+    Consider the homomorphism $\det\colon\op{GL}_n(\CC)\to\CC^\times$ of \Cref{ex:det-hom}. We compute $\ker\det$ and $\ker\det$.
+\end{example}
+\begin{proof}
+    We run our computations separately.
+    \begin{itemize}
+        \item We note that $\ker\det$ consists of the matrices $M\in\op{GL}_n(\CC)$ such that $\det M=1$, which is equivalent to $M\in\op{SL}_n(\CC)$. Thus, $\ker\det=\op{SL}_n(\CC)$.
+        \item We claim $\im\det=\CC^\times$. Certainly $\im\det\subseteq\CC^\times$. In the other direction, for any $z\in\CC^\times$, we see that
+        \[\det\left(\begin{bmatrix}
+            z & 0 & 0 & \cdots & 0 \\
+            0 & 1 & 0 & \cdots & 0 \\
+            0 & 0 & 1 & \cdots & 0 \\
+            \vdots & \vdots & \vdots & \ddots & \vdots \\
+            0 & 0 & 0 & \cdots & 1
+        \end{bmatrix}\right)=z,\]
+        so $z\in\im\det$. Thus, $\CC^\times\subseteq\im\det$.
+        \qedhere
+    \end{itemize}
+\end{proof}
+\begin{example} \label{ex:z6z-to-z3z-ker-im}
+    Consider the homomorphism $f\colon\ZZ/6\ZZ\to\ZZ/3\ZZ$ of \Cref{ex:z6z-to-z3z}. We compute $\ker f$ and $\im f$.
+\end{example}
+\begin{proof}
+    We run our computations separately.
+    \begin{itemize}
+        \item To compute $\ker f$, we note that $[k]_6\in\ker f$ if and only if $f([k]_6)=[k]_3$ equals $[0]_3$, which is equivalent to $3\mid k$. Checking the elements of $\ZZ/6\ZZ$, we see that $\ker f=\{[0]_6,[3]_6\}=3\ZZ/6\ZZ$.
+        \item We claim $\im f=\ZZ/3\ZZ$. Certainly $\im f\subseteq\ZZ/3\ZZ$. Conversely, for any $[k]_3\in\ZZ/3\ZZ$, we see $f([k]_6)=[k]_3$, so $[k]_3\in\im f$. It follows $\ZZ/3\ZZ\subseteq\im f$.
+        \qedhere
+    \end{itemize}
+\end{proof}
+\begin{example}
+    Let $(G,\cdot)$ be a group and $H\subseteq G$ a subgroup. Consider the homomorphism $i\colon H\to G$ of \Cref{exe:subgroup-hom}.
+    \begin{itemize}
+        \item We see $g\in\ker i$ if and only if $i(g)=e$, but $i(g)=g$, so $g\in\ker i$ if and only if $g=e$. Thus, $\ker i=\{e\}$.
+        \item We claim $\im i=H$. In one direction, note $h\in H$ implies $i(h)=h$, so we see $h\in\im i$. Thus, $H\subseteq\im i$.
+        
+        In the other direction, if $g\in\im i$, then there exists $h\in H$ such that $g=i(h)$. But $i(h)=h$, so $g=h\in H$. It follows $\im i\subseteq H$.
+    \end{itemize}
+\end{example}
+\begin{example}
+    Let $(G,\cdot)$ be a one-element group with identity $e$. For any group $(G',\cdot')$ consider the unique homomorphism $f\colon G'\to G$ defined in \Cref{prop:trivial-homs}.
+    \begin{itemize}
+        \item We see $\ker f=G'$ because $f(g')=e$ for all $g'\in G'$.
+        \item We see $\im f=G$ because $G=\{e\}$. Explicitly, we know $\im f\subseteq G=\{e\}$ immediately; conversely, identity element $e'\in G'$ has $f(e')=e$, so $\{e\}\subseteq\im f$.
+    \end{itemize}
+\end{example}
+\begin{exe}
+    Let $(G,\cdot)$ be a one-element group with identity $e$. For any group $(G',\cdot')$ consider the unique homomorphism $f\colon G\to G'$ defined in \Cref{prop:trivial-homs}. (Note the direction change!) Compute $\ker f$ and $\im f$.
+\end{exe}
+Now let's prove a few facts which are hopefully not too surprising from the above discussion. We begin with the image.
+\begin{lemma} \label{lem:im-subgroup}
+    Let $f\colon G\to G'$ be a homomorphism of the groups $(G,\cdot)$ and $(G',\cdot')$.
+    \begin{listalph}
+        \item $\im f$ is a subgroup of $G'$.
+        \item $f$ is surjective if and only if $\im f=G'$.
+    \end{listalph}
+\end{lemma}
+\begin{proof}
+    We show these separately.
+    \begin{listalph}
+        \item We simply run our subgroups checks directly. Let $e$ and $e'$ be the identities of $G$ and $G'$, respectively.
+        \begin{itemize}
+            \item Identity: note $f(e)=e'$ by \Cref{lem:basic-hom}, so $e'\in\im f$.
+            \item Closed: given $f(g),f(h)\in\im f$, we see that $f(g)\cdot'f(h)=f(g\cdot h)$ also lives in $\im f$.
+            \item Inverse: given $f(g)\in\im f$, we see that $f(g)^{-1}=f\left(g^{-1}\right)$ by \Cref{lem:basic-hom}, so $f(g)^{-1}$ is also in $\im f$.
+        \end{itemize}
+        \item Note $\im f=G'$ is equivalent to the following statement: for each $g'\in G'$, there exists $g\in G$ such that $f(g)=g'$. But this is equivalent to saying $f$ is surjective, so we are done.
+        \qedhere
+    \end{listalph}
+\end{proof}
+\begin{exe}
+    Adapt the proof of \Cref{lem:im-subgroup} to show the following: let $f\colon G\to G'$ be a homomorphism of the groups $(G,\cdot)$ and $(G',\cdot')$. If $H\subseteq G$ is a subgroup, then $f(H)$ is also a subgroup.
+\end{exe}
+Now we discuss the kernel.
+\begin{lemma} \label{lem:ker-subgroup}
+    Let $f\colon G\to G'$ be a homomorphism of the groups $(G,\cdot)$ and $(G',\cdot')$.
+    \begin{listalph}
+        \item $\ker f$ is a subgroup of $G$.
+        \item $f$ is injective if and only if $\ker f=\{e\}$.
+    \end{listalph}
+\end{lemma}
+\begin{proof}
+    We show these separately.
+    \begin{listalph}
+        \item We show the subgroup properties by hand. Let $e$ and $e'$ denote the identities of $G$ and $G'$, respectively.
+        \begin{itemize}
+            \item Identity: by \Cref{lem:basic-hom}, we see that $f(e)=e'$, so $e\in\ker f$.
+            \item Closed: if $g,h\in\ker f$, then to show $g\cdot h\in\ker f$ we compute
+            \[f(g\cdot h)=f(g)\cdot'f(h)=e'\cdot e'=e'.\]
+            \item Inverse: if $g\in\ker f$, we would like to show $g^{-1}\in\ker f$. Well, by \Cref{lem:basic-hom}, we see $f\left(g^{-1}\right)=f(g)^{-1}$, but $f(g)=e'$, so $f\left(g^{-1}\right)=(e')^{-1}=e'$.
+        \end{itemize}
+        \item This requires some care. In one direction, suppose $f$ is injective. Then we know $f(e)=e'$ by \Cref{lem:basic-hom}. But now $g\in\ker f$ is equivalent to $f(g)=e'=f(e)$. Because $f$ is injective, we thus see $g\in\ker f$ is equivalent to $g=e$, so $\ker f=\{e\}$.
+        
+        In the other direction, suppose $\ker f=\{e\}$. Suppose $g,h\in G$ have $f(g)=f(h)$ so that we would like to show $g=h$. The key claim is to show that $g\cdot h^{-1}\in\ker f$. This will be enough because $\ker f=\{e\}$, so $g\cdot h^{-1}\in\ker f$ will imply $g\cdot h^{-1}=e$ and so $g=h$.
+        
+        We now show $g\cdot h^{-1}\in\ker f$ by direct computation: we write
+        \[f\left(g\cdot h^{-1}\right)=f(g)\cdot'f\left(h^{-1}\right)=f(g)\cdot'f(h)^{-1}.\]
+        However, $f(g)=f(h)$, so this is $f(g)\cdot'f(g)^{-1}=e'$. This completes the proof.
+        \qedhere
+    \end{listalph}
+\end{proof}
+In fact, we can generalize the above proof to show that kernels have a special relationship to normal subgroups.
+\begin{proposition} \label{prop:ker-normal}
+    Let $f\colon G\to G'$ be a homomorphism of the groups $(G,\cdot)$ and $(G',\cdot')$. The following are equivalent for $g,h\in G$.
+    \begin{listalph}
+        \item $f(g)=f(h)$.
+        \item $g\cdot h^{-1}\in\ker f$.
+        \item $g^{-1}\cdot h\in\ker f$.
+    \end{listalph}
+    It follows that $\ker f$ is a normal subgroup of $G$.
+\end{proposition}
+\begin{proof}
+    We begin by showing that (a) and (b) are equivalent. We are concerned if the element $g\cdot h^{-1}$ lives in $\ker f$, so the main point here is the computation
+    \[f\left(g\cdot h^{-1}\right)=f(g)\cdot'f\left(h^{-1}\right)=f(g)\cdot'f(h)^{-1}.\]
+    Thus, if given (a), then we see $f(g)\cdot'f(h)^{-1}=e'$, so $g\cdot h^{-1}\in\ker f$ follows. Conversely, if given (b), then $f\left(g\cdot g^{-1}\right)=e'$, so $f(g)\cdot'f(h)^{-1}=e'$, which rearranges into $f(g)=f(h)$.
+    
+    The proof that (a) and (c) are equivalent is essentially the same. For completeness, we will note that the main point is again the computation
+    \[f\left(g^{-1}\cdot h\right)=f\left(g^{-1}\right)\cdot'f(h)=f(g)^{-1}\cdot'f(h).\]
+    We leave the rest of the proof to the following exercise.
+    \begin{exe}
+        Complete the proof that (a) and (c) are equivalent.
+    \end{exe}
+    We now turn to showing that $\ker f$ is a normal subgroup of $G$. Indeed, for any $g\in G$, we want to show $g\cdot(\ker f)=(\ker f)\cdot g$. By \Cref{prop:how-to-coset}, we see that $h\in g\cdot(\ker f)$ is equivalent to $g^{-1}\cdot h\in\ker f$; similarly, $h\in(\ker f)\cdot g$ is equivalent to $g\cdot h^{-1}\in\ker f$. Thus, using the above work,
+    \begin{align*}
+        g\cdot(\ker f) &= \left\{h\in G:g^{-1}\cdot h\in\ker f\right\} \\
+        &= \left\{h\in G:g\cdot h^{-1}\in\ker f\right\} \\
+        &= (\ker f)\cdot g,
+    \end{align*}
+    which is what we wanted.
+\end{proof}
+\begin{example} \label{ex:ker-of-quotient}
+    Let $(G,\cdot)$ be a group and $H\subseteq G$ be a normal subgroup. Then the function $f\colon G\to G/H$ given by $f(g)\coloneqq g\cdot H$ defines a homomorphism: for any $g_1,g_2\in G$, we see
+    \[f(g_1\cdot g_2)=(g_1\cdot g_2)\cdot H=(g_1\cdot H)\cdot(g_2\cdot H)=f(g_1)\cdot f(g_2).\]
+    Now, we note $\ker f=H$. Indeed, $f(g)=g\cdot H$ is equal to $e\cdot H$ if and only if $g\in e\cdot H=H$.
+\end{example}
+Now, \Cref{prop:ker-normal} tells us that all kernels are normal subgroups, and \Cref{ex:ker-of-quotient} tells us that all normal subgroups appear as the kernel of some map. Thus, we can (and should!) think about normal subgroups as the normal subgroups which arise as kernels.
+
+\subsection{The Homomorphism Theorem}
+We close this subsection by trying to generalize the isomorphism
+\[\frac{\ZZ/6\ZZ}{3\ZZ/6\ZZ}\cong\frac{\ZZ}{3\ZZ}.\]
+It turns out that this, too, arises from a more general construction. To see this, we recall that \Cref{ex:z6z-to-z3z-ker-im} provided us with some homomorphism $f\colon\ZZ/6\ZZ\to\ZZ/3\ZZ$ by $f\colon[k]_6\mapsto[k]_3$ with kernel $3\ZZ/6\ZZ$. Notice that by ``quotienting'' $f$ out by this kernel, we do obtain the above isomorphism sending $[k]_6+3\ZZ/6\ZZ\to[k]_3$.
+
+Speaking more generally, given a homomorphism $f\colon G\to G'$, it is not unreasonable to expect some quotiented homomorphism $(G/\ker f)\to G'$ which is injective. After all, quotienting out by this kernel more or less declares all elements which go to the identity in $G'$ to be the identity in $G/\ker f$, so this map ought be injective by \Cref{lem:ker-subgroup}.
+
+All of this discussion is rather un-rigorous, but we can make it rigorous.
+\begin{theorem}[homomorphism] \label{thm:hom}
+    Let $f\colon G\to G'$ be a homomorphism of the groups $(G,\cdot)$ and $(G',\cdot')$. Then the function $\overline f\colon(G/\ker f)\to(\im f)$ defined by $\overline f(g\cdot(\ker f))\coloneqq f(g)$ is a well-defined function and an isomorphism.
+\end{theorem}
+\begin{proof}
+    Quickly, note that $G/\ker f$ is a legal group because $\ker f\subseteq G$ is a normal subgroup by \Cref{prop:ker-normal}. Now, we have many checks to run on $\overline f$. For brevity, set $K\coloneq\ker f$.
+    \begin{itemize}
+        \item Well-defined and injective: this essentially follows from \Cref{prop:ker-normal}.
+        
+        We show that $g\cdot K=h\cdot K$ is equivalent to $\overline f(g\cdot K)=\overline f(h\cdot K)$. Unwinding the definition of $\overline f$, we must show $g\cdot K=h\cdot K$ is equivalent to $f(g)=f(h)$. Well, $f(g)=f(h)$ is equivalent to $g\cdot h^{-1}\in K$ by \Cref{prop:ker-normal}, which is equivalent to $g\cdot K=h\cdot K$ by \Cref{prop:how-to-coset}.
+        \item Surjective: we must show $\im\overline f=\im f$. Well, we compute
+        \begin{align*}
+            \im\overline f &= \{\overline f(x):x\in G/K\} \\
+            &= \{\overline f(g\cdot K):g\in G\} \\
+            &= \{f(g):g\in G\} \\
+            &= \im f.
+        \end{align*}
+        \item Homomorphism: for each $g\cdot K,h\cdot K\in G/K$, we check
+        \begin{align*}
+            \overline f((g\cdot K)\cdot(h\cdot K)) &= \overline f((g\cdot h)\cdot K) \\
+            &= f(g\cdot h) \\
+            &= f(g)\cdot'f(h) \\
+            &= \overline f(g\cdot K)\cdot'\overline f(h\cdot K).
+        \end{align*}
+    \end{itemize}
+    The above checks complete the proof.
+\end{proof}
+In some sense, \Cref{thm:hom} is an isomorphism machine: it produces us isomorphisms even though we only feed it homomorphisms. As such, it is a very powerful tool. Let's see some examples.
+\begin{example}
+    Work in the context of \Cref{ex:real-part-hom,ex:real-part-ker-im}. Plugging $r\colon\CC\to\RR$ into \Cref{thm:hom} implies $\CC/\RR\cong\RR$.
+\end{example}
+\begin{example}
+    Work in the context of \Cref{ex:z-to-d4,ex:z-to-d4-ker-im}. Plugging $f\colon\ZZ\to D_4$ into \Cref{thm:hom} implies $\ZZ/4\ZZ\cong\left\{e,r,r^2,r^3\right\}$.
+\end{example}
+\begin{example}
+    Work in the context of \Cref{ex:z6z-to-z3z,ex:z6z-to-z3z-ker-im}. Plugging $f\colon\ZZ/6\ZZ\to\ZZ/3\ZZ$ recovers the fact $(\ZZ/6\ZZ)/(3\ZZ/6\ZZ)\cong\ZZ/3\ZZ$.
+\end{example}
+\begin{exe} \label{exe:fractions}
+    Let $(G,\cdot)$ be a group, and let $H,K\subseteq G$ be normal subgroups such that $K\subseteq H$. Show that the map $p\colon G/K\to G/H$ defined by $p(g\cdot K)\coloneqq g\cdot H$ is a well-defined homomorphism. By using \Cref{thm:hom}, conclude
+    \[\frac{G/K}{H/K}\cong\frac GK.\]
+\end{exe}
+Congratulations on making it to the end of this course. As our grand finale, \Cref{exe:fractions} tells us that we can do fractions.
+
+\subsection{Problems}
+% \begin{homework}
+% A group that is commutative is called Abelian. Prove that every subgroup of an Abelian group is normal.
+% \end{homework}
+% \begin{homework}
+% Let $H$ be a normal subgroup of $G$, show that the map $q:G \to G/H$ given by $x \mapsto [x]$ is a surjective group homomorphism.
+% \end{homework}
+
+% \begin{homework}
+% Use the first isomorphism theorem to prove that $\CC/\RR \cong \RR$. [Hint: Use the map $f:\CC \to \RR$ defined by $f(z)=\text{Re}(z)$. You should still prove that its a group homomorphism.]
+% \end{homework}
+
+% Nir's problems
+\begin{homework}
+    Let $2\ZZ$ denote the subgroup of even integers in $(\ZZ,+)$. Exhibit two distinct isomorphisms $\varphi\colon2\ZZ\to\ZZ$.
+\end{homework}
+
+\begin{homework}
+    Show that the groups $D_4$ and $\ZZ/8\ZZ$ are not isomorphic.
+\end{homework}
+
+\begin{homework}
+    Let $(G,\cdot)$ be a group. Given $g\in G$, suppose that there is a least positive integer $n$ such that $g^n=e$. Consider the homomorphism $f\colon\ZZ\to G$ defined by $f(k)\coloneqq g^k$ in \Cref{ex:cyclic-subgroup-hom}.
+    \begin{listalph}
+        \item Show that $\ker f=n\ZZ$.
+        \item Show that $\im f=\left\{e,g,g^2,\ldots,g^{n-1}\right\}$.
+    \end{listalph}
+\end{homework}
+
+\begin{homework}
+    One can check that $\ZZ$ is a normal subgroup of $(\QQ,+)$, so we may define the group $\QQ/\ZZ$. Define $\varphi\colon\QQ/\ZZ\to\QQ/\ZZ$ by $\varphi(x)\coloneqq 5x$.
+    \begin{enumerate}[label=(\alph*)]
+        \item Show that $\varphi$ is a group homomorphism.
+        \item Exhibit an isomorphism $\ker\varphi\cong\ZZ/5\ZZ$.
+    \end{enumerate}
+\end{homework}
+
+\begin{homework}
+    Consider the groups $(\ZZ,+)$ and $\ZZ/10\ZZ$.
+    \begin{enumerate}[label=(\alph*)]
+        \item Compute the number of group homomorphisms $\varphi\colon\ZZ\to\ZZ/10\ZZ$.
+        \item Compute the number of group homomorphisms $\varphi\colon\ZZ/10\ZZ\to\ZZ$.
+        \item Compute the number of injective group homomorphisms $\varphi\colon\ZZ\to\ZZ/10\ZZ$.
+        \item Compute the number of surjective group homomorphisms $\varphi\colon\ZZ\to\ZZ/10\ZZ$.
+    \end{enumerate}
+\end{homework}
+
+\begin{homework}
+    Let $(G,\cdot)$ be a group. Define the map $\varphi\colon G\to G$ by $\varphi(g)\coloneqq g^2$.
+    \begin{enumerate}[label=(\alph*)]
+        \item Suppose $\varphi$ is a group homomorphism. Show that $G$ is commutative.
+        \item Suppose $G$ is commutative. Show that $\varphi$ is a group homomorphism.
+    \end{enumerate}
+\end{homework}
+
+\begin{homework}
+    Let $(G,\cdot)$ be a group with identity element $e$. Suppose $g^2=e$ for each $g\in G$. Show that $G$ is commutative.
+\end{homework}
+
+\begin{homework}
+    Let $(G,\cdot)$ be a group.
+    \begin{enumerate}[label=(\alph*)]
+        \item Let $\operatorname{Aut}(G)$ denote the set of isomorphisms $G\to G$. Show that $\operatorname{Aut}(G)$ is a group where the operation is composition.
+        \item Define the function $\varphi\colon\operatorname{Aut}(\QQ)\to\QQ^\times$ by $\varphi(f)\coloneqq f(1)$. Show that $\varphi$ is an isomorphism.
+        \item Let $g\in G$ be some element. Define $\varphi_g\colon G\to G$ by $\varphi_g(h)\coloneqq ghg^{-1}$. Show that $\varphi_g$ is an automorphism.
+        \item Define $\varphi\colon G\to\operatorname{Aut}(G)$ by $\varphi(g)\coloneqq\varphi_g$. Show that $\varphi$ is a homomorphism.
+        \item Show that $\ker\varphi=\{g\in G:gh=hg\text{ for all }h\in G\}$.
+    \end{enumerate}
+\end{homework}
+
+\begin{homework}
+    Show that $\operatorname{GL}_n(\RR)/\operatorname{SL}_n(\RR)$ is isomorphic to $\RR^\times$.
+\end{homework}
+
+\end{document}

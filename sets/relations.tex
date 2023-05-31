@@ -1,0 +1,355 @@
+%Read the slack post (link below) regarding syntax and formatting before you start writing lecture notes.
+% Post: https://musa-2021.slack.com/archives/C01DGR645SL/p1609187728029500
+
+
+
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+
+\section{Week 5: Functions and Relations} \label{sec:relations}
+Functions appear throughout mathematics. In linear algebra, you will see functions called ``linear transformations.'' In Math~104, you may deal with sequences, metrics, and homeomorphisms---all different types of functions. In Math~113, you will learn about homomorphisms, another special kind of function. We begin this section by introducing functions and some of the vocabulary associated with them.
+
+\subsection{Functions}
+We begin with a few definitions.
+\begin{definition}[function]
+    Let $X$ and $Y$ be sets. A \dfn{function}, \dfn{mapping}, \dfn{morphism}, or \dfn{transformation} $f\colon X \to Y$ is a ``rule'' by which each element of $X$ is assigned exactly one element of $Y$. If $f$ sends $x \in X$ to $y\in Y$, we write $f(x) = y$, or $f\colon x \mapsto y$.
+\end{definition}
+\begin{remark}
+    The truly pedantic may prefer to think of a function as its ``graph,'' which is the set
+    \[\{(x,f(x)):x\in X\}.\]
+    From this perspective, a function $f$ is a subset of $X\times Y$ satisfying the following condition: for each $x\in X$, there is exactly one $y\in Y$ such that $(x,y)\in f$. We will not use this perspective going forward.
+\end{remark}
+\begin{example}
+    Here are some functions.
+    \begin{itemize}
+        \item Sending natural numbers $n\in\NN$ to their square $n^2\in\NN$ defines a function $f\colon\NN\to\NN$. In other words, we may define a function $f\colon\NN\to\NN$ by $f(n)=n^2$ for each $n\in\NN$.
+        \item We can define a function $g\colon\NN\to\RR$ by $g(n)\coloneqq\sqrt n$ for each $n\in\NN$.
+    \end{itemize}
+\end{example}
+\begin{nex}
+    A function $X \to Y$ assigns exactly one element of $Y$ to each element of $X$. As such, the rule which sends $x \in \RR$ to the $y \in \RR$ such that $(x, y)$ lies on the unit circle is not a function. Indeed, if $y \neq 0$, then $(x, -y)$ also lies on the unit circle, so we are sending the single $x$-value to multiple $y$-values.
+\end{nex}
+A rule between sending elements of $X$ to elements of $Y$ is said to be ``well-defined'' if it defines a function. If you are asked to prove that a rule $f\colon X \to Y$ is well-defined, then you should show that for all $x, x' \in X$, then $f(x) \in Y$, and if $x = y$, then $f(x) = f(y)$.
+\begin{nex}
+    Consider $f\colon \QQ \to \QQ$ defined by the rule
+    \[f\left(\frac{a}{b}\right) \coloneqq a + b.\]
+    This $f$ is not well-defined. To see this, we must find $x, y \in \QQ$ such that $x = y$ but $f(x) \neq f(y)$. Let $x = \frac{1}{2}$ and $y = \frac{2}{4}$. Then $x = y$, but $f(x) = 3$ and $f(y) = 6$, so $f$ is not well-defined.
+\end{nex}
+A function $f\colon X\to Y$ helps us understand the sets $X$ and $Y$. Here are the corresponding nouns.
+\begin{definition}[domain, codomain, pre-image]
+    Let $f\colon X\to Y$ be a function. Then $X$ is called the \dfn{domain} of $f$, and $Y$ is called the \dfn{codomain} or \dfn{target} of $f$. More generally, given a subset $Y'\subseteq Y$, the set
+    \[f^{-1}(Y')\coloneqq\{x\in X:f(x)\in Y'\}\]
+    is called the \dfn{pre-image} of $Y'$ under $f$.
+\end{definition}
+Functions relate sets together, but we might also want to relate functions together. Composition is how this is done.
+\begin{definition}[composition]
+    Let $X$, $Y$, and $Z$ be sets, and let $f\colon X\to Y$ and $g\colon Y\to Z$ be functions. Then we define the \dfn{composition} of $f$ and $g$, denoted $(g\circ f)$, to be the function $(g\circ f)\colon X\to Z$ given by
+    \[(g\circ f)(x)\coloneqq g(f(x)).\]
+\end{definition}
+\begin{exe}
+    Define the functions $f,g,h\colon\ZZ\to\ZZ$ by $f(n)\coloneqq2n$ and $g(n)\coloneqq n+1$ and $h(n)\coloneqq 2n-2$. Compute $f\circ(g\circ h)$ and $(f\circ g)\circ h$.
+\end{exe}
+To understand functions, we will want to give them adjectives. Here are a few.
+\begin{definition}[injective, surjective]
+    Let $f\colon X \to Y$ be a function.
+    \begin{itemize}
+        \item We say $f$ is \dfn{injective} or \dfn{one-to-one} if and only if $f(x_1) = f(x_2)$ implies $x_1 = x_2$.
+        \item We say $f$ is \dfn{surjective} or \dfn{onto} $Y$ if and only if $f(X) = Y$. In other words, for each $y\in Y$, there exists $x\in X$ such that $f(x)=y$.
+        \item If $f$ is both injective and surjective, we say that $f$ is a \dfn{bijection} or \dfn{one-to-one correspondence}.
+    \end{itemize}
+\end{definition}
+Intuitively, injective functions are ``efficient" in that they don't send two points to the same point. Surjective functions are ``effective" in that they hit every point. As such, bijective functions are both ``efficient and effective."
+
+In some sense, a bijection $f\colon X\to Y$ tells us that $X$ and $Y$ are essentially the same. As such, we expect to be able to go backwards $Y\to X$ along $f$. Indeed, this is true.
+\begin{prop} \label{prop:bij-is-iso}
+    Let $f\colon X\to Y$ be a function. A function $f^{-1}\colon Y\to X$ is an \dfn{inverse} for $f$ if and only if $f^{-1}(f(x))=x$ for all $x\in X$ and $f\left(f^{-1}(y)\right)=y$ for all $y\in Y$. The function $f$ is bijective if and only if its has an inverse.
+\end{prop}
+\begin{proof}
+    This proof has two directions.
+    \begin{itemize}
+        \item Suppose $f$ is bijection. We need to show that $f$ has an inverse. To do this, we construct a function which looks like it could be an inverse, and then we prove that it actually is one.
+        
+        We begin by defining $f^{-1}$. Because $f$ is surjective, for every $y \in Y$, we can find a $x \in X$ such that $f(x) = y$; in fact, this $x$ is unique because if we found another $x'$ with $f(x')=y$, then $f(x)=y=f(x')$ implies $x=x'$ because $f$ is injective. Thus, we define $f^{-1}\colon Y\to X$ by sending $y\in Y$ to the unique $x\in X$ such that $f(x)=y$.
+        
+        We now check that $f^{-1}$ defines our inverse function. By construction, $f\left(f^{-1}(y)\right)=y$. Further, for any $x\in X$, we set $y\coloneqq f(x)$ and see that $f(x)=y$ implies
+        \[x=f^{-1}(y)=f^{-1}(f(x)),\]
+        finishing.
+        
+        \item Suppose $f$ has an inverse $f^{-1}\colon Y\to X$. We show that $f$ is bijective. To show that $f$ is injective, suppose $y\coloneqq f(x)=f(x')$ for some $x,x'\in X$. Then $f^{-1}(f(x))=x$ and $f^{-1}(f(x'))=x'$, so $x=f^{-1}(y)=x'$.
+
+        To show $f$ is surjective, for each $y\in Y$, we note that $x\coloneqq f^{-1}(y)$ has $f(x)=y$ by definition of $f^{-1}$.
+    \end{itemize}
+    The above implications complete the proof.
+\end{proof}
+\begin{exe}
+    Find sets $X$ and $Y$ and functions $f\colon X\to Y$ and $g\colon Y\to X$ such that $g(f(x))=x$ for all $x\in X$, but there exists $y\in Y$ such that $f(g(y))\ne y$. Is $f$ injective?
+\end{exe}
+\begin{remark}
+    Even though we defined a bijective function as being both injective and surjective, in practice is often easier to construct an inverse function instead. For the most part, this will be our strategy when exhibiting a bijection in the future.
+\end{remark}
+On reason to care about the adjectives we have defined so far is that they can ``build'' up all functions, in the following sense.
+\begin{prop} \label{prop:factor-functions} %[First isomorphism theorem of sets]
+    %\index{first isomorphism theorem!set theory}
+    Let $f\colon X\to Z$ be a function. There exists a set $Y$ and functions $\pi\colon X\to Y$ and $\iota\colon Y\to Z$ such that $\pi$ is surjective, $\iota$ is injective, and
+    \[f=\iota\circ\pi.\]
+    % There are sets $X_0\subseteq X$ and $Y_0\subseteq Y$ and functions $\pi\colon X \to X_0$, $\widetilde f\colon X_0 \to Y_0$, and $\iota\colon Y_0 \to Y$ such that $\pi$ is surjective, $\widetilde f$ is bijective, $\iota$ is injective, and
+    % \[f = \iota \circ \widetilde f \circ \pi.\]
+\end{prop}
+% In the context of set theory, ``isomorphism" is just a synonym for bijection. (In other branches of math, such as linear algebra, an isomorphism is a special type of bijection!) There are other isomorphism theorems that prove that certain functions are bijections. We often express the conclusion of the first isomorphism theorem by saying that ``the diagram
+% $$\begin{tikzcd}
+%     X \arrow[r, "f"] \arrow[d, "\pi"] &Y\\
+%     X_0 \arrow[r, "\tilde f"] &Y_0 \arrow[u, "\iota"]
+% \end{tikzcd}$$
+% commutes"; i.e. if you were to start with an $x \in X$ and apply the functions (``arrows") to $x$ in the order that they appear, you'd end up with the same result no matter whether you took the path $f$ or the path $\pi,\tilde f, \iota$.
+% 
+% For those of you who have taken computer science courses, this proof can be thought of as an algorithm to compute the set $X_0$ from $f$ and $X$. We start with $X$, and step by step construct $X_0$. (Of course, if $X$ is an infinite set, this might take an infinite amount of time, but if $X$ is finite and $f$ is ``not too complicated," then it's reasonable to think that you could design a computer program that carried out this process.) Most of the work goes into defining $X_0$; $\tilde f$ is easy to define, and the rest is just book-keeping.
+% 
+% This is a good strategy for writing proofs in general, and a theme we'll see again and again: to show that something exists, try giving a step-by-step process for computing it, and then prove that your process works at the end.
+\begin{proof}
+    As in \Cref{prop:bij-is-iso}, the strategy here will be to construct all of our objects first and then show that they satisfy the desired properties. To get some intuition of what is going on here, the idea is that $\pi$ is supposed to do all the squishing that $f$ does, and all that is left over is some injective part.
+
+    More explicitly, define $Y\coloneqq f(X)$. Then for each $x\in X$, we see that $f(x)\in f(X)$, so we define $\pi\colon X\to Y$ by $\pi(x)\coloneqq f(x)$. Continuing, we note that $f(X)\subseteq Z$, so we define $\iota\colon Y\to Z$ by $\iota(y)\coloneqq y$. We now check that this works.
+    \begin{itemize}
+        \item We check that $\pi$ is surjective. Indeed, for any $y\in f(X)$, by definition of $f(X)$, there exists some $x\in X$ such that $f(x)=y$.
+        \item We check that $\iota$ is injective. Indeed, given $y,y'\in f(X)$ such that $\iota(y)=\iota(y')$, we note that $\iota(y)=y$ and $\iota(y')=y'$, so $y=y'$ follows.
+        \item We check that $f=\iota\circ\pi$. Well, for any $x\in X$, we see that
+        \[\iota(\pi(x))=\iota(f(x))=f(x)\]
+        where we have used the definitions of $\pi$ and $\iota$.
+    \end{itemize}
+    The above checks complete the proof.
+    % Start with $X_0 = X$, and go through its elements one by one. If at any point we find a $x_1 \in X_0$ and a $x_2 \in X_0$ such that $x_2 \neq x_1$ and $f(x_1) = f(x_2)$, remove $x_2$ from $X_0$. We repeat this process until we have exhausted all elements of $X$. This defines $X_0$.
+    %
+    % Let $\tilde f$ denote the restriction of $f$ to $X_0$; that is, $\tilde f$ is the function $X_0 \to Y$ such that $\tilde f(x) = f(x)$ for all $x \in X_0$. If $\tilde f(x_1) = \tilde f(x_2)$, then $x_1 = x_2$ (or else $x_2$ was removed from $X_0$, so $\tilde f(x_2)$ is not defined), so $\tilde f$ is injective.
+    %
+    % We define $\pi: X \to X_0$ to be function which sends $x_1 \in X$ to the $x_2 \in X_0$ such that $f(x_1) = \tilde f(x_2)$. Since $\tilde f$ is injective, $\pi$ is actually a function. If $x \in X_0$, then $x \in X$ and $\pi(x) = x$. So $\pi$ is surjective.
+    %
+    % We now define $Y_0 = \tilde f(X_0)$. Then if we think of $\tilde f$ as a function $X_0 \to Y_0$, $\tilde f$ is surjective. Therefore $\tilde f$ is a bijection. Moreover, we let $\iota(y) = y$, so $\iota$ is defined on all of $Y_0$. If $\iota(y_1) = \iota(y_2)$ then $y_1 = y_2$ by definition of $\iota$, so $\iota$ is injective.
+    %
+    % Finally, notice that since $\iota$ is just the identity on $Y_0$,
+    % $$\iota \circ \tilde f \circ \pi = \tilde f \circ \pi.$$
+    % By definition of $\pi$, $\tilde f \circ \pi = f$. Therefore
+    % $$f = \iota \circ \tilde f \circ \pi,$$
+    % as promised.
+\end{proof}
+\begin{remark}
+    At the cost of an extra function $\widetilde f$, we can control $Y$ a bit more. Namely, one can show the following: there are sets $X_0\subseteq X$ and $Z_0\subseteq Z$ and functions $\pi\colon X \to X_0$, $\widetilde f\colon X_0 \to Z_0$, and $\iota\colon Z_0 \to Z$ such that $\pi$ is surjective, $\widetilde f$ is bijective, $\iota$ is injective, and
+    \[f = \iota \circ \widetilde f \circ \pi.\]
+    The reader is encouraged to try to prove this, but it is nontrivial.
+\end{remark}
+
+\subsection{Relations and Orders}
+Relations allow us to compare elements within a set.
+\begin{definition}[relation]
+    Let $X$ be a set, and let $n$ be a positive integer. An \emph{$n$-ary \dfn{relation}} on $X$ is a subset of $X^n$. If $R$ is an $n$-ary relation on $X$ and $(x_1, \ldots, x_n) \in X^n$, then we write $R(x_1, \ldots, x_n)$ to mean $(x_1,\ldots,x_n)\in R$. If $n=2$, we might also write $x_1Rx_2$ to mean $(x_1,x_2)\in R$.
+\end{definition}
+We might say ``binary'' instead of $2$-ary.
+\begin{example}
+    Notice that a $1$-ary relation on a set $X$ is just a subset of $X$. For example, consider the $1$-ary relation $E$ on $\NN$ where $E(n)$ means ``$n$ is even.'' Then $E$ is the set of even natural numbers. 
+\end{example}
+\begin{example}
+    Let $R\subseteq\ZZ\times\ZZ$ be the set of all ordered pairs $(x,y)$ such that $x+y$ is even. Then $R$ is relation. For example, we have $1R21$.
+\end{example}
+\begin{example} \label{ex:f-gives-equiv-relation}
+    Define the function $f\colon\RR\to\RR$ by $f(x)\coloneqq x^2$. Then we define $R\subseteq\RR\times\RR$ by
+    \[\{(x_1,x_2)\in\RR\times\RR:f(x_1)=f(x_2)\}.\]
+    Then $R$ is relation. For example, $0R0$ and $2R(-2)$.
+\end{example}
+Orderings provide special examples of relations.
+\begin{example} \label{ex:le-on-n}
+    Define $L\subseteq\NN\times\NN$ by
+    \[L\coloneqq\{(a,b)\in\NN\times\NN:a\le b\}.\]
+    Then $L$ is a relation. For example, $1L2$, but $(2,1)\notin L$.
+    % Orderings on sets, such as the usual well-ordering $\leq$ on $\NN$ that you have seen, are binary relations. Strictly speaking, the well-ordering on $\NN$ is a set $L \subseteq \NN \times \NN$ where a pair $(a, b)$ of natural numbers is an element of $L$ if and only if $a \leq b$. Thus $(3, 4)$, $(0, 42)$, and $(0, 0)$ are elements of $L$, while $(4, 3)$ and $(42, 0)$ are not elements of $L$.
+\end{example}
+Let's codify what we mean by an order.
+\begin{definition}[parital order]
+    A \dfn{partially ordered set}, or \textit{poset}, is a set $X$ with a binary relation $\preceq$ on $X$ with the following properties.
+    \begin{enumerate}[label=(\alph*)]
+        \item Reflexivity: for all $x \in X$, we have $x \preceq x$.
+        \item Antisymmetry: for all $x, y \in X$, if $x \preceq y$ and $y \preceq x$, then $x = y$.
+        \item Transitivity: for all $x, y, z \in X$, if $x \preceq y$ and $y \preceq z$, then $z \preceq z$.
+    \end{enumerate}
+    In this case, we call $\preceq$ a \dfn{partial order} on $X$. %A partial order $\leq$ is another type of binary relation. Note that a partial order is not necessarily \textit{total}; there may be elements $a, b \in X$ such that neither $a \leq b$ nor $b \leq a$.
+\end{definition}
+\begin{exercise} \label{exe:div-on-n}
+    For natural numbers $a$ and $b$, we write $a \mid b$ to mean ``$b$ is divisible by $a$.'' Note $\mid$ defines a binary relation on $\NN$.
+    \begin{enumerate}[label=(\alph*)]
+        \item Write down three pairs of natural numbers which are elements of the relation and three pairs of natural numbers which are not in the relation.
+        \item Prove that $(\NN, {}\mid{})$ is a partially ordered set.
+        \item For natural numbers $a$ and $b$, write $a\nmid b$ to mean ``$b$ is not divisible by $a$.'' It is also true that $\nmid$ is a binary relation on $\NN$. Is $\nmid$ a partial order?
+    \end{enumerate}
+\end{exercise}
+However, partial orders are a bit weak. Continuing \Cref{exe:div-on-n}, we note that $2$ does not divide $3$, and $3$ does not divide $2$. If we want our order to be a good notion of ``size,'' then we would like this sort of thing to not happen. We want total orders.
+\begin{definition}[total order]
+    A \dfn{totally ordered set} is a set $X$ with a partial order $\preceq$ satisfying the following fourth property.
+    \begin{enumerate}[label=(\alph*)]
+        \setcounter{enumi}{3}
+        \item Totality: for all $x,y\in X$, we have $x\preceq y$ or $y\preceq x$.
+    \end{enumerate}
+    In this case, we call $\preceq$ a \dfn{total order} on $X$.
+\end{definition}
+\begin{example}
+    The relation $L$ of \Cref{ex:le-on-n} is a total order.
+\end{example}
+
+\subsection{Equivalence Relations}
+A common way to compare two things is to say that they are similar to each other. For sets, the way to say that two elements of a set are similar to each other is with an equivalence relation.
+\begin{definition}[equivalence relation]
+    Let $X$ be a set, and let $\sim$ be a binary relation on $X$. We will use the notation $x \sim y$ to mean that $\sim$ holds of the pair $(x, y)$. Say that $\sim$ is an \dfn{equivalence relation} on $X$ if all the following hold:
+    \begin{enumerate}[label=(\alph*)]
+        \item Reflexivity: for all $x \in X$, we have $x \sim x$.
+        \item Symmetry: for all $x, y \in X$, if $x \sim y$, then $y \sim x$.
+        \item Transitivity: for all $x, y, z \in X$, if $x \sim y$ and $y \sim z$, then $x \sim z$.
+    \end{enumerate}
+\end{definition}
+Here is an example that will be relevant to us later in \cref{subsec:mods}.
+\begin{prop} \label{prop:mods-equiv-relation}
+    Let $n$ be a positive integer, and let $\sim$ be the binary relation on $\ZZ$ where $x \sim y$ if and only if $x-y$ is divisible by $n$. Then $\sim$ is an equivalence relation.
+\end{prop}
+\begin{proof}
+    To prove that $\sim$ is an equivalence relation, we must show that $\sim$ is reflexive, symmetric, and transitive.
+    \begin{enumerate}[label=(\alph*)]
+        \item Reflexivity: let $x \in \ZZ$. Then $x-x=0$ is divisible by $n$ because $0=0\cdot n$, so $x\sim x$.
+        \item Symmetry: let $x, y \in \ZZ$, and suppose $x \sim y$. Then $x-y$ is divisible by $n$, so we can find an integer $a$ such that $x-y=an$. But then
+        \[y-x=-1\cdot(x-y)=-a\cdot n,\]
+        so $y-x$ is divisible by $n$, so $y\sim x$.
+        \item Transitivity: let $x, y, z \in \ZZ$, and suppose that $x \sim y$ and $y \sim z$. Then $x-y$ and $y-z$ are divisible by $n$, so we can find integers $a$ and $b$ such that $x-y=an$ and $y-z=bn$. Summing, we see
+        \[x-z=(x-y)+(y-z)=an+bn=(a+b)n.\]
+        Thus $x-z$ is divisible by $n$, so $x\sim z$.
+        \qedhere
+    \end{enumerate}
+\end{proof}
+\begin{exe}
+    Show that the relation $R$ of \Cref{ex:f-gives-equiv-relation} is an equivalence relation.
+\end{exe}
+One can generalize \Cref{ex:f-gives-equiv-relation} as follows.
+\begin{proposition} \label{prop:function-to-equiv}
+    Let $X$ be a set and $f\colon X\to Y$ be a function. Then define the relation $\sim_f$ on $X$ by $x_1\sim_f x_2$ if and only if $f(x_1)=f(x_2)$. Then $\sim_f$ is an equivalence relation.
+\end{proposition}
+\begin{proof}
+    As before, to show that $\sim_f$ is an equivalence relation, we must show that $\sim_f$ is reflexive, symmetry, and transitive.
+    \begin{enumerate}[label=(\alph*)]
+        \item Reflexivity: for each $x\in X$, we note $f(x)=f(x)$, so $x\sim_fx$.
+        \item Symmetry: given $x,y\in X$ such that $x\sim_fy$, we see $f(x)=f(y)$. But then $f(y)=f(x)$, so $y\sim_fx$ as well.
+        \item Transitivity: suppose $x,y,z\in X$ have $x\sim_fy$ and $y\sim_fz$. Then $f(x)=f(y)$ and $f(y)=f(z)$, so $f(x)=f(z)$, meaning $x\sim_fz$.
+        \qedhere
+    \end{enumerate}
+\end{proof}
+We said that equivalence relations declare elements similar to each other, so it is useful to talk about all the elements similar to each other as one object.
+\begin{definition}[equivalence class]
+    Let $X$ be a set and $\sim$ be an equivalence relation on $X$. An \emph{equivalence class} is a subset $Y\subseteq X$ such that, for all $y_1, y_2 \in Y$, we have $y_1 \sim y_2$. If $x \in X$, then the set
+    \[[x] \coloneqq \{y \in X : x \sim y\}\]
+    is the equivalence class of $x$.
+\end{definition}
+\begin{remark}
+    Technically, we must check that $[x]$ is in fact an equivalence class. For completeness, we do this: if $y_1,y_2\in[x]$, we must show $y_1\sim y_2$. Well, by definition of $[x]$, we see $x\sim y_1$ and $x\sim y_2$. But $\sim$ is an equivalence relation! It follows $y_1\sim x$ and $x\sim y_2$, so $y_1\sim y_2$.
+\end{remark}
+\begin{example}
+    Let $n$ be a positive integer. Using \Cref{prop:mods-equiv-relation}, consider the equivalence relation $\sim$ on $\ZZ$ where $x \sim y$ if and only if $x-y$ is divisible by $n$. Then $[0]$ is the set of multiples of $n$, which are the integers with last digit $0$. One can check that the other equivalence classes are $[1], [2], \ldots, [n - 1]$.
+\end{example}
+\begin{example}
+    Using the relation $R$ of \Cref{ex:f-gives-equiv-relation}, we see that
+    \[[1]=\left\{x\in\RR:x^2=1^2\right\}=\{\pm1\}.\]
+    More generally, $[y]=\{\pm y\}$.
+\end{example}
+Having divided our set into equivalence classes, we now pick up the equivalence classes back again.
+\begin{definition}
+    Let $X$ be a set and $\sim$ an equivalence relation on $X$. Then $X / {\sim}$, usually pronounced ``$X$ mod $\sim$,'' is the set of equivalence classes of $X$ under the equivalence relation $\sim$.
+\end{definition}
+\begin{example}
+    Let $n$ be a positive integer. Using \Cref{prop:mods-equiv-relation}, consider the equivalence relation $\sim$ on $\ZZ$ where $x \sim y$ if and only if $x-y$ is divisible by $n$. Then we saw $\ZZ /{\sim}$ is the set $\{[0], [1], [2], \dotsc, [n]\}$.
+\end{example}
+\begin{exercise}
+    The following problem is similar to one you will likely see in Math 113. Fix a positive integer $n$, and consider again the equivalence relation $\sim$ on $\ZZ$ where $x \sim y$ if and only if $x-y$ is divisible by $n$. Recalling $\ZZ/{\sim}=\{[0], [1], [2], \dotsc, [n - 1]\}$, show that the function $f\colon (\ZZ /{\sim}) \times (\ZZ /{\sim}) \to \ZZ /{\sim}$, given by
+    \[f\colon([a], [b]) \mapsto [a + b],\]
+    is well-defined.
+\end{exercise}
+The notion of $X/{\sim}$ allows us to build the following reversed version of \Cref{prop:function-to-equiv}. This tells us that functions and equivalence relations are inherently intertwined: any function gives an equivalence relation, and any equivalence relation gives back a function.
+\begin{exe}
+    Let $\sim$ be an equivalence relation on a set $X$. Define the function $f\colon X\to X/{\sim}$ by sending each $x\in X$ to the equivalence class $[x]\in X/{\sim}$. Show that $x\sim x'$ if and only if $x\sim_fx'$, where $\sim_f$ has been defined as in \Cref{prop:function-to-equiv}.
+\end{exe}
+This next definition gives another way to think about equivalence relations.
+\begin{definition}[partition]
+    Let $X$ be a set. A \dfn{partition} of $X$ is a family $\mathcal{F}$ of subsets of $X$ such that the following hold.
+    \begin{enumerate}[label=(\alph*)]
+        \item Distinct elements of the partition are disjoint: if $A, B \in \mathcal{F}$ and $A \neq B$, then $A \cap B = \varnothing$.
+        \item Every element of the partition is nonempty: if $A \in \mathcal{F}$, then $A \neq \varnothing$.
+        \item The union of $\mathcal{F}$ is the entire set $X$: in other words, every element of $X$ is found in some $A \in \mathcal{F}$.
+    \end{enumerate}
+\end{definition}
+\begin{exercise}
+    Let $X$ be a set, and let $\mathcal{F}$ be a partition of $X$. Define $\sim$ to be the binary relation on $X$ such that $x \sim y$ if and only if there is $A \in \mathcal{F}$ such that $x \in A$ and $y \in A$. Prove that $\sim$ is an equivalence relation.
+\end{exercise}
+\begin{exercise}
+    Let $X$ be a set, and let $\sim$ be an equivalence relation on $X$. Prove that $X /{\sim}$ is a partition of $X$.
+\end{exercise}
+Again, the previous two exercises tell us that partitions are intertwined with equivalence relations: any partition gives an equivalence relation, and any equivalence relation gives back a partition.
+
+\subsection{Problems}
+\begin{homework} \label{prob:compose-injs-surjs}
+    Let $f\colon X \to Y$ and $g\colon Y \to Z$ be functions. Show the following.
+    \begin{enumerate}[label=(\alph*)]
+        \item If $f$ and $g$ are injective, then $g \circ f$ is injective.
+        \item If $f$ and $g$ are surjective, then $g \circ f$ is surjective.
+        \item If $f$ and $g$ are bijective, then $g \circ f$ is bijective.
+        \item If $g\circ f$ is injective, then $f$ is injective.
+        \item If $g\circ f$ is surjective, then $g$ is surjective.
+    \end{enumerate}
+\end{homework}
+\begin{homework}
+    Let $f\colon X\to Y$ be a function, $A,B\subseteq X$ be subsets of $X$, and $C,D\subseteq Y$ be subsets of $Y$.
+    \begin{enumerate}[label=(\alph*)]
+        \item Show that $f(A\cup B)=f(A)\cup f(B)$.
+        \item Show that $f(A\cap B)\subseteq f(A)\cap f(B)$.
+        \item If $f$ is injective, show that $f(A\cap B)=f(A)\cap f(B)$.
+        \item Construct an example where $f(A\cap B)\ne f(A)\cap f(B)$.
+        \item Show that $f^{-1}(C\cup D)=f^{-1}(C)\cup f^{-1}(D)$.
+        \item Show that $f^{-1}(C\cap D)=f^{-1}(C)\cap f^{-1}(D)$.
+    \end{enumerate}
+\end{homework}
+\begin{homework}
+    Let $S$ be a set and $\mc P(S)$ denote the power set of $S$. For any $A \subseteq S$, define $1_A\colon S \to \{0, 1\}$ be defined by
+    \[1_A(s) = \begin{cases} 1 & \text{if }s \in A, \\ 0 & \text{if }s \notin A.\end{cases}\]
+    Prove that $1_A$ is well-defined. This function $1_A$ is called the ``characteristic function of $A$ in $S$.''
+\end{homework}
+% \begin{homework}[first isomorphism theorem of vector spaces]
+%     \index{first isomorphism theorem!linear algebra}
+%     For those who have taken a linear algebra course, show that if $V$ and $W$ are (say, finite-dimensional) vector spaces and $T: V \to W$ is a linear transformation, there are subspaces (not just subsets!) $V_0 \subseteq V$ and $W_0 \subseteq W$, and linear transformations (not just functions!) $\pi: V \to V_0$, $\iota: W_0 \to W$, and $\tilde T: V_0 \to W_0$ such that $\pi$ is surjective, $\iota$ is injective, and $\tilde T$ is invertible, and such that the diagram
+% $$\begin{tikzcd}
+%     V \arrow[r, "T"] \arrow[d, "\pi"] & W \\
+%     V_0 \arrow[r, "\tilde T"] & W_0 \arrow[u, "\iota"]
+%     \end{tikzcd}$$
+%     commutes; in other words,
+%     $$T = \iota \circ \tilde T \circ \pi.$$
+%     Moreover, prove that $\dim V_0 + \dim \ker T = \dim V$ and $\dim W_0 = \rk T$. To accomplish this, you'll probably want to use rank theorem and the invertible matrix theorem.
+% \end{homework}
+\begin{homework}
+    Extend \Cref{prop:factor-functions} as follows: let $T\colon V\to W$ be a linear transformation of vector spaces. Show there exists a vector space $U$ and linear transformations $\pi\colon V\to U$ and $\iota\colon U\to W$ such that $\pi$ is surjective, $\iota$ is injective, and
+    \[T=\iota\circ\pi.\]
+\end{homework}
+\begin{homework}
+    For each of the following rules, either prove the rule defines a function or show it is not well-defined.
+    \begin{enumerate}[label=(\alph*)]
+        \item $f\colon \QQ \to \QQ$ by $\frac{a}{b} \mapsto ab$
+        \item $f\colon \NN \to \NN$ by $n \mapsto n + 1$.
+        \item $f\colon \ZZ^+ \times \ZZ^+ \to \ZZ$ by $(a, b) \mapsto \frac{a}{b}$, where $\ZZ^+$ is the set of positive integers.
+        \item $f\colon \QQ^+ \to \QQ^+$ by $\frac ab\mapsto\frac ba$, where $\QQ^+$ is the set of positive rational numbers.
+        \item $f\colon X \to (X / {\sim})$ by $x \mapsto [x]$, where $\sim$ is an equivalence relation on a set $X$.
+        \item $f\colon (X / {\sim}) \to X$ by $[x] \mapsto x$, where $\sim$ is an equivalence relation on a set $X$.
+    \end{enumerate}
+\end{homework}
+\begin{homework}
+    This exercise will teach you how to construct the set of integers from equivalence classes on the set of pairs of natural numbers. For $(a, b), (c, d) \in \NN \times \NN$, say $(a, b) \sim (c, d)$ if and only if $a + d = b + c$. We claim that $(\NN \times \NN) /{\sim}$ looks very much like $\ZZ$.
+    \begin{enumerate}[label=(\alph*)]
+        \item Prove that $\sim$ is an equivalence relation.
+        \item Write $(\NN \times \NN) /{\sim}$ as $\mathcal{Z}$. Define $\alpha\colon \ZZ \mapsto \mathcal{Z}$ by
+        \[z \mapsto \begin{cases} [(z, 0)] & \text{if }z \geq 0, \\ [(0, -z)] & \text{if }z < 0. \end{cases}\]
+        Prove that $\alpha$ is well-defined and a bijection. Where does the inverse function send $[(a,b)]$?
+        \item Define $+_{\mathcal{Z}}\colon \mathcal{Z} \times \mathcal{Z} \to \mathcal{Z}$ by
+        $$[(a, b)] +_{\mathcal{Z}} [(c, d)] = [(a + c, b + d)]$$
+        Show that $+_{\mathcal{Z}}$ is well-defined. In fact, show $\alpha(a) +_{\mathcal{Z}} \alpha(b) = \alpha(a + b)$ for any $a,b\in\ZZ$.
+    \end{enumerate}
+    % You have shown that $\mathcal{Z}$ with the addition operation $+_{\mathcal{Z}}$ is structurally very similar to $\ZZ$ with the usual addition.
+\end{homework}
+
+\end{document}

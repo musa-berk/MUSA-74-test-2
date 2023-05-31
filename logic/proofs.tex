@@ -1,0 +1,281 @@
+%Read the slack post (link below) regarding syntax and formatting before you start writing lecture notes.
+% Post: https://musa-2021.slack.com/archives/C01DGR645SL/p1609187728029500
+
+
+
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+
+\section{Week 3: Introduction to Proofs}
+In this section, we discuss proofs.
+
+\subsection{Proof Basics}
+The best way to learn what a proof is to see some examples. Here's an example from high-school algebra.
+\begin{example}
+    Set $p(x) \coloneqq x^2 + bx + c$ for some real numbers $b$ and $c$. If $r_1,r_2$ are the zeroes of $p$, then $r_1 + r_2 = -b$, and $r_1r_2 = c$.
+\end{example}
+\begin{proof}
+    We want to start any proof by writing down the basic definitions and properties. We know that $r_1$ and $r_2$ are zeroes, so $p(r_1) = p(r_2) = 0$. It follows that we can factor
+    \[p(x)=(x-r_1)(x-r_2)\]
+    because the leading coefficient on the $x^2$ term of $p(x)$ is $1$. Expanding both sides,
+    \[x^2 + bx + c = x - (r_1 + r_2)x + r_1r_2,\]
+    so $r_1 + r_2 = -b$ and $r_1r_2 = c$.
+\end{proof}
+That proof should convince you beyond a shadow of a doubt that the claim is true, assuming that you know basic facts about quadratics: above all, a proof is an argument, meant to persuade the reader. If it didn't, think about it and figure out where you lost the line of reasoning, and ask around. Often a proof might not make sense when we read it ourselves, but it becomes clearer when someone else explains it.
+\begin{example} \label{exe:squares-even}
+    Let $n$ be an integer. If $n$ is even, then $n^2$ is even.
+\end{example}
+\begin{proof}
+    Again, we start by writing down the definition. If $n$ is even, then there exists another natural number $k$ such that $n = 2k$. Then
+    \begin{align*}
+        n^2 &= (2k)^2\\
+        &= 4k^2\\
+        &= 2 \cdot 2k^2.
+    \end{align*}
+    We have shown that $n^2$ is $2$ times the natural number $2k^2$, so $n^2$ is an even number by definition.
+\end{proof}
+Let's try a more complicated example, which you might've seen in calculus, and it is important in its own right.
+\begin{example}[Euler's formula]
+    For all real numbers $x$,
+    \[e^{ix} = \cos x + i \sin x.\]
+\end{example}
+\begin{proof}
+    At first this might seem a bit hopeless, because it's not clear that $\exp$ and the trigonometric functions have anything to do with each other. The first clue to consider is that the derivative $\frac ddx\exp(x) = \exp(x)$, while $\frac d{dx}\sin(x) = \cos(x)$, and $\frac d{dx}\cos(x) = -\sin(x)$. So it's very easy to compute the higher derivatives of these functions, which means we can reason using Taylor series. This is as good a place to start as any, so we'll try this and see what happens.
+
+    Recall the Taylor series
+    \[e^x = \sum_{n=0}^\infty \frac{\exp^{(n)}(0)}{n!} x^n = \sum_{n=0}^\infty \frac{e^0}{n!} x^n = \sum_{n=0}^\infty \frac{x^n}{n!}.\]
+    Similarly,
+    \begin{align*}
+        \cos x &= 1 - \frac{x^2}{2!} + \frac{x^4}{4!} - \frac{x^6}{6!} + \cdots \\
+        \sin x &= x - \frac{x^3}{3!} + \frac{x^5}{5!} - \frac{x^7}{7!} - \cdots.
+    \end{align*}
+    Plugging in $ix$ to $e^x$ and using that $i^2 = -1$, we have
+    \begin{align*}
+        e^{ix} &= 1 + ix + \frac{(ix)^2}{2!} + \frac{(ix)^3}{3!} + \frac{(ix)^4}{4!} + \dots \\
+        &= 1 + ix + \frac{-x^2}{2!} - i\frac{x^3}{3!} + \frac{x^4}{4!} + \dots\\
+        &= \left(1 - \frac{x^2}{2!} + \frac{x^4}{4!} - \dots\right) + i\left(x - \frac{x^3}{3!} + \frac{x^5}{5!} - \dots\right)\\
+        &= \cos x + i\sin x,
+    \end{align*}
+    so $e^{ix} = \cos x + i\sin x$.
+\end{proof}
+% It can be helpful to break up a big proof into lots of smaller parts, called ``lemmas,'' and work on each one separately.
+Notice that in all of the above proofs, we needed to use every assumption we made. This will be the case on the homework. In other words, if you finished a proof and didn't use some assumption that the theorem made, then something went wrong. Explicitly, one of the following happened.
+\begin{itemize}
+    \item You assumed too much. In this case, the statement of the theorem you were trying to prove should be rephrased without the unnecessary assumptions.
+    \item You used the assumption tacitly in part of the proof, without realizing it. In this case, realize where you used the assumption, and note it explicitly.
+    \item You made an error elsewhere in the proof. In this case, fix your proof!
+\end{itemize}
+In general, if you prove a theorem but didn't use one of your assumptions, then you have proven a stronger theorem!
+
+Let's see another example. Keep track of where we use the fact that $\triangle ABC$ is a right triangle in the following proof!
+\begin{example}[Pythagorean theorem] \nirindex{Pythagorean theorem} \label{exe:pythag-thm}
+    Let $\triangle ABC$ be a right triangle with right angle $C$. Setting $a\coloneqq BC$ and $b\coloneqq CA$ and $c\coloneqq AB$, then
+    \[a^2 + b^2 = c^2.\]
+\end{example}
+\begin{proof}
+    We must show $BC^2 + CA^2 = AB^2$. Let $H$ be the point on the hypotenuse such that $\angle CHA$ is a right angle, which gives the following diagram.
+    \begin{center}
+        \begin{asy}
+            unitsize(0.7cm);
+            pair B=(0,3), C=(0,0), A=(4,0), H=(13/9,23/12);
+            draw(A -- B -- C -- cycle);
+            draw(C -- H);
+            dot("$A$", A, ESE);
+            dot("$B$", B, NNW);
+            dot("$C$", C, SW);
+            dot("$H$", H, NE);
+        \end{asy}
+    \end{center}
+    We claim that $\triangle ACH$ is similar to $\triangle ABC$. Indeed, $\angle AHC=\angle ACB$ because both are right angles, and $\angle BAC=\angle CAH$ because those are literally the same angle. Lastly, because the angles in both triangles must add up to $180^\circ$ degrees, we must have
+    \[\angle ABC + \angle BCA + \angle CAB = 180^\circ = \angle ACH + \angle CHA + \angle HAC,\]
+    so $\angle ACH = \angle ABC = 90^\circ - \angle BAC$. Thus, the triangles are similar. A similar proof shows $\triangle CBH$ is similar to $\triangle ABC$. (Show this yourself, if you'd like.)
+
+    Using our similar triangles, we see
+    \[\frac{CA}{AB} = \frac{HA}{AC}\qquad\text{and}\qquad\frac{BC}{AB} = \frac{BH}{CB}.\]
+    Thus, $BC^2 = AB\cdot BH$ and $AC^2 = AB\cdot AH$, so
+    \[BC^2 + AC^2 = AB\cdot BH + AB\cdot AH = AB(AH + BH) = AB^2.\]
+    This proves the claim.
+\end{proof}
+\begin{remark}
+    If the proof of \Cref{exe:pythag-thm} did not use the condition that $\triangle ABC$ was a right triangle, then we would have proven the stronger claim that any triangle $\triangle ABC$ has
+    \[BC^2+CA^2=AB^2.\]
+    However, this claim is false! For example, there is an equilateral triangle with $AB=BC=CA=1$, and $1^2+1^2\ne1^2$. This equilateral triangle is called a ``counterexample'' to our statement.
+\end{remark}
+We close this subsection with an example from linear algebra.
+\begin{example} % \label{kernel is subspace}
+    Let $T\colon V \to W$ be a linear transformation between vector spaces over the scalar field $F$. Then the kernel $\ker(T)$ of $T$ is a vector subspace of $V$.
+\end{example}
+\begin{proof}
+    By definition, the kernel is
+    \[\ker(T) \coloneqq \{v \in V: T(v) = 0\},\]
+    where $0$ is the zero vector of $W$.
+    
+    Now, recall the definition of subspace of a vector space: a set $S$ is a subspace of $V$ if $S$ is a subset of $V$ that contains the zero vector $0_V$ and is closed under vector addition and scalar multiplication. Therefore, we must check that $\ker(T)$ fulfills all three of the necessary conditions to be a subspace of $V$.
+    \begin{itemize}
+        \item By definition, we see $\ker(T)$ is a subset of $V$.
+        \item It is a property of linear transformations that $T(0_V)=0_W$. To see this, note $0_V+0_V=0_V$, so because $T$ is a linear transformation,
+        \[T(0_V)+T(0_V)=T(0_V+0_V)=T(0_V).\]
+        Rearranging gives $T(0_V)=0_W$, so $0_V$ is in $\ker(T)$.
+        \item We check that $\ker(T)$ is closed under addition. Well, given two arbitrary vectors $v$ and $w$ in $\ker(T)$, we must show their sum $v+w$ is also in $\ker(T)$. Because $T$ is a linear transformation,
+        \[T(v+w)=T(v)+T(w).\]
+        Now, we use our assumption that $v$ and $w$ were in $\ker(T)$. This means we know $T(v) = 0_W$ and $T(w) = 0_W$, so
+        \[T(v+w)=0_W+0_W=0_W.\]
+        It follows $v+w$ is in $\ker(T)$.
+        \item We check that $\ker(T)$ is closed under scalar multiplication. Well, given a vector $v$ in $\ker(T)$ and a scalar $k$ in $F$, we must show $k\cdot v$ is also in $\ker(T)$. Because $T$ is a linear transformation, we compute
+        \[T(k\cdot v)=k\cdot T(v).\]
+        However, because $v$ is in $\ker(T)$, we see $T(v)=0_V$. To finish, we use properties of the zero vector to give
+        \[T(k\cdot v)=k\cdot 0_V=0_V.\]
+        It follows $k\cdot v$ is in $\ker(T)$.
+        \qedhere
+    \end{itemize}
+\end{proof}
+
+\subsection{Contradiction and Contraposition}
+In order to prove that a statement is true, it is sometimes easier to do so when an extra assumption, let's say $P$, is true. If another proof proves the statement when $P$ is false, then together the two proofs imply that the statement is true. This is called ``proof by cases.''
+\begin{example}
+    There exist irrational real numbers $x$ and $y$ such that $x^y$ is rational.
+\end{example}
+\begin{proof}
+    You will prove in the homework that $\sqrt{2}$ is irrational. For now, assume that $\sqrt{2}$ is irrational. We know $\sqrt{2}^{\sqrt{2}}$ must be either rational or irrational. So, we divide our proof into two cases.
+    \begin{itemize}
+        \item Suppose $\sqrt{2}^{\sqrt{2}}$ is rational. Then we have found irrational numbers $x$ and $y$, with $x = y = \sqrt{2}$, such that $x^y$ is rational.
+        \item Suppose $\sqrt{2}^{\sqrt{2}}$ is irrational. Let $x = \sqrt{2}^{\sqrt{2}}$ and $y = \sqrt{2}$. Then
+        \[x^y = \left(\sqrt{2}^{\sqrt{2}}\right)^{\sqrt{2}} = \sqrt{2}^{\sqrt{2} \cdot \sqrt{2}} = \sqrt{2}^2 = 2.\]
+        Because $x^y=2$ is rational, we have found irrational numbers $x$ and $y$, with $x = \sqrt{2}^{\sqrt{2}}$ and $y = \sqrt{2}$, such that $x^y$ is rational. 
+    \end{itemize}
+    Because one of the above cases must hold, and in both cases such $x$ and $y$ exist, the statement must be true.
+\end{proof}
+This proof is ``non-constructive.'' Namely, the proof does not tell us the explicit $x$ and $y$ such that the statement holds; rather, the proof only verifies that such $x$ and $y$ exist. You will encounter plenty of non-constructive proofs in your upper division math classes.
+\begin{remark}
+    It turns out that $\sqrt{2}^{\sqrt{2}}$ is irrational, as in the second case above, but proving this is non-trivial. For the interested, it is a consequence of the Gelfond--Schneider theorem.
+\end{remark}
+Now let's see an example that we'll come back to later: Russell's paradox. It's a silly, but very important, example of a ``proof by contradiction.''
+\begin{example} \label{exe:barber-diagonalization} %\index{Russell's paradox}
+    It is impossible for a barber to say that he will shave people if and only if they do not shave themselves.
+\end{example}
+\begin{proof}
+    For a proof by contradiction, we are going to suppose that such a barber exists, and then show that the existence of the barber implies a contradiction. It will then follow that the barber could not exist!
+    
+    Indeed, suppose that such a barber exists. Either the barber shaves himself or he does not shave himself, which gives the following cases.
+    \begin{itemize}
+        \item Suppose that the barber shaves himself. If so, then he does not shave himself, so he both shaves himself and does not shave himself. This is impossible.
+        \item Suppose the barber does not shave himself. But then he shaves himself, which is still impossible.
+    \end{itemize}
+    All cases have led to impossibility, so the barber does not exist.
+\end{proof}
+Here is another proof by contradiction.
+\begin{example} \label{exe:odd-square-to-odd}
+    Let $n$ be an integer. If $n^2$ is odd, then $n$ is odd.
+\end{example}
+\begin{proof}
+    Suppose for the sake of contradiction that $n$ is not odd, so $n$ is even. But then $n^2$ is even by \Cref{exe:squares-even}! This is a contradiction because we know $n^2$ is supposed to be odd. Thus, we must instead have $n$ being odd.
+\end{proof}
+A proof technique similar to contradiction is contraposition. To understand contraposition, recall that
+\[(p\to q)\equiv(\lnot q\to\lnot p)\]
+by \Cref{exe:contraposition}. As such, sometimes when we want to show a statement of the form $p\to q$, we can try to prove the contraposition $\lnot q\to\lnot p$ instead. Our first example is revamping the proof of \Cref{exe:odd-square-to-odd}.
+\begin{proof}[Another proof]
+    The contraposition of ``if $n^2$ is odd, then $n$ is odd'' is the statement ``if $n$ is not odd, then $n^2$ is not odd.'' However, a positive integer is ``not odd'' if and only if it is even, so we're actually proving ``if $n$ is even, then $n^2$ is even,'' which is exactly \Cref{exe:squares-even}.
+\end{proof}
+Here's a similar example for you to try.
+\begin{exe}
+    Let $n$ be an integer. If $n^2$ is even, then $n$ is even.
+\end{exe}
+
+\subsection{Uniqueness Proofs}
+Sometimes we will want to prove that some object is unique. The usual way to do this is to suppose that any two such objects are equal. Let's see some examples.
+\begin{example} \label{exe:increasing-is-injective}
+    Let $f$ be a strictly increasing function from the real numbers to the real numbers. Then for each real number $y$, there is at most real number $x$ such that $f(x)=y$.
+\end{example}
+\begin{proof}
+    Suppose that we have real numbers $x$ and $x'$ such that $f(x)=y$ and $f(x')=y$. We show $x=x'$. There are three cases.
+    \begin{itemize}
+        \item If $x<x'$, then $f(x)<f(x')$, so $y<y$, which is impossible.
+        \item If $x=x'$, then we are done.
+        \item If $x>x'$, then $f(x)>f(x')$, so $y>y$, which is impossible.
+    \end{itemize}
+    All cases give impossibility or $x=x'$, so we conclude $x=x'$.
+\end{proof}
+Note that third case of the previous proof was identical to the first case with some letters changed. In the future, we might say ``without loss of generality, we have $x>x'$ or $x=x'$ because the case of $x'<x$ is similar.''
+
+Continuing with our examples, here is one from calculus.
+\begin{example}
+    Say that a function $f$ from the real numbers to the real numbers is ``strictly convex'' if $f$ is twice-differentiable and $f''(t) > 0$ for all real numbers $t$. If $f$ is strictly convex, then there exists at most one real number $x$ such that $f(x)$ is the (global) minimum value of $f$.
+\end{example}
+\begin{proof}
+    Assume that $f$ achieves its minimum at $x$ and $x'$.
+    % Without loss of generality, we can assume that $x \leq x'$ because the case of $x'\ge x$ is similar.
+    % This means that we are making a harmless assumption: we do not know much about $x$ and $y$, but either $x \leq y$ or $x \leq y$. The proofs will be exactly the same in either case but with the variables swapped, so we might as well assume $x \leq y$.
+    By some calculus, we can compute the derivatives $f'(x) = 0$ and $f'(x') = 0$. On the other hand, since $f''(t) > 0$ for all $t$, we see $f'$ is strictly increasing, so $f'(x)=f'(x')$ implies $x=y$ by \Cref{exe:increasing-is-injective}.
+\end{proof}
+Our last example of this subsection will be relevant to us when we study group theory in \Cref{ch:grp}.
+\begin{example}
+    There exists exactly one real number $z$ such that $z+a=a+z=a$ for all real numbers $a$. %The additive identity of a vector space is unique. %TODO Replace with not linear algebra
+\end{example}
+\begin{proof}
+    Before jumping into the uniqueness part of this proof, we see that there are at least one real number $z$ because $z=0$ will work: $0+a=a+0=a$ for all real numbers $a$.
+
+    We now show uniqueness. Suppose there are two such real numbers $z$ and $z'$. The trick, now, is to compute $z+z'$ in two ways: we see
+    \[z+z'=z\qquad\text{and}\qquad z+z'=z'.\]
+    Thus, $z=z'$.
+    % Let $V$ be a vector space. To show that the additive identity of $V$ is unique, we will suppose there are two instances of the additive identity, $0$ and $0'$, in $V$, and show that they are in fact equal. Let $v \in V$. Then
+    % \begin{align*}
+    %     v + 0 &= v + 0'
+    %     \intertext{Since $V$ is a vector space, $v$ has an additive inverse $-v$. Adding $-v$ to each side yields}
+    %     v + 0 + (-v) &= v + 0' + (-v)\\
+    %     0 + 0 &= 0 + 0'\\
+    %     0 &= 0'
+    % \end{align*}
+    % Conclude that the additive identity of a vector space is unique.
+\end{proof}
+If you made it this far, then the discussion problems below should not be conceptually too difficult. Focus on writing neat, complete, and rigorous proofs.
+\begin{exercise}
+    We know that if a natural number $n$ is even, then there is another natural number $k$ such that $n = 2k$. Prove that this $k$ is unique.
+\end{exercise}
+\begin{exercise}
+    Let $q$ be a non-zero rational number. Prove that $q$ has a unique multiplicative inverse; that is, there exists a unique rational number $r$ such that $qr = 1$.
+\end{exercise}
+\begin{exercise}
+    Show that the set of rational numbers $\QQ$ is closed under addition and multiplication. Is the set $\RR \setminus \QQ$ of irrational numbers also closed under addition and multiplication? If so, prove it, and if not, find a counterexample.
+\end{exercise}
+
+\subsection{Problems}
+\begin{homework}[triangle inequality]
+    %\index{triangle inequality}
+    %\label{triangle ineq}
+    Prove the following.
+    \begin{enumerate}[label=(\alph*)]
+        \item For any real numbers $a$ and $b$,
+        \[|a+b|\ge|a|+|b|.\]
+        \item For any real numbers $x$, $y$, and $z$,
+        \[|x-z|\ge|x-y|+|y-z|.\]
+        \item For any vectors $u$, $v$, and $w$ in $\mathbb R^3$,
+        \[\lVert u-w\rVert\ge\lVert u-v\rVert+\lVert v-w\rVert,\]
+        where $\lVert z\rVert$ denotes the length of a vector $z$ in $\mathbb R^3$.
+    \end{enumerate}
+\end{homework}
+
+\begin{homework}
+    Prove that if $n$ is an integer, then $3n^2 + n + 10$ is even.
+\end{homework}
+
+\begin{homework}
+    Prove the following.
+    \begin{enumerate}[label=(\alph*)]
+        \item If $x$ is even and $y$ is odd then $x + y$ is odd.
+        \item If $x$ and $y$ are both even then $x + y$ is even.
+        \item If $x$ and $y$ are both odd then $x + y$ is even.
+        \item If $x$ is even and $y$ is even then $xy$ is even.
+        \item If $x$ is odd and $y$ is even then $xy$ is even.
+        \item If $x$ and $y$ are both odd then $xy$ is odd.
+    \end{enumerate}
+\end{homework}
+
+\begin{homework}
+    Show that $\sqrt[3]{2}$ is irrational.
+\end{homework}
+
+% \begin{homework}
+%     Let $(V, \bigoplus _{V}, \bigotimes _{V})$ and $(W, \bigoplus _{W}, \bigotimes _{W})$ be vector spaces over the field $F$. Let $T: V \rightarrow W$ be a linear transformation. Verify that, in fact, $\ker(T)$ is closed under scalar multiplication. 
+% \end{homework}
+
+\end{document}
